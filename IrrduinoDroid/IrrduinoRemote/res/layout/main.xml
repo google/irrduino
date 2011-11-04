@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:background="@drawable/grass_and_sky_background_portrait"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="Activate Sprinklers"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Spinner
+        android:id="@+id/spinner_runtimes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/spinner_runtimes"
+        android:layout_marginLeft="10dp"
+        android:text="Front Yard"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/button_frontyard_lawn_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:text="Left Side Lawn" />
+
+    <Button
+        android:id="@+id/button_frontyard_lawn_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_frontyard_lawn_1"
+        android:layout_marginLeft="5dp"
+        android:text="Right Side Lawn" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner_runtimes"
+        android:layout_marginLeft="70dp"
+        android:layout_toRightOf="@+id/textView2"
+        android:text="Back Yard"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/button_garden"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_below="@+id/textView3"
+        android:text="Garden" />
+
+    <Button
+        android:id="@+id/button_patio_plants"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_garden"
+        android:layout_below="@+id/button_garden"
+        android:text="Patio Plants" />
+
+    <Button
+        android:id="@+id/button_backyard_lawn_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_patio_plants"
+        android:layout_below="@+id/button_patio_plants"
+        android:text="Lawn Zone 1" />
+
+    <Button
+        android:id="@+id/button_backyard_lawn_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_backyard_lawn_1"
+        android:layout_below="@+id/button_backyard_lawn_1"
+        android:text="Lawn Zone 2" />
+
+    <Button
+        android:id="@+id/button_backyard_lawn_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_backyard_lawn_2"
+        android:layout_below="@+id/button_backyard_lawn_2"
+        android:text="Lawn Zone 3" />
+
+    <Button
+        android:id="@+id/button_all_stop"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/status_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/button_all_stop" />
+
+	<!--  
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:text="system status"
+        android:lines="1"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    -->
+    <EditText
+        android:id="@+id/status_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:editable="false"
+        android:isScrollContainer="false"
+        android:hint="status"
+        android:lines="1" />
+
+</RelativeLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Irrduino Remote  by Joe Fernandez</string>
+    <string name="activity_title">Irrduino Remote</string>
+
+    <!-- User Interface: main.xml strings -->
+    <string name="button_all_stop">Stop All</string>
+    <string-array name="run_durations">
+        <item>1 Minute</item>
+        <item>2 Minutes</item>
+        <item>3 Minutes</item>
+        <item>4 Minutes</item>
+        <item>5 Minutes</item>
+        <item>6 Minutes</item>
+        <item>7 Minutes</item>
+        <item>8 Minutes</item>
+        <item>9 Minutes</item>
+        <item>10 Minutes</item>
+    </string-array>
+
+</resources>
