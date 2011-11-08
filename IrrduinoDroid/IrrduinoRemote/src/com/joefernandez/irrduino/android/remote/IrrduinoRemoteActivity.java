@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 public class IrrduinoRemoteActivity extends Activity {
+	
 	private static final String TAG = "IrrduinoRemoteActivity";
 	
 	private static final String CMD_ALL_OFF = "/off";
@@ -150,8 +151,10 @@ public class IrrduinoRemoteActivity extends Activity {
 
     	if (controllerAddress == null || settingsChanged){
 	    	settings = PreferenceManager.getDefaultSharedPreferences(this);
-	    	String host = settings.getString(Settings.CONTROLLER_HOST_NAME, "192.168.1.110");
-	    	String port = settings.getString(Settings.CONTROLLER_HOST_PORT, "80");
+	    	String host = settings.getString(Settings.CONTROLLER_HOST_NAME, 
+	    									 Settings.DEFAULT_CONTROLLER_HOST);
+	    	String port = settings.getString(Settings.CONTROLLER_HOST_PORT, 
+	    									 Settings.DEFAULT_CONTROLLER_PORT);
 	    	
 	    	controllerAddress = "http://"+host;
 	    	if (port != null && !port.equalsIgnoreCase("80")){
@@ -205,7 +208,8 @@ public class IrrduinoRemoteActivity extends Activity {
                 return new String(baf.toByteArray());
                 
             } catch (Exception e) {
-            	Log.d(TAG, "http request exception: "+e.getMessage());
+            	Log.d(TAG, "http request exception for: " + urls[0]);
+            	Log.d(TAG, "    Exception: "+e.getMessage());
             }
             return null;
 

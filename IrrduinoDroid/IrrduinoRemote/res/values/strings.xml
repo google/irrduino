@@ -31,6 +31,8 @@
     <string name="controller_host_port">Port Number</string>
     <string name="controller_host_port_summary">Enter port number (e.g., 8080)</string>
         
+    <string name="about_settings_title">About</string>
+    <string name="about_version">Version</string>
         
         
 </resources>
