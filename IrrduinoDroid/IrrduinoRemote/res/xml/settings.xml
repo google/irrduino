@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+            android:title="@string/controller_settings_title">    
+	<EditTextPreference
+	        android:key="controller_host_name"
+	        android:title="@string/controller_host_name"
+	        android:summary="@string/controller_host_name_summary"
+	        android:dialogTitle="@string/controller_host_name"
+	        />
+	<EditTextPreference
+	        android:key="controller_host_port"
+	        android:title="@string/controller_host_port"
+	        android:summary="@string/controller_host_port_summary"
+	        android:dialogTitle="@string/controller_host_name" 
+	        />
+	</PreferenceCategory>
+</PreferenceScreen>
