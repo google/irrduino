@@ -1,15 +1,15 @@
 // functions for controlling Arduino pin outputs
 
-void httpCmdZonesOff(){
+void cmdZonesOff(){
     httpJsonReply("\"zones\":\"ALL OFF\"");
     shutDownAll();
 }
 
-void httpCmdZoneTimedRun(){
+void cmdZoneTimedRun(){
 
     if ( commandDispatch[OBJ_ID] == 0 || commandDispatch[VALUE_1] == 0 ){
       
-        String error = "ERROR: httpCmdZoneTimedRun, commandDispatch not properly initialized.";
+        String error = "ERROR: cmdZoneTimedRun, commandDispatch not properly initialized.";
         Serial.println(error);
         httpJsonReply(error);
         return;
@@ -27,6 +27,24 @@ void httpCmdZoneTimedRun(){
     httpJsonReply(jsonReply);
 
     startTimedRun(commandDispatch[OBJ_ID], commandDispatch[VALUE_1]);
+
+    // clear the command, so we don't re-execute
+    clearCommandDispatch();
+}
+
+void cmdStatusRequest(){
+  
+    // check for running command
+    if (commandRunning[CMD_OBJ] > 0){
+        jsonReply += "\"pin";
+        jsonReply += commandRunning[CMD_OBJ];
+        jsonReply += "\":\"running\"";
+    } else {
+        jsonReply += "\"system status\":\"ready\"";
+    }
+
+    httpJsonReply(jsonReply);
+
     // clear the command, so we don't re-execute
     clearCommandDispatch();
 }

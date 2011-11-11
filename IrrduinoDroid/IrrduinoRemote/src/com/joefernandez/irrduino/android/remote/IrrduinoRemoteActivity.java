@@ -55,14 +55,19 @@ public class IrrduinoRemoteActivity extends Activity {
         setContentView(R.layout.main);
 
         Spinner spinnerRunTime = (Spinner) findViewById(R.id.spinner_runtimes);
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-//                this, R.array.run_durations, android.R.layout.simple_spinner_item);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinner.setAdapter(adapter);        
         spinnerRunTime.setAdapter(getSpinnerAdapter());
         spinnerRunTime.setOnItemSelectedListener(new RuntimeItemSelectedListener());
-        
+
         statusText = (EditText) findViewById(R.id.status_text);
+        
+        Bundle extras = getIntent().getExtras(); 
+        if(extras !=null) {
+            String value = extras.getString("taskResult");
+            if (value != null && value.length() > 0){
+            	statusText.setText(value);
+            }
+        }
+        
 
         Button allOff = (Button) findViewById(R.id.button_all_stop);
         allOff.setOnClickListener(new OnClickListener() {
@@ -187,34 +192,12 @@ public class IrrduinoRemoteActivity extends Activity {
             return super.onOptionsItemSelected(item);
         }
     }   
-	//=== Async Task code (for HTML requests) ============================================
-    private class IrrduinoCommandTask extends AsyncTask<String, Void, String> {
-        /** The system calls this to perform work in a worker thread and
-          * delivers it the parameters given to AsyncTask.execute() */
-        protected String doInBackground(String... urls) {
-            try {
-                URL commandURL = new URL(urls[0]);
-                URLConnection conn = commandURL.openConnection();
-                InputStream is = conn.getInputStream();
-                BufferedInputStream bis = new BufferedInputStream(is);
-                ByteArrayBuffer baf = new ByteArrayBuffer(50);
 
-                int current = 0;
-                while((current = bis.read()) != -1){
-                    baf.append((byte)current);
-                }
-
-                /* Convert the Bytes read to a String. */
-                return new String(baf.toByteArray());
-                
-            } catch (Exception e) {
-            	Log.d(TAG, "http request exception for: " + urls[0]);
-            	Log.d(TAG, "    Exception: "+e.getMessage());
-            }
-            return null;
-
-        }
-        
+    /** Async Task code (for Irrduino Controller requests) */
+    public class IrrduinoCommandTask extends HttpCommandTask {
+    	
+    	private static final String TAG = "IrrduinoCommandTask";
+    	
         /** The system calls this to perform work in the UI thread and delivers
           * the result from doInBackground() */
         protected void onPostExecute(String result) {
@@ -225,7 +208,7 @@ public class IrrduinoRemoteActivity extends Activity {
         	}
         }
     }
-
+    
     //=== Duration Spinner management functions ===================================================
 
     public class RuntimeItemSelectedListener implements OnItemSelectedListener {

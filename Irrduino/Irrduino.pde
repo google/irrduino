@@ -1,11 +1,13 @@
 /**
-  Irrduino v0.7 by Joe Fernandez
+  Irrduino v0.8 by Joe Fernandez
 
   Issues:
   - need a nanny process to set a max run time for valves (regardless of commands or program)
-  - need to support a "status" option for each zone individually and all zones together
+  - add a "status" option for each zone individually and all zones together
+  - add sending event reports to web server for reporting
 
   Change Log:
+  - 2011-11-10 - add global status option
   - 2011-10-27 - added code to turn on and blink an LED on pin 13 while zone running
   - 2011-10-07 - fixed problem with home page not displaying after first request
                - fixed problem mismatch between zone/pin selection
@@ -69,6 +71,7 @@ int zoneCount = 10;
 // Uri Object identifier
 
 const int OBJ_CMD_ALL_OFF  = 1;
+const int OBJ_CMD_STATUS   = 2;
 const int OBJ_CMD_ZONE     = 10;
 const int OBJ_CMD_ZONES    = 100;
 const int OBJ_CMD_PROGRAM  = 20;
@@ -200,10 +203,15 @@ void loop(){
           findCmdObject(arg1);
           
           switch (commandDispatch[CMD_OBJ]) {
-             
+            
             case OBJ_CMD_ALL_OFF:   // all off command
-              httpCmdZonesOff();
+              cmdZonesOff();
               break;
+
+            case OBJ_CMD_STATUS: // Global status ping
+              cmdStatusRequest();
+              break;
+            
             case OBJ_CMD_ZONE:      // zone command
               
               findZoneCommand(arg2);
@@ -214,7 +222,7 @@ void loop(){
                    break;
                  case ON:
                    findZoneTimeValue(arg3);
-                   httpCmdZoneTimedRun();
+                   cmdZoneTimedRun();
                    break;
               }
 
@@ -264,12 +272,19 @@ void findCmdObject(char *cmdObj){
         return;
     }
     
+    // check for global "status" request
+    if (commandObject.compareTo("status") == 0) {
+        commandDispatch[CMD_OBJ] = OBJ_CMD_STATUS;
+        return;
+    }
+    
     // must check for plural form first
     if (commandObject.compareTo("zones") == 0) {
         commandDispatch[CMD_OBJ] = OBJ_CMD_ZONES;
         jsonReply += "\"zones\":";
         return;
     }
+
     if (commandObject.startsWith("zone")) {
         commandDispatch[CMD_OBJ] = OBJ_CMD_ZONE; // command object type, 0 for none
         jsonReply += "\"zone";
