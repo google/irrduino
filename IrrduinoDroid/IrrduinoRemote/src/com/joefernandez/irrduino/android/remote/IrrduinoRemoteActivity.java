@@ -8,9 +8,15 @@ import java.net.URLConnection;
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -19,13 +25,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import com.joefernandez.irrduino.android.remote.R.id;
 
 public class IrrduinoRemoteActivity extends Activity {
+	
 	private static final String TAG = "IrrduinoRemoteActivity";
-	private static final String IRRDUINO_HOST = "http://joefernandez.org";
 	
 	private static final String CMD_ALL_OFF = "/off";
 	private static final String CMD_ZONE_1_ON = "/zone1/ON";
@@ -36,6 +39,10 @@ public class IrrduinoRemoteActivity extends Activity {
 	private static final String CMD_ZONE_6_ON = "/zone6/ON";
 	private static final String CMD_ZONE_7_ON = "/zone7/ON";
 	private static final String CMD_ZONE_8_ON = "/zone8/ON";
+	
+	private SharedPreferences settings;
+	private boolean settingsChanged = true;
+	private String controllerAddress;
 	
     protected String zoneRunTime = "1";
 	protected EditText statusText;
@@ -55,90 +62,131 @@ public class IrrduinoRemoteActivity extends Activity {
         spinnerRunTime.setAdapter(getSpinnerAdapter());
         spinnerRunTime.setOnItemSelectedListener(new RuntimeItemSelectedListener());
         
-        statusText = (EditText) findViewById(id.status_text);
+        statusText = (EditText) findViewById(R.id.status_text);
 
-        Button allOff = (Button) findViewById(id.button_all_stop);
+        Button allOff = (Button) findViewById(R.id.button_all_stop);
         allOff.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(IRRDUINO_HOST + CMD_ALL_OFF);
+	            new IrrduinoCommandTask().execute(getControllerAddress() + CMD_ALL_OFF);
 			}
 		});
 
-        Button zone1 = (Button) findViewById(id.button_garden);
+        Button zone1 = (Button) findViewById(R.id.button_garden);
         zone1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(IRRDUINO_HOST + 
+	            new IrrduinoCommandTask().execute(getControllerAddress() + 
 	            									CMD_ZONE_1_ON +
 	            									"/" + zoneRunTime);
 			}
 		});
     
-        Button zone2 = (Button) findViewById(id.button_backyard_lawn_1);
+        Button zone2 = (Button) findViewById(R.id.button_backyard_lawn_1);
         zone2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				
-	            new IrrduinoCommandTask().execute(IRRDUINO_HOST + 
+	            new IrrduinoCommandTask().execute(getControllerAddress() + 
 	            									CMD_ZONE_2_ON +
 	            									"/" + zoneRunTime);
 			}
 		});
 
-        Button zone3 = (Button) findViewById(id.button_backyard_lawn_2);
+        Button zone3 = (Button) findViewById(R.id.button_backyard_lawn_2);
         zone3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(IRRDUINO_HOST + 
+	            new IrrduinoCommandTask().execute(getControllerAddress() + 
 	            									CMD_ZONE_3_ON +
 	            									"/" + zoneRunTime);
 			}
 		});
 
-        Button zone4 = (Button) findViewById(id.button_backyard_lawn_3);
+        Button zone4 = (Button) findViewById(R.id.button_backyard_lawn_3);
         zone4.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(IRRDUINO_HOST + 
+	            new IrrduinoCommandTask().execute(getControllerAddress() + 
 	            									CMD_ZONE_4_ON +
 	            									"/" + zoneRunTime);
 			}
 		});
 
-        Button zone5 = (Button) findViewById(id.button_patio_plants);
+        Button zone5 = (Button) findViewById(R.id.button_patio_plants);
         zone5.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(IRRDUINO_HOST + 
+	            new IrrduinoCommandTask().execute(getControllerAddress() + 
 	            									CMD_ZONE_5_ON +
 	            									"/" + zoneRunTime);
 			}
 		});
         
         // Zone 6 (backyard left side flower beds, is not hooked up)
-//        Button zone6 = (Button) findViewById(id.button_patio_plants);
+//        Button zone6 = (Button) findViewById(R.id.button_patio_plants);
 //        zone6.setOnClickListener(new OnClickListener() {
 //			public void onClick(View v) {
-//	            new IrrduinoCommandTask().execute(IRRDUINO_HOST + 
+//	            new IrrduinoCommandTask().execute(getControllerAddress() + 
 //	            									CMD_ZONE_6_ON +
 //	            									"/" + zoneRunTime);
 //			}
 //		});
         
-        Button zone7 = (Button) findViewById(id.button_frontyard_lawn_1);
+        Button zone7 = (Button) findViewById(R.id.button_frontyard_lawn_1);
         zone7.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(IRRDUINO_HOST + 
+	            new IrrduinoCommandTask().execute(getControllerAddress() + 
 	            									CMD_ZONE_7_ON +
 	            									"/" + zoneRunTime);
 			}
 		});
 
-        Button zone8 = (Button) findViewById(id.button_frontyard_lawn_2);
+        Button zone8 = (Button) findViewById(R.id.button_frontyard_lawn_2);
         zone8.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(IRRDUINO_HOST + 
+	            new IrrduinoCommandTask().execute(getControllerAddress() + 
 	            									CMD_ZONE_8_ON +
 	            									"/" + zoneRunTime);
 			}
 		});
+        
     }
 
+    public String getControllerAddress(){
+
+    	if (controllerAddress == null || settingsChanged){
+	    	settings = PreferenceManager.getDefaultSharedPreferences(this);
+	    	String host = settings.getString(Settings.CONTROLLER_HOST_NAME, 
+	    									 Settings.DEFAULT_CONTROLLER_HOST);
+	    	String port = settings.getString(Settings.CONTROLLER_HOST_PORT, 
+	    									 Settings.DEFAULT_CONTROLLER_PORT);
+	    	
+	    	controllerAddress = "http://"+host;
+	    	if (port != null && !port.equalsIgnoreCase("80")){
+	    		controllerAddress += ":"+port;
+	    	}
+	    	settingsChanged = false;
+    	}
+    	return controllerAddress;
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.app_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	final Intent intent;
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.preferences:
+        	intent = new Intent(this, Settings.class);
+        	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        	startActivity(intent);
+        	settingsChanged = true;
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }   
 	//=== Async Task code (for HTML requests) ============================================
     private class IrrduinoCommandTask extends AsyncTask<String, Void, String> {
         /** The system calls this to perform work in a worker thread and
@@ -160,7 +208,8 @@ public class IrrduinoRemoteActivity extends Activity {
                 return new String(baf.toByteArray());
                 
             } catch (Exception e) {
-            	Log.d(TAG, "http request exception: "+e.getMessage());
+            	Log.d(TAG, "http request exception for: " + urls[0]);
+            	Log.d(TAG, "    Exception: "+e.getMessage());
             }
             return null;
 

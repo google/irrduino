@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Irrduino Remote  by Joe Fernandez</string>
-    <string name="activity_title">Irrduino Remote</string>
+    <string name="app_name">Irrduino Remote by Joe Fernandez</string>
+    <string name="activity_title_main">Irrduino Remote</string>
+    <string name="activity_title_settings">Settings</string>
 
     <!-- User Interface: main.xml strings -->
     <string name="button_all_stop">Stop All</string>
@@ -19,4 +20,19 @@
         <item>10 Minutes</item>
     </string-array>
 
+    <!-- Menu -->
+    <string name="menu_item_settings">Settings</string>
+        
+    <!-- Settings -->  
+    <string name="controller_settings_title">Irrduino Controller Settings</string>
+    <string name="controller_host_name">Host Name</string>
+    <string name="controller_host_name_summary">Enter host name or IP address</string>
+
+    <string name="controller_host_port">Port Number</string>
+    <string name="controller_host_port_summary">Enter port number (e.g., 8080)</string>
+        
+    <string name="about_settings_title">About</string>
+    <string name="about_version">Version</string>
+        
+        
 </resources>
