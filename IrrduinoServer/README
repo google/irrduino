@@ -1,0 +1,16 @@
+IrrduinoServer
+==============
+
+This is the server component of Irrduino.  It's a Python Google App Engine
+application.
+
+Global TODOs
+------------
+
+Fix pdb_set_trace:
+  Don't force the user to reload the server.
+
+Limitations
+-----------
+
+I specifically decided not to write any tests because this is a prototype.
