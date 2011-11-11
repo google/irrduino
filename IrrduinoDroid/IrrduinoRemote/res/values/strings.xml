@@ -7,32 +7,25 @@
 
     <!-- User Interface: main.xml strings -->
     <string name="button_all_stop">Stop All</string>
-    <string-array name="run_durations">
-        <item>1 Minute</item>
-        <item>2 Minutes</item>
-        <item>3 Minutes</item>
-        <item>4 Minutes</item>
-        <item>5 Minutes</item>
-        <item>6 Minutes</item>
-        <item>7 Minutes</item>
-        <item>8 Minutes</item>
-        <item>9 Minutes</item>
-        <item>10 Minutes</item>
-    </string-array>
 
     <!-- Menu -->
     <string name="menu_item_settings">Settings</string>
         
     <!-- Settings -->  
     <string name="controller_settings_title">Irrduino Controller Settings</string>
-    <string name="controller_host_name">Host Name</string>
-    <string name="controller_host_name_summary">Enter host name or IP address</string>
+    	<string name="controller_host_name">Host Name</string>
+    		<string name="controller_host_name_summary">Enter host name or IP address</string>
 
-    <string name="controller_host_port">Port Number</string>
-    <string name="controller_host_port_summary">Enter port number (e.g., 8080)</string>
+    	<string name="controller_host_port">Port Number</string>
+    		<string name="controller_host_port_summary">Enter port number (e.g., 8080)</string>
+
+    <string name="videofeed_settings_title">Video Feed</string>
+	    <string name="videofeed_camera_address">IP Camera Address</string>
+	    	<string name="videofeed_camera_address_summary">Enter camera http address</string>
+	    <string name="videofeed_autofocus">Trigger Auto Focus</string>
         
     <string name="about_settings_title">About</string>
-    <string name="about_version">Version</string>
+    	<string name="about_version">Version</string>
         
         
 </resources>

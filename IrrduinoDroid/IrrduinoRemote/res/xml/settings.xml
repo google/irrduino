@@ -5,29 +5,46 @@
             android:key="controller_settings_category"
             android:title="@string/controller_settings_title"
             >    
-	<EditTextPreference
-	        android:key="controller_host_name"
-	        android:title="@string/controller_host_name"
-	        android:summary="@string/controller_host_name_summary"
-	        android:dialogTitle="@string/controller_host_name"
-	        />
-	<EditTextPreference
-	        android:key="controller_host_port"
-	        android:title="@string/controller_host_port"
-	        android:summary="@string/controller_host_port_summary"
-	        android:dialogTitle="@string/controller_host_name" 
-	        />
+		<EditTextPreference
+		        android:key="controller_host_name"
+		        android:title="@string/controller_host_name"
+		        android:summary="@string/controller_host_name_summary"
+		        android:dialogTitle="@string/controller_host_name"
+		        />
+		<EditTextPreference
+		        android:key="controller_host_port"
+		        android:title="@string/controller_host_port"
+		        android:summary="@string/controller_host_port_summary"
+		        android:dialogTitle="@string/controller_host_name" 
+		        />
 	</PreferenceCategory>
-	
+
+    <PreferenceCategory 
+        android:key="videofeed_settings_category"
+        android:title="@string/videofeed_settings_title"
+        >
+		<EditTextPreference
+		        android:key="videofeed_host_address"
+		        android:title="@string/videofeed_camera_address"
+		        android:summary="@string/videofeed_camera_address_summary"
+		        android:dialogTitle="@string/videofeed_camera_address"
+		        />
+        <Preference 
+            android:key="videofeed_trigger_autofocus"
+            android:title="@string/videofeed_autofocus"
+            />
+        
+    </PreferenceCategory>	
+
     <PreferenceCategory 
         android:key="about_settings_category"
         android:title="@string/about_settings_title"
         >
-    <Preference 
-        android:key="about_version"
-        android:title="@string/about_version"
-        android:selectable="false"
-        />
+	    <Preference 
+	        android:key="about_version"
+	        android:title="@string/about_version"
+	        android:selectable="false"
+	        />
         
     </PreferenceCategory>
 </PreferenceScreen>
