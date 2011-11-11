@@ -14,9 +14,11 @@
 
 """This is the welcome page for the app."""
 
+from google.appengine.ext import webapp
+
 from irrduinoserver.utils import web as webutils
 
 
-class WelcomeHandler(BaseHandler):
+class WelcomeHandler(webapp.RequestHandler):
   def get(self):
     webutils.render_to_response(self, "welcome.html", {})
