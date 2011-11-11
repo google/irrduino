@@ -87,5 +87,5 @@ def pdb_set_trace():
 
 
 def create_http_with_timeout():
-  """Call httplib2.Http and set a time.out."""
+  """Call httplib2.Http and set a timeout."""
   return httplib2.Http(timeout=HTTP_TIMEOUT)
