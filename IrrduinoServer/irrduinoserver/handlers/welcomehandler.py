@@ -17,8 +17,32 @@
 from google.appengine.ext import webapp
 
 from irrduinoserver.utils import web as webutils
+from irrduinoserver.utils import irrduino as irrduinoutils
 
 
 class WelcomeHandler(webapp.RequestHandler):
   def get(self):
     webutils.render_to_response(self, "welcome.html", {})
+
+  def post(self):
+    """Control the sprinklers.
+
+    TODO: This is just some sample code.
+
+    """
+    template_params = {}
+    if self.request.get("get-system-status"):
+      response = irrduinoutils.execute("/status")
+      assert (response.get("system status") == "ready" or
+              "running" in response.values())
+    elif self.request.get("water-zone-1"):
+      response = irrduinoutils.execute("/zone1/on/1")
+      assert response["zone1"] == "on"
+      assert int(response["time"]) == 1
+    elif self.request.get("turn-off-everything"):
+      response = irrduinoutils.execute("/off")
+      assert response["zones"] == "ALL OFF"
+    else:
+      raise ValueError("Invalid submit button")
+    template_params["status"] = response
+    webutils.render_to_response(self, "welcome.html", template_params)

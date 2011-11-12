@@ -1,7 +1,18 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<p>
-  Yo dawg, this site be all about waterin' Joe's lawn.  Let's keep it real, yo!
-</p>
+  <p>
+    Yo dawg, this site be all about waterin' Joe's lawn. Let's keep it real, yo!
+  </p>
+
+  <!-- TODO: This is just some sample code to test things out. -->
+  {% if status %}
+    <p>Status: {{ status|escape }}</p>
+  {% endif %}
+
+  <form action="" method=post>
+    <input type=submit name=get-system-status value="Get System Status">
+    <input type=submit name=water-zone-1 value="Water Zone 1 for 1 Minute">
+    <input type=submit name=turn-off-everything value="Turn Off Everything">
+  </form>
 {% endblock %}
