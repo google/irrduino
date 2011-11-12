@@ -1,0 +1,20 @@
+Here's a quick run-down on the Irrduino controller web API:
+
+Turn off everything (all zones):
+http://irrduinoctrl.org/off
+    returns: {"zones":"ALL OFF"}
+
+Get system status (new as of today)
+http://irrduinoctrl.org/status
+    returns: {"system status":"ready"}
+    - or: if a zone is running:
+    returns: {"zoneX":"running"} // currently "pinX" = bug!
+
+Activate Zones: (syntax: zone[1-9]/on/[1-10]) zone X, ON for N minutes
+http://irrduinoctrl.org/zone1/on/1
+    returns: {"zone1":"ON","time":"1"}
+    
+Provoke a report call (for testing only)
+http://irrduinoctrl.org/testreport/irrduinoserver.org:8080/datadrop?what=1&ever=2&you=3&want=4
+    makes the following http request:
+    http://irrduinoserver.org:8080/datadrop?what=1&ever=2&you=3&want=4

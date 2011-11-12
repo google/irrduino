@@ -64,7 +64,8 @@ public class Settings extends PreferenceActivity {
             	videoFeedAddress.setSummary(prefs.getString(
             			VIDEOFEED_HOST_ADDRESS, DEFAULT_CONTROLLER_HOST));
             }
-            Preference videoFeedAutofocus = videofeed.findPreference(VIDEOFEED_HOST_ADDRESS);
+            
+            Preference videoFeedAutofocus = videofeed.findPreference(VIDEOFEED_TRIGGER_AUTOFOCUS);
             if (videoFeedAutofocus != null){
             	videoFeedAutofocus.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 					

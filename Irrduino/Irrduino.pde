@@ -17,7 +17,7 @@
   - 2011-09-28 - Split pde into parts for easier code management
                - Introduced new commandDispatch[] object for storing command parameters
   - 2011-09-25 - Added web UI for more zones and "ALL OFF" function
-  - 2011-09-xx - Entended parser to turn off zones individually
+  - 2011-09-xx - Entended parser to turn off zones indifvidually
   - updated to use timer for executing irrigation zone runs; now runs can be interrupted
 
   An irrigation control program with a REST-like http 
@@ -32,11 +32,13 @@
 
 #include <SPI.h>
 #include <Ethernet.h>
+#include <EthernetDNS.h>
 
 
 byte mac[] = { 0x90, 0xA2, 0xDA, 0x00, 0x50, 0xA0 };    //physical mac address
 byte ip[] = { 192, 168, 1, 14 };			// ip in lan
 byte gateway[] = { 192, 168, 1, 1 };			// internet access via router
+byte dnsServerIp[] = { 192, 168, 1, 1};                 // DNS server IP (typically your gateway)
 byte subnet[] = { 255, 255, 255, 0 };                   //subnet mask
 
 Server server(80);                                      //server port
@@ -76,6 +78,9 @@ const int OBJ_CMD_ZONE     = 10;
 const int OBJ_CMD_ZONES    = 100;
 const int OBJ_CMD_PROGRAM  = 20;
 const int OBJ_CMD_PROGRAMS = 200;
+const int OBJ_CMD_REPORTTEST = 900;
+
+const String CMD_TESTREPORT = "testreport";
 
 const int OFF = 0;
 const int ON =  1;
@@ -97,8 +102,8 @@ unsigned long commandRunning[] = {0, // zoneID, 0 for none
                                   0  // run end time in miliseconds, 0 for none 
                                   };
 
-                                  
 String jsonReply;
+String reportData;
 
 void setup(){
   // Turn on serial output for debugging
@@ -107,6 +112,9 @@ void setup(){
   // Start Ethernet connection and server
   Ethernet.begin(mac, ip, gateway, subnet);
   server.begin();
+
+  // Set the DNS server (for resolving hosts)
+  EthernetDNS.setDNSServer(dnsServerIp);
   
   //Set relay pins to output
   for (int i = 0; i < zoneCount; i++){
@@ -125,7 +133,10 @@ void loop(){
   int index = 0;
 
   // check on timed runs, shutdown expired runs
-  checkTimedRun();    
+  checkTimedRun();
+  
+  // check for pending reports to be sent
+  checkAndPostReport();
 
   // listen for incoming clients
   client = server.available();
@@ -233,6 +244,12 @@ void loop(){
               break;
             case OBJ_CMD_PROGRAMS:  // all programs
               break;
+
+            case OBJ_CMD_REPORTTEST:
+              urlString.toCharArray(clientLine, BUFSIZE);
+              testReport(clientLine);
+              break;
+            
             default:
               httpJsonReply("\"ERROR\":\"Command not recognized.\"");
           }
@@ -275,6 +292,15 @@ void findCmdObject(char *cmdObj){
     // check for global "status" request
     if (commandObject.compareTo("status") == 0) {
         commandDispatch[CMD_OBJ] = OBJ_CMD_STATUS;
+        
+        
+        
+        return;
+    }
+    
+    // check for "reporttest" request
+    if (commandObject.compareTo(CMD_TESTREPORT) == 0) {
+        commandDispatch[CMD_OBJ] = OBJ_CMD_REPORTTEST;
         return;
     }
     
