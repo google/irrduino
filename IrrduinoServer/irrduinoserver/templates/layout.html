@@ -9,14 +9,16 @@
   </head>
 
   <body>
-    {% block page_header %}{% endblock %}
-    {% if errors %}
-      <ul>
-      {% for error in errors %}
-        <li>{{ error|escape }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-    {% block content %}{% endblock %}
+    <h1 id="title">Irrduino Server</h1>
+    <div id="main-container">
+      {% if errors %}
+        <ul>
+        {% for error in errors %}
+          <li>{{ error|escape }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
   </body>
 </html>
