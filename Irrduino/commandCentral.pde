@@ -104,7 +104,8 @@ void endTimedRun(){
     Serial.print("deactivating zone: ");
     Serial.println(commandRunning[CMD_OBJ]);
 
-    reportData = "Zone: 1\nRuntime: 60";
+    // TODO: Populate reportData for reporting to IrrduinoServer
+    // reportData = "Zone: 1\nRuntime: 60";
     
     // turn off the pin for the active zone
     digitalWrite(commandRunning[CMD_OBJ], LOW);
