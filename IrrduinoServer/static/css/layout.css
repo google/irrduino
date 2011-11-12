@@ -1,4 +1,19 @@
 body {
-  margin-top: 0;
   font-family: Helvetica, Arial, sans-serif;
+  background: #5976a3 url("/static/images/grass.png") repeat-x center bottom;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+}
+
+#main-container {
+  background-color: #d3f7a4;
+  margin: 0 97px 151px 97px;
+  padding: 10px;
+}
+
+#title {
+  color: white;
+  margin: 20px;
+  padding: 0;
 }
