@@ -15,3 +15,10 @@
 """This module contains stuff related to the datastore."""
 
 from google.appengine.ext import db
+
+
+class ZoneRun(db.Model):
+  """A zone run is when you water a zone for some amount of time."""
+  zone = db.IntegerProperty()
+  runtime_seconds = db.IntegerProperty()
+  created_at = db.DateTimeProperty(auto_now_add=True)
