@@ -15,6 +15,18 @@ void httpJsonReply(String msg){
   client.stop();
 }
 
+void jsonStatusRunningZone(){
+        jsonReply += "\"zone";
+        jsonReply += commandRunning[CR_ZONE_ID];
+        jsonReply += "\":\"ON\"";
+        jsonReply += ",\"elapsed\":\"";
+        jsonReply += (millis() - commandRunning[CR_START_TIME]) / 1000;
+        jsonReply += "\"";
+        jsonReply += ",\"remaining\":\"";
+        jsonReply += (commandRunning[CR_END_TIME] - millis()) / 1000;
+        jsonReply += "\"";
+}
+
 void httpHomePage(){
   Serial.println("sending httpHomePage()...");
   httpHeader();

@@ -1,14 +1,30 @@
 Here's a quick run-down on the Irrduino controller web API:
 
+Get Control main page:
+http://irrduinoctrl.org/
+
 Turn off everything (all zones):
 http://irrduinoctrl.org/off
     returns: {"zones":"ALL OFF"}
 
-Get system status (new as of today)
+Get Global system status (whole system)
 http://irrduinoctrl.org/status
     returns: {"system status":"ready"}
     - or: if a zone is running:
-    returns: {"zoneX":"running"} // currently "pinX" = bug!
+    returns: 
+    {"zone1":"ON", 	// zone is on
+     "elapsed":"4",	// seconds elapsed in run
+     "remaining":"235"} // seconds remaining for run
+
+Get per-zone status
+http://irrduinoctrl.org/zone1
+http://irrduinoctrl.org/zone1/status
+    returns: {"zone1":"OFF"}
+    - or - 
+    returns: 
+    {"zone1":"ON", 	// zone is on
+     "elapsed":"4",	// seconds elapsed in run
+     "remaining":"235"} // seconds remaining for run
 
 Activate Zones: (syntax: zone[1-9]/on/[1-10]) zone X, ON for N minutes
 http://irrduinoctrl.org/zone1/on/1

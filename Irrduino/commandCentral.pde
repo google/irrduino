@@ -9,7 +9,7 @@ void cmdZoneTimedRun(){
 
     if ( commandDispatch[CD_OBJ_ID] == 0 || commandDispatch[CD_VALUE_1] == 0 ){
 
-        String error = "ERROR: cmdZoneTimedRun, commandDispatch not properly initialized.";
+        String error = "ERROR: cmdZoneTimedRun(), commandDispatch not properly initialized.";
         Serial.println(error);
         httpJsonReply(error);
         return;
@@ -32,23 +32,37 @@ void cmdZoneTimedRun(){
     clearCommandDispatch();
 }
 
-void cmdStatusRequest(){
+void cmdGlobalStatusRequest(){
 
     // check for running command
     if (commandRunning[CR_PIN_ID] > 0){
-        jsonReply += "\"zone";
-        jsonReply += commandRunning[CR_ZONE_ID];
-        jsonReply += "\":\"ON\"";
-        jsonReply += ",\"elapsed\":\"";
-        jsonReply += (millis() - commandRunning[CR_START_TIME]) / 1000;
-        jsonReply += "\"";
-        jsonReply += ",\"remaining\":\"";
-        jsonReply += (commandRunning[CR_END_TIME] - millis()) / 1000;
-        jsonReply += "\"";
+        jsonStatusRunningZone();
     } else {
         jsonReply += "\"system status\":\"ready\"";
     }
 
+    httpJsonReply(jsonReply);
+
+    // clear the command, so we don't re-execute
+    clearCommandDispatch();
+}
+
+// zone status request, should return:
+// zoneX:OFF 
+// - or -
+// zoneX:ON, elapsed:nnnn, remaining:nnn
+void cmdZoneStatus(){
+    
+    if (commandDispatch[CD_OBJ_ID] == commandRunning[CR_ZONE_ID]){
+        jsonStatusRunningZone();
+    } else {
+        // zone is not active
+        jsonReply += "\"zone";
+        jsonReply += commandDispatch[CD_OBJ_ID];
+        jsonReply += "\":\"OFF\"";
+
+    }
+    // send the response
     httpJsonReply(jsonReply);
 
     // clear the command, so we don't re-execute

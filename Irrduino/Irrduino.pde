@@ -1,4 +1,4 @@
-/**
+ /**
   Irrduino v0.8 by Joe Fernandez
 
   Issues:
@@ -83,8 +83,10 @@ const int OBJ_CMD_REPORTTEST = 900;
 
 const String CMD_TESTREPORT = "testreport";
 
-const int OFF = 0;
-const int ON =  1;
+// Command Codes (CC)
+const int CC_OFF = 0;
+const int CC_ON =  1;
+const int CC_STATUS  = 3;
 
 int commandDispatchLength = 5;
 int commandDispatch[]     = { 0, // command object type, 0 for none
@@ -93,11 +95,11 @@ int commandDispatch[]     = { 0, // command object type, 0 for none
                               0, // value 1, 0 for none
                               0  // value 2, 0 for none
                               };
-const int CD_CMD_OBJ  = 0;
-const int CD_OBJ_ID   = 1;
-const int CD_CMD_CODE = 2;
-const int CD_VALUE_1  = 3;
-const int CD_VALUE_2  = 4;
+const int CD_OBJ_TYPE  = 0;
+const int CD_OBJ_ID    = 1;
+const int CD_CMD_CODE  = 2;
+const int CD_VALUE_1   = 3;
+const int CD_VALUE_2   = 4;
 
 int commandRunningLength = 4;
 unsigned long commandRunning[] = {0, // pin ID, 0 for none
@@ -221,14 +223,14 @@ void loop(){
           // identify the command
           findCmdObject(arg1);
 
-          switch (commandDispatch[CD_CMD_OBJ]) {
+          switch (commandDispatch[CD_OBJ_TYPE]) {
 
             case OBJ_CMD_ALL_OFF:   // all off command
               cmdZonesOff();
               break;
 
             case OBJ_CMD_STATUS: // Global status ping
-              cmdStatusRequest();
+              cmdGlobalStatusRequest();
               break;
 
             case OBJ_CMD_ZONE:      // zone command
@@ -236,12 +238,15 @@ void loop(){
               findZoneCommand(arg2);
 
               switch (commandDispatch[CD_CMD_CODE]){
-                 case OFF:
+                 case CC_OFF:
                    endTimedRun();
                    break;
-                 case ON:
+                 case CC_ON:
                    findZoneTimeValue(arg3);
                    cmdZoneTimedRun();
+                   break;
+                 case CC_STATUS:
+                   cmdZoneStatus();
                    break;
               }
 
@@ -292,32 +297,32 @@ void findCmdObject(char *cmdObj){
 
     // check for "OFF" shortcut
     if (commandObject.compareTo("off") == 0) {
-        commandDispatch[CD_CMD_OBJ] = OBJ_CMD_ALL_OFF;
+        commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_ALL_OFF;
         jsonReply += "\"command\":\"zones off\"";
         return;
     }
 
     // check for global "status" request
     if (commandObject.compareTo("status") == 0) {
-        commandDispatch[CD_CMD_OBJ] = OBJ_CMD_STATUS;
+        commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_STATUS;
         return;
     }
 
     // check for "reporttest" request
     if (commandObject.compareTo(CMD_TESTREPORT) == 0) {
-        commandDispatch[CD_CMD_OBJ] = OBJ_CMD_REPORTTEST;
+        commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_REPORTTEST;
         return;
     }
 
     // must check for plural form first
     if (commandObject.compareTo("zones") == 0) {
-        commandDispatch[CD_CMD_OBJ] = OBJ_CMD_ZONES;
+        commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_ZONES;
         jsonReply += "\"zones\":";
         return;
     }
 
     if (commandObject.startsWith("zone")) {
-        commandDispatch[CD_CMD_OBJ] = OBJ_CMD_ZONE; // command object type, 0 for none
+        commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_ZONE; // command object type, 0 for none
         jsonReply += "\"zone";
 
         // get zone number
@@ -333,12 +338,12 @@ void findCmdObject(char *cmdObj){
 
     // must check for plural form first
     if (commandObject.compareTo("programs") == 0) {
-        commandDispatch[CD_CMD_OBJ] = OBJ_CMD_PROGRAMS;
+        commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_PROGRAMS;
         jsonReply += "\"programs\":";
         return;
     }
     if (commandObject.startsWith("program")) {
-        commandDispatch[CD_CMD_OBJ] = OBJ_CMD_PROGRAM;
+        commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_PROGRAM;
         jsonReply += "\"program";
 
         // get program number
@@ -358,21 +363,39 @@ void findCmdObject(char *cmdObj){
 void findZoneCommand(char *zoneCmd){
 
     String zoneCommand = String(zoneCmd);
-    zoneCommand = zoneCommand.toLowerCase();
 
+    // if zone command is empty, treat as a status request
+    if (zoneCommand.length() < 1){
+        commandDispatch[CD_CMD_CODE] = CC_STATUS;
+        // clear the json reply
+        jsonReply = "";
+        return;
+    }
+
+    zoneCommand = zoneCommand.toLowerCase();
+    
     // check for "ON"
     if (zoneCommand.compareTo("on") == 0) {
-        commandDispatch[CD_CMD_CODE] = ON;
+        commandDispatch[CD_CMD_CODE] = CC_ON;
         jsonReply += "\"on\"";
         return;
     }
 
     // check for "OFF"
     if (zoneCommand.compareTo("off") == 0) {
-        commandDispatch[CD_CMD_CODE] = OFF;
+        commandDispatch[CD_CMD_CODE] = CC_OFF;
         jsonReply += "\"off\"";
         return;
     }
+    
+    // check for "status"
+    if (zoneCommand.compareTo("status") == 0) {
+        commandDispatch[CD_CMD_CODE] = CC_STATUS;
+        // clear the json reply
+        jsonReply = "";
+        return;
+    }
+    
 }
 
 void findZoneTimeValue(char *zoneTime){
