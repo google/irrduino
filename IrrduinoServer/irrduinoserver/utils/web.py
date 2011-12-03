@@ -14,15 +14,21 @@
 
 """This module contains helpers related to rendering, etc."""
 
+import datetime
 import os
 import pdb
 import simplejson
 import sys
+import time
 
+from google.appengine.ext import db
 from google.appengine.ext.webapp import template
+
 import httplib2
 
 HTTP_TIMEOUT = 10
+SIMPLE_TYPES = (int, long, float, bool, dict, basestring, list)
+JSON_INDENTATION = " " * 2
 
 
 def render_to_string(template_name, template_params=None):
@@ -56,7 +62,7 @@ def error_response(handler, status=400, msg="Error", content_type="text/plain"):
 def render_json_to_response(handler, obj):
   """Serialize obj to JSON and write it out to the response stream."""
   handler.response.headers['Content-Type'] = 'application/json'
-  handler.response.out.write(simplejson.dumps(obj))
+  handler.response.out.write(simplejson.dumps(obj, indent=JSON_INDENTATION))
 
 
 def rescue_default(callback, default=""):
@@ -95,3 +101,39 @@ def pdb_set_trace():
 def create_http_with_timeout():
   """Call httplib2.Http and set a timeout."""
   return httplib2.Http(timeout=HTTP_TIMEOUT)
+
+
+def is_format_json(handler):
+  """Return True if the requested format is "JSON"."""
+  return handler.request.get("format").lower() == "json"
+
+
+def entity_to_dict(entity):
+  """Convert a data entity to a dict.
+
+  Taken from: http://stackoverflow.com/questions/1531501/json-serialization-of-google-app-engine-models
+  
+  """
+
+  output = {}
+
+  for key, prop in entity.properties().iteritems():
+    value = getattr(entity, key)
+
+    if value is None or isinstance(value, SIMPLE_TYPES):
+      output[key] = value
+    elif isinstance(value, datetime.date):
+
+      # Convert date/datetime to ms-since-epoch ("new Date()").
+      ms = time.mktime(value.utctimetuple()) * 1000
+      ms += getattr(value, 'microseconds', 0) / 1000
+      output[key] = int(ms)
+
+    elif isinstance(value, db.GeoPt):
+      output[key] = {'lat': value.lat, 'lon': value.lon}
+    elif isinstance(value, db.Model):
+      output[key] = to_dict(value)
+    else:
+      raise ValueError('Cannot encode: %r' % repr(prop))
+
+  return output
