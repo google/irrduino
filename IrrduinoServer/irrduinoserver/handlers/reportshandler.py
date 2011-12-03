@@ -29,7 +29,9 @@ class ReportsHandler(webapp.RequestHandler):
 
     """
     template_params = {}
-    template_params["zone_runs"] = list(model.ZoneRun.gql(""))
+    num_zone_runs_to_show = irrduinoutils.NUM_ZONES * 2
+    template_params["zone_runs"] = list(model.ZoneRun.gql(
+      "ORDER BY created_at DESC LIMIT %s" % num_zone_runs_to_show))
     if webutils.is_format_json(self):
       template_params["zone_runs"] = map(
         webutils.entity_to_dict, template_params["zone_runs"])
