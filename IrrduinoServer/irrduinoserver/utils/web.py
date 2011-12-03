@@ -47,6 +47,12 @@ def render_to_response(handler, template_name, template_params=None,
     render_to_string(template_name, template_params))
 
 
+def error_response(handler, status=400, msg="Error", content_type="text/plain"):
+  handler.response.set_status(status)
+  handler.response.headers['Content-Type'] = content_type
+  handler.response.out.write(msg)
+
+  
 def render_json_to_response(handler, obj):
   """Serialize obj to JSON and write it out to the response stream."""
   handler.response.headers['Content-Type'] = 'application/json'
