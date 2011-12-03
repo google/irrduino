@@ -23,9 +23,19 @@ from irrduinoserver.utils import irrduino as irrduinoutils
 
 class ReportsHandler(webapp.RequestHandler):
   def get(self):
+    """Give the user information about the zone runs.
+
+    This also supports ?format=JSON.
+
+    """
     template_params = {}
     template_params["zone_runs"] = list(model.ZoneRun.gql(""))
-    webutils.render_to_response(self, "reports.html", template_params)
+    if webutils.is_format_json(self):
+      template_params["zone_runs"] = map(
+        webutils.entity_to_dict, template_params["zone_runs"])
+      webutils.render_json_to_response(self, template_params)
+    else:
+      webutils.render_to_response(self, "reports.html", template_params)
 
   def post(self):
     """Accept data from Irrduino.
