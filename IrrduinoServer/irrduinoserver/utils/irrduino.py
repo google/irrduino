@@ -21,6 +21,7 @@ from irrduinoserver.utils import web as webutils
 SERVER_ROOT = "http://joefernandez.org"
 MIN_ZONE = 1
 MAX_ZONE = 8
+NUM_ZONES = MAX_ZONE - MIN_ZONE + 1
 
 
 def execute(path):
