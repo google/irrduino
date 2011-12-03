@@ -14,8 +14,10 @@
 
 """This module contains the routing for the application."""
 
+from irrduinoserver.handlers.reportshandler import ReportsHandler
 from irrduinoserver.handlers.welcomehandler import WelcomeHandler
 
 ROUTES = [
   ('/', WelcomeHandler),
+  ('/reports', ReportsHandler),
 ]
