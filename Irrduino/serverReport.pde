@@ -19,19 +19,32 @@
 //  License along with EthernetDNS. If not, see
 //  <http://www.gnu.org/licenses/>.
 
-char reportServerHostName[512];
 
 const char* ip_to_str(const uint8_t*);
 
+// TODO: Populate reportData for reporting to IrrduinoServer
+// /reports?zone=1&runtime=120";
 void checkAndPostReport(){
+
+    if (commandReport[CR_ZONE_ID] > 0){
+        reportData  = "/reports?zone=";
+        reportData += commandReport[CR_ZONE_ID];
+        reportData += "&runtime=";
+
+        // calculate runtime in seconds
+        reportData += (commandReport[CR_END_TIME] - commandReport[CR_START_TIME]) / 1000;
+        
+        Serial.println("Run Report parameters set:");
+        Serial.println(reportData);
+    }
   
     if (reportData != ""){
       // there is report data waiting to be sent
-      
+
       byte ipAddr[4];
-  
+
       DNSError err = EthernetDNS.resolveHostName(reportServerHostName, ipAddr);
-  
+
       if (DNSSuccess == err) {
         Serial.print("The IP address is ");
         Serial.print(ip_to_str(ipAddr));
@@ -46,7 +59,7 @@ void checkAndPostReport(){
         Serial.println(".");
       }
       
-      Client client(ipAddr, 80);
+      Client client(ipAddr, reportServerHostPort);
       
      if (client.connect()) {
        Serial.println("connected");
@@ -57,8 +70,11 @@ void checkAndPostReport(){
        client.print("POST ");
        client.print(reportData);
        client.println(" HTTP/1.1");
+       client.println("Content-length: 0");
        
+       // empty the reportData and clear the commandReport object
        reportData = "";
+       clearCommandReport();
      } 
      else {
        Serial.println("connection failed");

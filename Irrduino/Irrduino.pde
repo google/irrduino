@@ -7,7 +7,8 @@
   - add sending event reports to web server for reporting
 
   Change Log:
-  - 2011-11-16 - add per-zone status reporting, with zone IDs and remaining times
+  - 2011-12-02 - added function to report zone runs checkAndPostReport()
+  - 2011-12-02 - add per-zone status reporting, with zone IDs and remaining times
   - 2011-11-10 - add global status option
   - 2011-10-27 - added code to turn on and blink an LED on pin 13 while zone running
   - 2011-10-07 - fixed problem with home page not displaying after first request
@@ -71,8 +72,7 @@ int zones[] = {zone1, zone2, zone3, zone4, zone5,
                    zone6, zone7, zone8, zone9, zone10};
 int zoneCount = 10;
 
-// Uri Object identifier
-
+// Uri Object identifiers
 const int OBJ_CMD_ALL_OFF  = 1;
 const int OBJ_CMD_STATUS   = 2;
 const int OBJ_CMD_ZONE     = 10;
@@ -81,13 +81,19 @@ const int OBJ_CMD_PROGRAM  = 20;
 const int OBJ_CMD_PROGRAMS = 200;
 const int OBJ_CMD_REPORTTEST = 900;
 
+// Reporting constants and variables
 const String CMD_TESTREPORT = "testreport";
+const boolean reportingEnabled = true;
+
+char reportServerHostName[512] = "staging.24hrdiner.com";
+int  reportServerHostPort = 8080;
 
 // Command Codes (CC)
 const int CC_OFF = 0;
 const int CC_ON =  1;
 const int CC_STATUS  = 3;
 
+// Command Dispatch structure - for processing incoming commands
 int commandDispatchLength = 5;
 int commandDispatch[]     = { 0, // command object type, 0 for none
                               0, // command object id, 0 for none
@@ -101,6 +107,7 @@ const int CD_CMD_CODE  = 2;
 const int CD_VALUE_1   = 3;
 const int CD_VALUE_2   = 4;
 
+// Command Running structure - for managing running commands
 int commandRunningLength = 4;
 unsigned long commandRunning[] = {0, // pin ID, 0 for none
                                   0, // run end time in miliseconds, 0 for none
@@ -111,6 +118,14 @@ const int CR_PIN_ID     = 0;
 const int CR_END_TIME   = 1;
 const int CR_ZONE_ID    = 2;
 const int CR_START_TIME = 3;
+
+// Command Report structure - for reporting completed runs (use CR_ constants for indexes)
+int commandReportLength = 4;
+unsigned long commandReport[]  = {0, // pin ID, 0 for none
+                                  0, // run end time in miliseconds, 0 for none
+                                  0, // zone ID, 0 for none
+                                  0  // run start time in milliseconds, 0 for none
+                                  };
 
 String jsonReply;
 String reportData;
@@ -421,6 +436,12 @@ void clearCommandDispatch(){
 void clearCommandRunning(){
     for (int i = 0; i < commandRunningLength; i++){
         commandRunning[i] = 0;
+    }
+}
+
+void clearCommandReport(){
+    for (int i = 0; i < commandReportLength; i++){
+        commandReport[i] = 0;
     }
 }
 

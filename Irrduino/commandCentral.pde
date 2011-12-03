@@ -126,18 +126,30 @@ void endTimedRun(){
     Serial.print("deactivating zone: ");
     Serial.println(commandRunning[CR_PIN_ID]);
 
-    // TODO: Populate reportData for reporting to IrrduinoServer
-    // reportData = "Zone: 1\nRuntime: 60";
-
     // turn off the pin for the active zone
     digitalWrite(commandRunning[CR_PIN_ID], LOW);
-
+    
+    // record the actual end time for reporting
+    commandRunning[CR_END_TIME]   = millis();
+    
     // turn off the LED indicator
     digitalWrite(ledIndicator, LOW);    // set the LED off
     ledState = LOW;                     // reset the state
     ledFlashTimer = 0;                  // reset the timer
 
-    // reset commandRunning to defaults
+    if (reportingEnabled){
+        // Capture command run data for a report
+        // all report data is in the commandRunning array.
+        clearCommandReport();
+        
+        // transfer the commandRunning data into commandReport
+        for (int i = 0; i < commandReportLength; i++){
+            commandReport[i] = commandRunning[i];
+        }
+        // that's all: report will be sent on next loop run
+    }
+
+    // clear the commandRunning array
     clearCommandRunning();
 
 }
