@@ -12,9 +12,23 @@ following from the current directory:
 
   dev_appserver.py .
 
+If you want to setup an ssh tunnel from a public server back to your own
+development server so that Irrduino can talk to your development server,
+do something like:
+
+  ssh -R \*:8080:127.0.0.1:8080 $USER@your-public-server.com
+
+To deploy to the public server, just use GoogleAppEngineLauncher.  The
+app is currently deployed to:
+
+  http://irrduinoserver.appspot.com/
+
 Global TODOs
 ------------
 
+Add some real navigation.
+Restrict access to the server.
+Remove the hostname for Joe's server from the code.
 Fix pdb_set_trace:
   Don't force the user to reload the server.
 
