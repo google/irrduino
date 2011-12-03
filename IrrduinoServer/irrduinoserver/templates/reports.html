@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h3>Zone Runs</h3>
+
+  <ul>
+  {% for i in zone_runs %}
+    <li>
+      Zone
+      {{ i.zone|escape }}
+      ran for
+      {{ i.runtime_seconds|escape }}
+      seconds on
+      {{ i.created_at|escape }}
+    </li>
+  {% endfor %}
+  </ul>
+{% endblock %}
