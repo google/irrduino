@@ -17,10 +17,17 @@ public class Settings extends PreferenceActivity {
 	
 	public static final String DEFAULT_CONTROLLER_HOST = "192.168.1.110";
 	public static final String DEFAULT_CONTROLLER_PORT = "80";
+
+	public static final String DEFAULT_SERVER_HOST = "192.168.1.111";
+	public static final String DEFAULT_SERVER_PORT = "80";
 	
 	public static final String SETTINGS_CATEGORY_CONTROLLER = "controller_settings_category";
 	public static final String CONTROLLER_HOST_NAME = "controller_host_name";
 	public static final String CONTROLLER_HOST_PORT = "controller_host_port";
+
+	public static final String SETTINGS_CATEGORY_SERVER = "server_settings_category";
+	public static final String SERVER_HOST_NAME = "server_host_name";
+	public static final String SERVER_HOST_PORT = "server_host_port";
 	
 	public static final String SETTINGS_CATEGORY_VIDEOFEED = "videofeed_settings_category";
 	public static final String VIDEOFEED_HOST_ADDRESS = "videofeed_host_address";
@@ -54,6 +61,20 @@ public class Settings extends PreferenceActivity {
             if (controllerHostPort != null&& prefs.contains(CONTROLLER_HOST_PORT)){
             	controllerHostPort.setSummary(prefs.getString(
             			CONTROLLER_HOST_PORT, DEFAULT_CONTROLLER_PORT));
+            }
+        }
+
+        PreferenceCategory server = (PreferenceCategory) findPreference(SETTINGS_CATEGORY_SERVER);
+        if (server != null){
+            Preference serverHostName = server.findPreference(SERVER_HOST_NAME);
+            if (serverHostName != null && prefs.contains(SERVER_HOST_NAME)){
+            	serverHostName.setSummary(prefs.getString(
+            			SERVER_HOST_NAME, DEFAULT_SERVER_HOST));
+            }
+            Preference serverHostPort = server.findPreference(SERVER_HOST_PORT);
+            if (serverHostPort != null&& prefs.contains(SERVER_HOST_PORT)){
+            	serverHostPort.setSummary(prefs.getString(
+            			SERVER_HOST_PORT, DEFAULT_SERVER_PORT));
             }
         }
         

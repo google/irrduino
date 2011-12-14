@@ -4,12 +4,14 @@
     <string name="app_name">Irrduino Remote by Joe Fernandez</string>
     <string name="activity_title_main">Irrduino Remote</string>
     <string name="activity_title_settings">Settings</string>
+    <string name="activity_title_report">Irrduino Report</string>
 
     <!-- User Interface: main.xml strings -->
     <string name="button_all_stop">Stop All</string>
 
     <!-- Menu -->
     <string name="menu_item_settings">Settings</string>
+    <string name="menu_item_report">View Report</string>
         
     <!-- Settings -->  
     <string name="controller_settings_title">Irrduino Controller Settings</string>
@@ -19,11 +21,18 @@
     	<string name="controller_host_port">Port Number</string>
     		<string name="controller_host_port_summary">Enter port number (e.g., 8080)</string>
 
+    <string name="server_settings_title">Irrduino Server Settings</string>
+    	<string name="server_host_name">Host Name</string>
+    		<string name="server_host_name_summary">Enter host name or IP address</string>
+
+    	<string name="server_host_port">Port Number</string>
+    		<string name="server_host_port_summary">Enter port number (e.g., 8080)</string>		    
+    		    
     <string name="videofeed_settings_title">Video Feed</string>
 	    <string name="videofeed_camera_address">IP Camera Address</string>
 	    	<string name="videofeed_camera_address_summary">Enter camera http address</string>
 	    <string name="videofeed_autofocus">Trigger Auto Focus</string>
-        
+	        
     <string name="about_settings_title">About</string>
     	<string name="about_version">Version</string>
         

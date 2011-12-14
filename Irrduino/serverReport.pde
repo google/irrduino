@@ -40,15 +40,24 @@ void checkAndPostReport(){
   
     if (reportData != ""){
       // there is report data waiting to be sent
+      
+      // make sure we are not sending reports endlessly
+      if (reportAttempts >= maxReportAttempts) {
+         reportData = "";
+         clearCommandReport();
+         reportAttempts = 0;
+      } else {
+         reportAttempts++;
+      }
+          
 
       byte ipAddr[4];
 
       DNSError err = EthernetDNS.resolveHostName(reportServerHostName, ipAddr);
 
       if (DNSSuccess == err) {
-        Serial.print("The IP address is ");
+        Serial.print("The IP address is: ");
         Serial.print(ip_to_str(ipAddr));
-        Serial.println(".");
       } else if (DNSTimedOut == err) {
         Serial.println("Timed out.");
       } else if (DNSNotFound == err) {
@@ -70,7 +79,12 @@ void checkAndPostReport(){
        client.print("POST ");
        client.print(reportData);
        client.println(" HTTP/1.1");
+       client.print("Host: ");
+       client.println(reportServerHostName);
        client.println("Content-length: 0");
+       client.println(""); // required to complete the request
+       
+       // TODO: check the return message for result
        
        // empty the reportData and clear the commandReport object
        reportData = "";
@@ -93,26 +107,29 @@ const char* ip_to_str(const uint8_t* ipAddr) {
   return buf;
 }
 
-// process a test report of the format: /testreport/irrduinoserver.org:8080/datadrop?what=1&ever=2&you=3&want=4
+// process a test report of the format:
+// /testreport/testserver.org:8080/datadrop?what=1&ever=2&you=3&want=4
 void testReport(char* urlLocation){
     
     String location = String(urlLocation);
     Serial.print("location: ");
     Serial.println(location);
 
+    int testReportLength = REST_CMD_TESTREPORT.length() + 2;
+    
     //  find the testreport host name
-    int endOfHost = location.indexOf(':', CMD_TESTREPORT.length() + 2); // start of port number
+    int endOfHost = location.indexOf(':', testReportLength); // start of port number
     if (endOfHost < 0){
-      endOfHost = location.indexOf('/', CMD_TESTREPORT.length() + 2); // start of page
+      endOfHost = location.indexOf('/', testReportLength); // start of page
     }
     if (endOfHost < 0){
-      endOfHost = location.indexOf('?', CMD_TESTREPORT.length() + 2 ); // start of parameters
+      endOfHost = location.indexOf('?', testReportLength); // start of parameters
     }
     Serial.print("endOfHost: ");
     Serial.println(endOfHost);
     if (endOfHost < 0) return;
     
-    String reportHost = location.substring( CMD_TESTREPORT.length() + 2, endOfHost );
+    String reportHost = location.substring( testReportLength, endOfHost );
     Serial.print("reportHost: ");
     Serial.println(reportHost);
 

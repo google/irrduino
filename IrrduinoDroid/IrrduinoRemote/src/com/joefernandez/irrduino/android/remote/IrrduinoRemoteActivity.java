@@ -1,17 +1,10 @@
 package com.joefernandez.irrduino.android.remote;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-
-import org.apache.http.util.ByteArrayBuffer;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -30,23 +23,28 @@ public class IrrduinoRemoteActivity extends Activity {
 	
 	private static final String TAG = "IrrduinoRemoteActivity";
 	
-	private static final String CMD_ALL_OFF = "/off";
-	private static final String CMD_ZONE_1_ON = "/zone1/ON";
-	private static final String CMD_ZONE_2_ON = "/zone2/ON";
-	private static final String CMD_ZONE_3_ON = "/zone3/ON";
-	private static final String CMD_ZONE_4_ON = "/zone4/ON";
-	private static final String CMD_ZONE_5_ON = "/zone5/ON";
-	private static final String CMD_ZONE_6_ON = "/zone6/ON";
-	private static final String CMD_ZONE_7_ON = "/zone7/ON";
-	private static final String CMD_ZONE_8_ON = "/zone8/ON";
+	private static final String CMD_ALL_OFF 	= "/off";
+	private static final String CMD_ZONE_PREFIX = "/zone";
+	private static final String CMD_ON 			= "/ON";
+	private static final String CMD_STATUS 		= "/status";
+	
+	private static final int ZONE_GARDEN 		= 1;
+	private static final int ZONE_BACK_LAWN1 	= 2;
+	private static final int ZONE_BACK_LAWN2 	= 3;
+	private static final int ZONE_BACK_LAWN3 	= 4;
+	private static final int ZONE_PATIO 		= 5;
+	private static final int ZONE_FLOWER_BED 	= 6;
+	private static final int ZONE_FRONT_LAWN1 	= 7;
+	private static final int ZONE_FRONT_LAWN2 	= 8;
 	
 	private SharedPreferences settings;
 	private boolean settingsChanged = true;
 	private String controllerAddress;
 	
-    protected String zoneRunTime = "1";
+    protected int zoneRunTime = 1;
 	protected EditText statusText;
     
+	protected CountDownTimer timer;
 
     /** Called when the activity is first created. */
     @Override
@@ -72,6 +70,7 @@ public class IrrduinoRemoteActivity extends Activity {
         Button allOff = (Button) findViewById(R.id.button_all_stop);
         allOff.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				statusText.setText("Sending...");
 	            new IrrduinoCommandTask().execute(getControllerAddress() + CMD_ALL_OFF);
 			}
 		});
@@ -79,46 +78,35 @@ public class IrrduinoRemoteActivity extends Activity {
         Button zone1 = (Button) findViewById(R.id.button_garden);
         zone1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(getControllerAddress() + 
-	            									CMD_ZONE_1_ON +
-	            									"/" + zoneRunTime);
+				sendZoneRunCommand(ZONE_GARDEN, zoneRunTime);
 			}
 		});
     
         Button zone2 = (Button) findViewById(R.id.button_backyard_lawn_1);
         zone2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				
-	            new IrrduinoCommandTask().execute(getControllerAddress() + 
-	            									CMD_ZONE_2_ON +
-	            									"/" + zoneRunTime);
+				sendZoneRunCommand(ZONE_BACK_LAWN1, zoneRunTime);
 			}
 		});
 
         Button zone3 = (Button) findViewById(R.id.button_backyard_lawn_2);
         zone3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(getControllerAddress() + 
-	            									CMD_ZONE_3_ON +
-	            									"/" + zoneRunTime);
+				sendZoneRunCommand(ZONE_BACK_LAWN2, zoneRunTime);
 			}
 		});
 
         Button zone4 = (Button) findViewById(R.id.button_backyard_lawn_3);
         zone4.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(getControllerAddress() + 
-	            									CMD_ZONE_4_ON +
-	            									"/" + zoneRunTime);
+				sendZoneRunCommand(ZONE_BACK_LAWN3, zoneRunTime);
 			}
 		});
 
         Button zone5 = (Button) findViewById(R.id.button_patio_plants);
         zone5.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(getControllerAddress() + 
-	            									CMD_ZONE_5_ON +
-	            									"/" + zoneRunTime);
+				sendZoneRunCommand(ZONE_PATIO, zoneRunTime);
 			}
 		});
         
@@ -126,33 +114,38 @@ public class IrrduinoRemoteActivity extends Activity {
 //        Button zone6 = (Button) findViewById(R.id.button_patio_plants);
 //        zone6.setOnClickListener(new OnClickListener() {
 //			public void onClick(View v) {
-//	            new IrrduinoCommandTask().execute(getControllerAddress() + 
-//	            									CMD_ZONE_6_ON +
-//	            									"/" + zoneRunTime);
+//				sendZoneRunCommand(ZONE_FLOWER_BED, zoneRunTime);
 //			}
 //		});
         
         Button zone7 = (Button) findViewById(R.id.button_frontyard_lawn_1);
         zone7.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(getControllerAddress() + 
-	            									CMD_ZONE_7_ON +
-	            									"/" + zoneRunTime);
+				sendZoneRunCommand(ZONE_FRONT_LAWN1, zoneRunTime);
 			}
 		});
 
         Button zone8 = (Button) findViewById(R.id.button_frontyard_lawn_2);
         zone8.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	            new IrrduinoCommandTask().execute(getControllerAddress() + 
-	            									CMD_ZONE_8_ON +
-	            									"/" + zoneRunTime);
+				sendZoneRunCommand(ZONE_FRONT_LAWN2, zoneRunTime);
 			}
 		});
         
+        // Request global status from controller (run *last*)
+        new IrrduinoCommandTask().execute(getControllerAddress() + CMD_STATUS);
+        
     }
 
-    public String getControllerAddress(){
+    private void sendZoneRunCommand(int zone, int minutes){
+		statusText.setText("Sending...");
+        IrrduinoZoneRunTask zrt =  new IrrduinoZoneRunTask(zone, minutes);
+        // command format: http://myirrduinocontroller.com/zone3/ON/1
+        zrt.execute(getControllerAddress() + CMD_ZONE_PREFIX +
+        			zone + CMD_ON + "/" + minutes);
+    }
+    
+    private String getControllerAddress(){
 
     	if (controllerAddress == null || settingsChanged){
 	    	settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -188,6 +181,11 @@ public class IrrduinoRemoteActivity extends Activity {
         	startActivity(intent);
         	settingsChanged = true;
             return true;
+        case R.id.report:
+        	intent = new Intent(this, ViewReportActivity.class);
+        	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        	startActivity(intent);
+            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -202,7 +200,53 @@ public class IrrduinoRemoteActivity extends Activity {
           * the result from doInBackground() */
         protected void onPostExecute(String result) {
         	if (result != null) {
-            	statusText.setText(result);
+        		if (timer != null) {
+        			timer.cancel();
+        		}
+        		if (result.length() < 256) {
+	            	statusText.setText(result);
+        		} else {
+        			// something went wrong with the request. Log it.
+        			Log.d(TAG, "Error processing command. Unexpected return result:\n" + result);
+            		statusText.setText("Error processing command.");
+        		}
+        	} else {
+        		statusText.setText("Error processing command.");
+        	}
+        }
+    }
+    
+    /** Async Task code (for Irrduino Controller requests) */
+    public class IrrduinoZoneRunTask extends HttpCommandTask {
+    	
+    	private static final String TAG = "IrrduinoZoneRunTask";
+    	
+    	public int zone = 0;
+    	public int minutes = 1;
+    	
+    	public IrrduinoZoneRunTask(int zone, int minutes){
+    		this.zone = zone;
+    		this.minutes = minutes;
+    	}
+    	
+        /** The system calls this to perform work in the UI thread and delivers
+          * the result from doInBackground() */
+        protected void onPostExecute(String result) {
+        	if (result != null) {
+            	// statusText.setText(result);
+        		if (timer != null) {
+        			timer.onFinish();
+        		}
+            	 timer = new CountDownTimer(60000 * minutes, 1000) {
+
+            	     public void onTick(long millisUntilFinished) {
+            	    	 statusText.setText("Running Zone " + zone + ": "+ millisUntilFinished / 1000);
+            	     }
+
+            	     public void onFinish() {
+            	    	 statusText.setText("Zone " + zone + ": OFF");
+            	     }
+            	  }.start();            	
         	} else {
         		statusText.setText("Error processing command.");
         	}
@@ -228,16 +272,16 @@ public class IrrduinoRemoteActivity extends Activity {
 			this,
 			android.R.layout.simple_spinner_item);
 
-		adapter.add(new SpinnerItemData("1 Minute", "1"));
-		adapter.add(new SpinnerItemData("2 Minutes", "2"));
-		adapter.add(new SpinnerItemData("3 Minutes", "3"));
-		adapter.add(new SpinnerItemData("4 Minutes", "4"));
-		adapter.add(new SpinnerItemData("5 Minutes", "5"));
-		adapter.add(new SpinnerItemData("6 Minutes", "6"));
-		adapter.add(new SpinnerItemData("7 Minutes", "7"));
-		adapter.add(new SpinnerItemData("8 Minutes", "8"));
-		adapter.add(new SpinnerItemData("9 Minutes", "9"));
-		adapter.add(new SpinnerItemData("10 Minutes", "10"));
+		adapter.add(new SpinnerItemData("1 Minute",    1));
+		adapter.add(new SpinnerItemData("2 Minutes",   2));
+		adapter.add(new SpinnerItemData("3 Minutes",   3));
+		adapter.add(new SpinnerItemData("4 Minutes",   4));
+		adapter.add(new SpinnerItemData("5 Minutes",   5));
+		adapter.add(new SpinnerItemData("6 Minutes",   6));
+		adapter.add(new SpinnerItemData("7 Minutes",   7));
+		adapter.add(new SpinnerItemData("8 Minutes",   8));
+		adapter.add(new SpinnerItemData("9 Minutes",   9));
+		adapter.add(new SpinnerItemData("10 Minutes", 10));
 		
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		return adapter;
@@ -245,9 +289,9 @@ public class IrrduinoRemoteActivity extends Activity {
 
 	public class SpinnerItemData {
 		public String key;
-		public String value;
+		public int value;
 
-		SpinnerItemData(String key, String value){
+		SpinnerItemData(String key, int value){
 			this.key = key;
 			this.value = value;
 		}

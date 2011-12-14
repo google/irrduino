@@ -7,6 +7,7 @@
   - add sending event reports to web server for reporting
 
   Change Log:
+  - 2011-12-13 - adding REST command for system settings /settings?rr
   - 2011-12-02 - added function to report zone runs checkAndPostReport()
   - 2011-12-02 - add per-zone status reporting, with zone IDs and remaining times
   - 2011-11-10 - add global status option
@@ -72,21 +73,31 @@ int zones[] = {zone1, zone2, zone3, zone4, zone5,
                    zone6, zone7, zone8, zone9, zone10};
 int zoneCount = 10;
 
-// Uri Object identifiers
+// REST commands
+const String REST_CMD_OFF        = "off";
+const String REST_CMD_STATUS     = "status";
+const String REST_CMD_ZONE       = "zone";
+const String REST_CMD_ZONES      = "zones";
+const String REST_CMD_SETTINGS   = "settings";
+const String REST_CMD_TESTREPORT = "testreport";
+
+// Command codes
 const int OBJ_CMD_ALL_OFF  = 1;
 const int OBJ_CMD_STATUS   = 2;
-const int OBJ_CMD_ZONE     = 10;
-const int OBJ_CMD_ZONES    = 100;
-const int OBJ_CMD_PROGRAM  = 20;
-const int OBJ_CMD_PROGRAMS = 200;
+const int OBJ_CMD_SETTINGS = 3;
+const int OBJ_CMD_ZONES    = 10;
+const int OBJ_CMD_ZONE     = 100;
+const int OBJ_CMD_PROGRAMS = 20;
+const int OBJ_CMD_PROGRAM  = 200;
 const int OBJ_CMD_REPORTTEST = 900;
 
 // Reporting constants and variables
-const String CMD_TESTREPORT = "testreport";
-const boolean reportingEnabled = true;
+int maxReportAttempts    = 3;
+int reportAttempts       = 0;
 
-char reportServerHostName[512] = "staging.24hrdiner.com";
-int  reportServerHostPort = 8080;
+boolean reportingEnabled       = false; // reporting disabled by default
+char reportServerHostName[512];
+int  reportServerHostPort      = 80;
 
 // Command Codes (CC)
 const int CC_OFF = 0;
@@ -247,6 +258,10 @@ void loop(){
             case OBJ_CMD_STATUS: // Global status ping
               cmdGlobalStatusRequest();
               break;
+              
+            case OBJ_CMD_SETTINGS: // Controller settings
+              findSettingsCommand(arg1);
+              break;
 
             case OBJ_CMD_ZONE:      // zone command
 
@@ -317,26 +332,32 @@ void findCmdObject(char *cmdObj){
         return;
     }
 
-    // check for global "status" request
-    if (commandObject.compareTo("status") == 0) {
+    // check for global "status" request "/status"
+    if (commandObject.compareTo(REST_CMD_STATUS) == 0) {
         commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_STATUS;
         return;
     }
+    
+    // check for settings request "/settings"
+    if (commandObject.startsWith(REST_CMD_SETTINGS + "?")) {
+        commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_SETTINGS;
+        return;
+    }
 
-    // check for "reporttest" request
-    if (commandObject.compareTo(CMD_TESTREPORT) == 0) {
+    // check for report test request "/testreport"
+    if (commandObject.compareTo(REST_CMD_TESTREPORT) == 0) {
         commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_REPORTTEST;
         return;
     }
 
     // must check for plural form first
-    if (commandObject.compareTo("zones") == 0) {
+    if (commandObject.compareTo(REST_CMD_ZONES) == 0) {
         commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_ZONES;
         jsonReply += "\"zones\":";
         return;
     }
 
-    if (commandObject.startsWith("zone")) {
+    if (commandObject.startsWith(REST_CMD_ZONE)) {
         commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_ZONE; // command object type, 0 for none
         jsonReply += "\"zone";
 
@@ -404,7 +425,7 @@ void findZoneCommand(char *zoneCmd){
     }
     
     // check for "status"
-    if (zoneCommand.compareTo("status") == 0) {
+    if (zoneCommand.compareTo(REST_CMD_STATUS) == 0) {
         commandDispatch[CD_CMD_CODE] = CC_STATUS;
         // clear the json reply
         jsonReply = "";
@@ -414,8 +435,94 @@ void findZoneCommand(char *zoneCmd){
 }
 
 void findZoneTimeValue(char *zoneTime){
-  int time = atoi(zoneTime);
-  commandDispatch[CD_VALUE_1] = time;
+    int time = atoi(zoneTime);
+    commandDispatch[CD_VALUE_1] = time;
+}
+
+// interpret and execute settings commands 
+void findSettingsCommand(char *settings){
+
+    char *arg, *i;    
+    int count=1;
+    //  get the parameters
+    arg = strtok_r(settings,"?",&i);
+    Serial.print("arg ");
+    Serial.print(count);
+    Serial.print(": ");
+    Serial.println(arg);
+
+    while (arg != NULL && count < 16){
+        count++;
+        arg = strtok_r(NULL,"&",&i);
+        if (arg != NULL) {
+            Serial.print("arg ");
+            Serial.print(count);
+            Serial.print(": ");
+            Serial.println(arg);
+            setSettings(arg);
+        }
+    }
+    // send reply, send error message if message empty
+    if (jsonReply == NULL || jsonReply.length() == 0){
+        jsonReply = "\"settings\":\"parameters not recognized\"";
+    }
+    httpJsonReply(jsonReply);
+
+    // clear the command, so we don't re-execute
+    clearCommandDispatch();
+}
+
+void setSettings(char *valuePair){
+    char *aLabel = strtok(valuePair, "=");
+    char *aValue = strtok(NULL, "=");
+    
+    String label = String(aLabel);
+    String value = String(aValue);
+
+    // check for "reportingEnabled" setting
+    if (label.compareTo("reportingEnabled") == 0 ||
+        label.compareTo("re") == 0) {  // label shortcut
+        if(jsonReply != NULL && jsonReply.length() > 0){
+          jsonReply += ",";
+        }
+        if (value.compareTo("true") == 0) {
+          reportingEnabled = true;
+          jsonReply += "\"reportingEnabled\":\"true\"";
+        }
+        if (value.compareTo("false") == 0) {
+          reportingEnabled = false;
+          jsonReply += "\"reportingEnabled\":\"false\"";
+        }
+        return;
+    }
+    
+    if (label.compareTo("reportingHostName") == 0 ||
+        label.compareTo("rhn") == 0){ // label shortcut
+        if(jsonReply != NULL && jsonReply.length() > 0){
+          jsonReply += ",";
+        }
+        if (value.length() >= 4) {
+          value.toCharArray(reportServerHostName, 512);
+          jsonReply += "\"reportingHostName\":\"";
+          jsonReply += value;
+          jsonReply += "\"";
+        }
+        return;
+    }
+
+    if (label.compareTo("reportingHostPort") == 0 ||
+        label.compareTo("rhp") == 0){ // label shortcut
+        if(jsonReply != NULL && jsonReply.length() > 0){
+          jsonReply += ",";
+        }
+        if (value.length() >= 1) {
+          reportServerHostPort = stringToInt(value);
+          jsonReply += "\"reportingHostPort\":\"";
+          jsonReply += value;
+          jsonReply += "\"";
+        }
+        return;
+    }
 }
 
 // Utility functions

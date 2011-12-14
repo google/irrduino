@@ -19,7 +19,6 @@
             android:name=".IrrduinoRemoteActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,6 +26,10 @@
 	        android:label="@string/activity_title_settings"
 	        android:name=".Settings">
 		</activity>
-    </application>
+        <activity
+	        android:label="@string/activity_title_report"
+	        android:name=".ViewReportActivity">
+		</activity>
+        </application>
 
 </manifest>

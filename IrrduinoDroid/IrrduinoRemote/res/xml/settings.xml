@@ -19,6 +19,24 @@
 		        />
 	</PreferenceCategory>
 
+    <PreferenceCategory
+            android:key="server_settings_category"
+            android:title="@string/server_settings_title"
+            >    
+		<EditTextPreference
+		        android:key="server_host_name"
+		        android:title="@string/server_host_name"
+		        android:summary="@string/server_host_name_summary"
+		        android:dialogTitle="@string/server_host_name"
+		        />
+		<EditTextPreference
+		        android:key="server_host_port"
+		        android:title="@string/server_host_port"
+		        android:summary="@string/server_host_port_summary"
+		        android:dialogTitle="@string/server_host_name" 
+		        />
+	</PreferenceCategory>
+        
     <PreferenceCategory 
         android:key="videofeed_settings_category"
         android:title="@string/videofeed_settings_title"
@@ -34,17 +52,17 @@
             android:title="@string/videofeed_autofocus"
             />
         
-    </PreferenceCategory>	
+    </PreferenceCategory>
 
-    <PreferenceCategory 
+    <PreferenceCategory
         android:key="about_settings_category"
         android:title="@string/about_settings_title"
         >
-	    <Preference 
+	    <Preference
 	        android:key="about_version"
 	        android:title="@string/about_version"
 	        android:selectable="false"
 	        />
-        
+
     </PreferenceCategory>
 </PreferenceScreen>

@@ -29,7 +29,14 @@ http://irrduinoctrl.org/zone1/status
 Activate Zones: (syntax: zone[1-9]/on/[1-10]) zone X, ON for N minutes
 http://irrduinoctrl.org/zone1/on/1
     returns: {"zone1":"ON","time":"1"}
-    
+
+Controller Settings (syntax: /settings?label1=value1&label2=value2&label3=value3 )
+http://irrduinoctrl.org/settings?re=true&rhn=my.server.com
+    parameters
+        reportingHostName=my.server.com (short form: rhn=my.server.com ) default value = NULL
+        reportingHostPort=80            (short form: rhp=80 )            default value = 80
+        reportingEnabled=true|false     (short form: re=true|false )     default value = false
+
 Provoke a report call (for testing only)
 http://irrduinoctrl.org/testreport/irrduinoserver.org:8080/datadrop?what=1&ever=2&you=3&want=4
     makes the following http request:
