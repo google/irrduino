@@ -54,7 +54,7 @@ class ReportsHandler(webapp.RequestHandler):
       if runtime <= 0:
         raise ValueError("runtime out of range: %s" % runtime)
     except (ValueError, TypeError), e:
-      webutils.error_response(msg="Invalid request: %r" % e)
+      webutils.error_response(self, msg="Invalid request: %r" % e)
     else:
       zone_run = model.ZoneRun(zone=zone, runtime_seconds=runtime)
       zone_run.put()
