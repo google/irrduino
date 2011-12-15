@@ -7,7 +7,8 @@
   - add sending event reports to web server for reporting
 
   Change Log:
-  - 2011-12-13 - adding REST command for system settings /settings?rr
+  - 2011-12-14 - added function to retrieve current settings
+  - 2011-12-13 - added REST command for system settings /settings?rr
   - 2011-12-02 - added function to report zone runs checkAndPostReport()
   - 2011-12-02 - add per-zone status reporting, with zone IDs and remaining times
   - 2011-11-10 - add global status option
@@ -96,8 +97,8 @@ int maxReportAttempts    = 3;
 int reportAttempts       = 0;
 
 boolean reportingEnabled       = false; // reporting disabled by default
-char reportServerHostName[512];
-int  reportServerHostPort      = 80;
+char reportingHostName[512];
+int  reportingHostPort         = 80;
 
 // Command Codes (CC)
 const int CC_OFF = 0;
@@ -339,7 +340,7 @@ void findCmdObject(char *cmdObj){
     }
     
     // check for settings request "/settings"
-    if (commandObject.startsWith(REST_CMD_SETTINGS + "?")) {
+    if (commandObject.startsWith(REST_CMD_SETTINGS)) {
         commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_SETTINGS;
         return;
     }
@@ -443,7 +444,7 @@ void findZoneTimeValue(char *zoneTime){
 void findSettingsCommand(char *settings){
 
     char *arg, *i;    
-    int count=1;
+    int count=0;
     //  get the parameters
     arg = strtok_r(settings,"?",&i);
     Serial.print("arg ");
@@ -452,9 +453,9 @@ void findSettingsCommand(char *settings){
     Serial.println(arg);
 
     while (arg != NULL && count < 16){
-        count++;
         arg = strtok_r(NULL,"&",&i);
         if (arg != NULL) {
+            count++;
             Serial.print("arg ");
             Serial.print(count);
             Serial.print(": ");
@@ -462,6 +463,23 @@ void findSettingsCommand(char *settings){
             setSettings(arg);
         }
     }
+    
+    // /settings with no parameters: return setting values
+    if ( count == 0 ){
+        jsonReply += "\"reportingEnabled\":";
+        if (reportingEnabled){
+            jsonReply += "\"true\"";
+        } else {
+            jsonReply += "\"false\"";
+        }
+        jsonReply += ",\"reportingHostName\":\"";
+        jsonReply += reportingHostName;
+        jsonReply += "\"";
+        jsonReply += ",\"reportingHostPort\":\"";
+        jsonReply += reportingHostPort;
+        jsonReply += "\"";
+    }
+    
     // send reply, send error message if message empty
     if (jsonReply == NULL || jsonReply.length() == 0){
         jsonReply = "\"settings\":\"parameters not recognized\"";
@@ -502,7 +520,7 @@ void setSettings(char *valuePair){
           jsonReply += ",";
         }
         if (value.length() >= 4) {
-          value.toCharArray(reportServerHostName, 512);
+          value.toCharArray(reportingHostName, 512);
           jsonReply += "\"reportingHostName\":\"";
           jsonReply += value;
           jsonReply += "\"";
@@ -516,7 +534,7 @@ void setSettings(char *valuePair){
           jsonReply += ",";
         }
         if (value.length() >= 1) {
-          reportServerHostPort = stringToInt(value);
+          reportingHostPort = stringToInt(value);
           jsonReply += "\"reportingHostPort\":\"";
           jsonReply += value;
           jsonReply += "\"";

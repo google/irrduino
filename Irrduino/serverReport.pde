@@ -53,11 +53,11 @@ void checkAndPostReport(){
 
       byte ipAddr[4];
 
-      DNSError err = EthernetDNS.resolveHostName(reportServerHostName, ipAddr);
+      DNSError err = EthernetDNS.resolveHostName(reportingHostName, ipAddr);
 
       if (DNSSuccess == err) {
         Serial.print("The IP address is: ");
-        Serial.print(ip_to_str(ipAddr));
+        Serial.println(ip_to_str(ipAddr));
       } else if (DNSTimedOut == err) {
         Serial.println("Timed out.");
       } else if (DNSNotFound == err) {
@@ -68,10 +68,9 @@ void checkAndPostReport(){
         Serial.println(".");
       }
       
-      Client client(ipAddr, reportServerHostPort);
+      Client client(ipAddr, reportingHostPort);
       
      if (client.connect()) {
-       Serial.println("connected");
        Serial.print("Sending report data: ");
        Serial.println(reportData);
        
@@ -80,7 +79,7 @@ void checkAndPostReport(){
        client.print(reportData);
        client.println(" HTTP/1.1");
        client.print("Host: ");
-       client.println(reportServerHostName);
+       client.println(reportingHostName);
        client.println("Content-length: 0");
        client.println(""); // required to complete the request
        
@@ -133,7 +132,7 @@ void testReport(char* urlLocation){
     Serial.print("reportHost: ");
     Serial.println(reportHost);
 
-    reportHost.toCharArray(reportServerHostName, BUFSIZE);
+    reportHost.toCharArray(reportingHostName, BUFSIZE);
     
     reportData = location.substring( endOfHost, location.length());
     Serial.print("reportData: ");

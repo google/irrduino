@@ -37,6 +37,12 @@ http://irrduinoctrl.org/settings?re=true&rhn=my.server.com
         reportingHostPort=80            (short form: rhp=80 )            default value = 80
         reportingEnabled=true|false     (short form: re=true|false )     default value = false
 
+Controller Settings listing (syntax: /settings (no parameters))
+    returns:
+    {"reportingEnabled":"true",
+     "reportingHostName":"my.server.com",
+     "reportingHostPort":"80"}
+
 Provoke a report call (for testing only)
 http://irrduinoctrl.org/testreport/irrduinoserver.org:8080/datadrop?what=1&ever=2&you=3&want=4
     makes the following http request:
