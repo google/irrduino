@@ -1,5 +1,7 @@
 package com.joefernandez.irrduino.android.remote;
 
+import com.joefernandez.irrduino.android.remote.ViewReportActivity.IrrduinoServerRequestTask;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -133,10 +135,35 @@ public class IrrduinoRemoteActivity extends Activity {
 		});
         
         // Request global status from controller (run *last*)
-        new IrrduinoCommandTask().execute(getControllerAddress() + CMD_STATUS);
-        
+        requestSystemStatus();
     }
 
+    @Override
+	protected void onResume() {
+		super.onResume();
+        // Request global status from controller
+        requestSystemStatus();
+	}
+
+
+
+	private void requestSystemStatus(){
+    	
+    	// get settings
+    	settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+    	if (settings.getString(Settings.CONTROLLER_HOST_NAME,
+				 Settings.DEFAULT_CONTROLLER_HOST).compareTo(Settings.DEFAULT_CONTROLLER_HOST) == 0){
+	   		// default setting, warn user
+    		statusText.setText("Report server is not set,\n specify a server in Settings.");
+	   	}
+	   	else{
+	   		statusText.setText("Requesting status...");
+	        new IrrduinoCommandTask().execute(getControllerAddress() + CMD_STATUS);
+	   	}
+   	}
+    
+    
     private void sendZoneRunCommand(int zone, int minutes){
 		statusText.setText("Sending...");
         IrrduinoZoneRunTask zrt =  new IrrduinoZoneRunTask(zone, minutes);

@@ -17,10 +17,21 @@
         android:id="@+id/report_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_margin="10dp"
-        android:text="Retrieving run info..."
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_alignLeft="@+id/activity_subtitle"
+        android:layout_below="@+id/activity_subtitle"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:padding="5dp"
+
+        android:scrollbars="vertical"
+        android:background="#d3f7a4"
+        android:text="Requesting report..."
+        
+        android:textAppearance="?android:attr/textAppearanceMedium" 
+        android:textColor="#000000"
+        />
 
 </RelativeLayout>
