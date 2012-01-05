@@ -22,6 +22,8 @@ SERVER_ROOT = "http://joefernandez.org"
 MIN_ZONE = 1
 MAX_ZONE = 8
 NUM_ZONES = MAX_ZONE - MIN_ZONE + 1
+MIN_TIME = 1
+MAX_TIME = 10
 
 
 def execute(path):
