@@ -21,28 +21,31 @@ from irrduinoserver.utils import irrduino as irrduinoutils
 
 
 class WelcomeHandler(webapp.RequestHandler):
-  def get(self):
-    webutils.render_to_response(self, "welcome.html", {})
+  def get(self, template_params=None):
+    if template_params is None:
+      template_params = {}
+    template_params["zones"] = xrange(irrduinoutils.MIN_ZONE, irrduinoutils.MAX_ZONE + 1)
+    template_params["times"] = xrange(irrduinoutils.MIN_TIME, irrduinoutils.MAX_TIME + 1)
+    webutils.render_to_response(self, "welcome.html", template_params)
 
   def post(self):
-    """Control the sprinklers.
-
-    TODO: This is just some sample code.
-
-    """
-    template_params = {}
+    """Control the sprinklers."""
     if self.request.get("get-system-status"):
       response = irrduinoutils.execute("/status")
       assert (response.get("system status") == "ready" or
-              "running" in response.values())
-    elif self.request.get("water-zone-1"):
-      response = irrduinoutils.execute("/zone1/on/1")
-      assert response["zone1"] == "on"
-      assert int(response["time"]) == 1
+              "running" in response.values(),
+              "Unexpected system status: %r" % response)
+    elif self.request.get("water-zone"):
+      zone = int(self.request.get("zone"))
+      time = int(self.request.get("time"))
+      assert irrduinoutils.MIN_ZONE <= zone <= irrduinoutils.MAX_ZONE
+      assert irrduinoutils.MIN_TIME <= time <= irrduinoutils.MAX_TIME
+      response = irrduinoutils.execute("/zone%s/on/%s" % (zone, time))
+      assert response["zone%s" % zone] == "on"
+      assert int(response["time"]) == time
     elif self.request.get("turn-off-everything"):
       response = irrduinoutils.execute("/off")
       assert response["zones"] == "ALL OFF"
     else:
       raise ValueError("Invalid submit button")
-    template_params["status"] = response
-    webutils.render_to_response(self, "welcome.html", template_params)
+    self.get({"status": response})
