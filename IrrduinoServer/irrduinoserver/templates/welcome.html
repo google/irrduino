@@ -2,7 +2,12 @@
 
 {% block content %}
   <p>
-    Yo dawg, this site be all about waterin' Joe's lawn. Let's keep it real, yo!
+    Welcome to the Irrduino Server site!
+  </p>
+  
+  <p>
+    The buttons below allow you to activate or shutdown the sprinkler system on 
+    demand.
   </p>
 
   <!-- TODO: This is just some sample code to test things out. -->
@@ -11,9 +16,16 @@
   {% endif %}
 
   <form action="" method=post>
-    <input type=submit name=get-system-status value="Get System Status">
-    <input type=submit name=water-zone-1 value="Water Zone 1 for 1 Minute">
+    <table>
+    <tr>
+    <td valign="top">
+    <input type=submit name=get-system-status value="Get System Status"><br>
     <input type=submit name=turn-off-everything value="Turn Off Everything">
+    </td>
+    <td valign="top">
+    <input type=submit name=water-zone-1 value="Water Zone 1 for 1 Minute"><br>
+    </td></tr>
+    <table>
   </form>
 
   <p>

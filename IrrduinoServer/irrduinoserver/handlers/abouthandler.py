@@ -12,14 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This module contains the routing for the application."""
+"""This handles the about page for the app."""
 
-from irrduinoserver.handlers.reportshandler import ReportsHandler
-from irrduinoserver.handlers.welcomehandler import WelcomeHandler
-from irrduinoserver.handlers.abouthandler import AboutHandler
+from google.appengine.ext import webapp
 
-ROUTES = [
-  ('/', WelcomeHandler),
-  ('/reports', ReportsHandler),
-  ('/about', AboutHandler)
-]
+from irrduinoserver.utils import web as webutils
+from irrduinoserver.utils import ui as uiutils
+
+
+class AboutHandler(webapp.RequestHandler):
+  def get(self):
+    template_params = {}
+    template_params["tabs"] = uiutils.generate_tabs("about")
+    webutils.render_to_response(self, "about.html", template_params)

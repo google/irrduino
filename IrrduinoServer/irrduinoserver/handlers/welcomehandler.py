@@ -18,11 +18,14 @@ from google.appengine.ext import webapp
 
 from irrduinoserver.utils import web as webutils
 from irrduinoserver.utils import irrduino as irrduinoutils
+from irrduinoserver.utils import ui as uiutils
 
 
 class WelcomeHandler(webapp.RequestHandler):
   def get(self):
-    webutils.render_to_response(self, "welcome.html", {})
+    template_params = {}
+    template_params["tabs"] = uiutils.generate_tabs("controls")
+    webutils.render_to_response(self, "welcome.html", template_params)
 
   def post(self):
     """Control the sprinklers.

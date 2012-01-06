@@ -19,6 +19,7 @@ from google.appengine.ext import webapp
 from irrduinoserver import model
 from irrduinoserver.utils import web as webutils
 from irrduinoserver.utils import irrduino as irrduinoutils
+from irrduinoserver.utils import ui as uiutils
 
 
 class ReportsHandler(webapp.RequestHandler):
@@ -29,6 +30,7 @@ class ReportsHandler(webapp.RequestHandler):
 
     """
     template_params = {}
+    template_params["tabs"] = uiutils.generate_tabs("reports")
     num_zone_runs_to_show = irrduinoutils.NUM_ZONES * 2
     template_params["zone_runs"] = list(model.ZoneRun.gql(
       "ORDER BY created_at DESC LIMIT %s" % num_zone_runs_to_show))
