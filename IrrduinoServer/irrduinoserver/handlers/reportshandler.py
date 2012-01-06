@@ -64,16 +64,32 @@ class ReportsHandler(webapp.RequestHandler):
         organized_by_date[date][zone_data["nth"]] += gallons
 
       # Shuffle the data into:
-      # "[new Date(2008, 1, 1), 2.4, 7.2, ...]"
-      data_rows = []
+      # "[[new Date(year, month, day), zone0_gallons, ...],
+      #   ...]"
+      date_gallons_per_zone_list = []
+      sorted_organized_by_date_items = sorted(organized_by_date.items())
       for ((year, month, day), gallons_per_zone) in \
-        sorted(organized_by_date.items()):
+        sorted_organized_by_date_items:
         gallons_per_zone_str = ", ".join(map(str, gallons_per_zone))
-        data_rows.append("[new Date(%s, %s, %s), %s]" %
+        date_gallons_per_zone_list.append("[new Date(%s, %s, %s), %s]" %
           (year, month, day, gallons_per_zone_str))
 
+      # Shuffle the data into:
+      # "[[new Date(year, month, day), cost], ...]"
+      date_cost_list = []
+      for ((year, month, day), gallons_per_zone) in \
+        sorted_organized_by_date_items:
+        gallons = sum(gallons_per_zone)
+        cost = (gallons * irrduinoutils.CUBIC_FEET_PER_GALLON *
+                irrduinoutils.COST_PER_CUBIC_FOOT)
+        date_cost_list.append("[new Date(%s, %s, %s), %s]" %
+          (year, month, day, cost))
+
       template_params["zones"] = sorted(irrduinoutils.ZONES.items())
-      template_params["data_rows_str"] = "[%s]" % ",\n".join(data_rows)
+      template_params["water_usage_rows"] = \
+        "[%s]" % ",\n".join(date_gallons_per_zone_list)
+      template_params["water_cost_rows"] = \
+        "[%s]" % ",\n".join(date_cost_list)
       webutils.render_to_response(self, "reports.html", template_params)
 
   def post(self):
