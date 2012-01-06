@@ -29,22 +29,28 @@ class WelcomeHandler(webapp.RequestHandler):
     webutils.render_to_response(self, "welcome.html", template_params)
 
   def post(self):
-    """Control the sprinklers."""
+    """Control the sprinklers.
+
+    Use assertions for IrrduinoController errors and ValueError exceptions for
+    unexpected user input errors.
+
+    """
     if self.request.get("get-system-status"):
       response = irrduinoutils.execute("/status")
-      assert (response.get("system status") == "ready" or
-              "running" in response.values(),
-              "Unexpected system status: %r" % response)
+      assert response
     elif self.request.get("water-zone"):
       zone = int(self.request.get("zone"))
       time = int(self.request.get("time"))
-      assert zone in irrduinoutils.ZONES
-      assert irrduinoutils.MIN_TIME <= time <= irrduinoutils.MAX_TIME
+      if not zone in irrduinoutils.ZONES:
+        raise ValueError("Invalid zone: %s" % zone)
+      if not (irrduinoutils.MIN_TIME <= time <= irrduinoutils.MAX_TIME):
+        raise ValueError("Invalid time: %s" % time)
       response = irrduinoutils.execute("/zone%s/on/%s" % (zone, time))
       assert response["zone%s" % zone] == "on"
       assert int(response["time"]) == time
     elif self.request.get("turn-off-everything"):
       response = irrduinoutils.execute("/off")
+      assert response["zones"] == "ALL OFF"
       assert response["zones"] == "ALL OFF"
     else:
       raise ValueError("Invalid submit button")
