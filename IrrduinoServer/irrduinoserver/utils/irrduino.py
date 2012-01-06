@@ -12,18 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This module contains helpers related to controlling Irrduino."""
+"""This module contains helpers related to controlling Irrduino.
+
+See irrduino/IrrduinoController/web-ctrl-api.txt for documentation about
+talking to the server.
+
+"""
 
 import simplejson
 
 from irrduinoserver.utils import web as webutils
 
 SERVER_ROOT = "http://joefernandez.org"
-MIN_ZONE = 1
-MAX_ZONE = 8
-NUM_ZONES = MAX_ZONE - MIN_ZONE + 1
 MIN_TIME = 1
 MAX_TIME = 10
+
+ZONES = {
+  1: {"location": "Back Yard", "name": "Garden"},
+  2: {"location": "Back Yard", "name": "Lawn 1"},
+  3: {"location": "Back Yard", "name": "Lawn 2"},
+  4: {"location": "Back Yard", "name": "Lawn 3"},
+  5: {"location": "Back Yard", "name": "Patio Plants"},
+  7: {"location": "Front Yard", "name": "Left Side Lawn"},
+  8: {"location": "Front Yard", "name": "Right Side Lawn"}
+}
 
 
 def execute(path):
