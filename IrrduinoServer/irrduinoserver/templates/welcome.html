@@ -9,7 +9,9 @@
       Water zone
       <select name=zone>
         {% for zone in zones %}
-          <option value="{{ zone|escape }}">{{ zone|escape }}</option>
+          <option value="{{ zone.0|escape }}">
+            {{ zone.1.location|escape }}: {{ zone.1.name|escape }}
+          </option>
         {% endfor %}
       </select>
       for
