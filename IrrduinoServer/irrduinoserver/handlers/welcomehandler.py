@@ -24,7 +24,7 @@ class WelcomeHandler(webapp.RequestHandler):
   def get(self, template_params=None):
     if template_params is None:
       template_params = {}
-    template_params["zones"] = xrange(irrduinoutils.MIN_ZONE, irrduinoutils.MAX_ZONE + 1)
+    template_params["zones"] = sorted(irrduinoutils.ZONES.items())
     template_params["times"] = xrange(irrduinoutils.MIN_TIME, irrduinoutils.MAX_TIME + 1)
     webutils.render_to_response(self, "welcome.html", template_params)
 
@@ -38,7 +38,7 @@ class WelcomeHandler(webapp.RequestHandler):
     elif self.request.get("water-zone"):
       zone = int(self.request.get("zone"))
       time = int(self.request.get("time"))
-      assert irrduinoutils.MIN_ZONE <= zone <= irrduinoutils.MAX_ZONE
+      assert zone in irrduinoutils.ZONES
       assert irrduinoutils.MIN_TIME <= time <= irrduinoutils.MAX_TIME
       response = irrduinoutils.execute("/zone%s/on/%s" % (zone, time))
       assert response["zone%s" % zone] == "on"
