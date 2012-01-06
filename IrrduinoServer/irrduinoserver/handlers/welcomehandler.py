@@ -22,30 +22,38 @@ from irrduinoserver.utils import ui as uiutils
 
 
 class WelcomeHandler(webapp.RequestHandler):
-  def get(self):
-    template_params = {}
+  def get(self, template_params=None):
+    if template_params is None:
+      template_params = {}
     template_params["tabs"] = uiutils.generate_tabs("controls")
+    template_params["zones"] = sorted(irrduinoutils.ZONES.items())
+    template_params["times"] = xrange(irrduinoutils.MIN_TIME, irrduinoutils.MAX_TIME + 1)
     webutils.render_to_response(self, "welcome.html", template_params)
 
   def post(self):
     """Control the sprinklers.
 
-    TODO: This is just some sample code.
+    Use assertions for IrrduinoController errors and ValueError exceptions for
+    unexpected user input errors.
 
     """
-    template_params = {}
     if self.request.get("get-system-status"):
       response = irrduinoutils.execute("/status")
-      assert (response.get("system status") == "ready" or
-              "running" in response.values())
-    elif self.request.get("water-zone-1"):
-      response = irrduinoutils.execute("/zone1/on/1")
-      assert response["zone1"] == "on"
-      assert int(response["time"]) == 1
+      assert response
+    elif self.request.get("water-zone"):
+      zone = int(self.request.get("zone"))
+      time = int(self.request.get("time"))
+      if not zone in irrduinoutils.ZONES:
+        raise ValueError("Invalid zone: %s" % zone)
+      if not (irrduinoutils.MIN_TIME <= time <= irrduinoutils.MAX_TIME):
+        raise ValueError("Invalid time: %s" % time)
+      response = irrduinoutils.execute("/zone%s/on/%s" % (zone, time))
+      assert response["zone%s" % zone] == "on"
+      assert int(response["time"]) == time
     elif self.request.get("turn-off-everything"):
       response = irrduinoutils.execute("/off")
       assert response["zones"] == "ALL OFF"
+      assert response["zones"] == "ALL OFF"
     else:
       raise ValueError("Invalid submit button")
-    template_params["status"] = response
-    webutils.render_to_response(self, "welcome.html", template_params)
+    self.get({"status": response})

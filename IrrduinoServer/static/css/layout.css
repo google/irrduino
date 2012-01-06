@@ -13,9 +13,17 @@ body {
 }
 
 #title {
-  color: white;
   margin: 20px;
   padding: 0;
+}
+
+#title a {
+  color: white;
+  text-decoration: none;
+}
+
+fieldset {
+  margin-bottom: 1em;
 }
 
 #header {

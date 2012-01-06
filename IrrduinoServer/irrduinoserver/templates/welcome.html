@@ -1,34 +1,41 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <p>
-    Welcome to the Irrduino Server site!
-  </p>
-  
-  <p>
-    The buttons below allow you to activate or shutdown the sprinkler system on 
-    demand.
-  </p>
-
-  <!-- TODO: This is just some sample code to test things out. -->
-  {% if status %}
-    <p>Status: {{ status|escape }}</p>
-  {% endif %}
+  <p>Use the the controls below to run sprinklers for a specific zone.</p>
 
   <form action="" method=post>
-    <table>
-    <tr>
-    <td valign="top">
-    <input type=submit name=get-system-status value="Get System Status"><br>
-    <input type=submit name=turn-off-everything value="Turn Off Everything">
-    </td>
-    <td valign="top">
-    <input type=submit name=water-zone-1 value="Water Zone 1 for 1 Minute"><br>
-    </td></tr>
-    <table>
+    <fieldset>
+      <legend>Activate Sprinklers</legend>
+      Water zone
+      <select name=zone>
+        {% for zone in zones %}
+          <option value="{{ zone.0|escape }}">
+            {{ zone.1.location|escape }}: {{ zone.1.name|escape }}
+          </option>
+        {% endfor %}
+      </select>
+      for
+      <select name=time>
+        {% for time in times %}
+          <option value="{{ time|escape }}">{{ time|escape }}</option>
+        {% endfor %}
+      </select>
+      minute(s)
+      <input type=submit name=water-zone value=Water> |
+      <input type=submit name=get-system-status value="Get System Status"> |
+      <input type=submit name=turn-off-everything value="Turn Off Everything">
+    </fieldset>
   </form>
+        
+  {% if status %}
+    <form>
+      <fieldset>
+        <legend>Status</legend>
+        {% for item in status.items %}
+          {{ item.0|escape }}: {{ item.1|escape }}<br>
+        {% endfor %}
+      </fieldset>
+    </form>
+  {% endif %}
 
-  <p>
-    Check out the <a href="/reports">reports page</a> too.
-  </p>
 {% endblock %}

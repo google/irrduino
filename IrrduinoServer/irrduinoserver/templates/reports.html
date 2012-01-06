@@ -1,18 +1,38 @@
 {% extends "layout.html" %}
 
-{% block content %}
-  <h3>Zone Runs</h3>
+{% block javascript_head %}
+  <script type=text/javascript src=https://www.google.com/jsapi></script>
+  <script type=text/javascript>
+    google.load("visualization", "1", {packages: ["corechart"]});
+    google.setOnLoadCallback(drawChart);
 
-  <ul>
-  {% for i in zone_runs %}
-    <li>
-      Zone
-      {{ i.zone|escape }}
-      ran for
-      {{ i.runtime_seconds|escape }}
-      seconds on
-      {{ i.created_at|escape }}
-    </li>
-  {% endfor %}
-  </ul>
+    function drawChart() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('datetime', 'Date');
+      {% for zone in zones %}
+        data.addColumn('number',
+          '{{ zone.1.location|escape }}: {{ zone.1.name|escape }}');
+      {% endfor %}
+      data.addRows({{ data_rows_str }});
+      var options = {
+        width: 800, height: 480,
+        title: 'Water Usage',
+        backgroundColor: '#d3f7a4',
+        strictFirstColumnType: true,
+        vAxis: {
+          title: "Gallons"
+        }
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart-div'));
+      chart.draw(data, options);
+    }
+  </script>
+{% endblock %}
+
+{% block content %}
+  <p>The following report shows number of gallons used in each watering zone per day.</p>
+
+  <div id="chart-div"></div>
+</html>
+
 {% endblock %}
