@@ -29,7 +29,7 @@ class ReportsHandler(webapp.RequestHandler):
 
     """
     template_params = {}
-    num_zone_runs_to_show = irrduinoutils.NUM_ZONES * 2
+    num_zone_runs_to_show = len(irrduinoutils.ZONES) * 2
     template_params["zone_runs"] = list(model.ZoneRun.gql(
       "ORDER BY created_at DESC LIMIT %s" % num_zone_runs_to_show))
     if webutils.is_format_json(self):
@@ -47,9 +47,8 @@ class ReportsHandler(webapp.RequestHandler):
     """
     try:
       zone = int(self.request.get("zone"))
-      if (zone < irrduinoutils.MIN_ZONE or
-          zone > irrduinoutils.MAX_ZONE):
-        raise ValueError("zone out of range: %s" % zone)
+      if zone not in irrduinoutils.ZONES:
+        raise ValueError("Invalid zone: %s" % zone)
       runtime = int(self.request.get("runtime"))
       if runtime <= 0:
         raise ValueError("runtime out of range: %s" % runtime)
