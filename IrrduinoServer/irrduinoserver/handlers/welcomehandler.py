@@ -18,12 +18,14 @@ from google.appengine.ext import webapp
 
 from irrduinoserver.utils import web as webutils
 from irrduinoserver.utils import irrduino as irrduinoutils
+from irrduinoserver.utils import ui as uiutils
 
 
 class WelcomeHandler(webapp.RequestHandler):
   def get(self, template_params=None):
     if template_params is None:
       template_params = {}
+    template_params["tabs"] = uiutils.generate_tabs("controls")
     template_params["zones"] = sorted(irrduinoutils.ZONES.items())
     template_params["times"] = xrange(irrduinoutils.MIN_TIME, irrduinoutils.MAX_TIME + 1)
     webutils.render_to_response(self, "welcome.html", template_params)

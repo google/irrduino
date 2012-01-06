@@ -12,14 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This module contains the routing for the application."""
+"""This module contains helpers related to user interface rendering"""
 
-from irrduinoserver.handlers.reportshandler import ReportsHandler
-from irrduinoserver.handlers.welcomehandler import WelcomeHandler
-from irrduinoserver.handlers.abouthandler import AboutHandler
 
-ROUTES = [
-  ('/', WelcomeHandler),
-  ('/reports', ReportsHandler),
-  ('/about', AboutHandler)
-]
+
+""" takes a parameter for a selected tab (e.g., "reports") and generates a tab list """
+def generate_tabs(tab_name=None):
+  if tab_name is None:
+    tab_name = "welcome"
+  tabs = []
+  for (name, url) in (
+    ("Controls", "/"),
+    ("Reports", "/reports"),
+    ("About", "/about")
+  ):
+    selected = ""
+    if tab_name.lower() == name.lower():
+      selected = " class=selected"
+        
+    tabs.append('<li%s><a href="%s">%s</a></li>' % (selected, url, name))
+  
+  return "".join(tabs)

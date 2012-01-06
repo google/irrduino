@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h3>Sprinkler Controller</h3>
+  <p>Use the the controls below to run sprinklers for a specific zone.</p>
 
   <form action="" method=post>
     <fieldset>
-      <legend>Controls</legend>
+      <legend>Activate Sprinklers</legend>
       Water zone
       <select name=zone>
         {% for zone in zones %}
@@ -38,7 +38,4 @@
     </form>
   {% endif %}
 
-  <p>
-    Check out the <a href=/reports>reports page</a> too.
-  </p>
 {% endblock %}

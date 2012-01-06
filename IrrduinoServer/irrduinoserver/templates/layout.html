@@ -7,8 +7,13 @@
   </head>
 
   <body>
-    <h1 id=title><a href=/>Irrduino Server</a></h1>
-    <div id=main-container>
+    <h1 id="title">Irrduino Server</h1>
+      <div id="header">
+        <ul>
+          {{ tabs }}
+        </ul>
+      </div>
+    <div id="main-container">
       {% if action_results %}
         <ul>
         {% for msg in action_results %}

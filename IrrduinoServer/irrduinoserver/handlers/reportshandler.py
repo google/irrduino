@@ -19,6 +19,7 @@ from google.appengine.ext import webapp
 from irrduinoserver import model
 from irrduinoserver.utils import web as webutils
 from irrduinoserver.utils import irrduino as irrduinoutils
+from irrduinoserver.utils import ui as uiutils
 
 MAX_ZONE_RUNS_TO_SHOW = 100
 MINS_PER_SEC = 1 / 60.0
@@ -32,6 +33,7 @@ class ReportsHandler(webapp.RequestHandler):
 
     """
     template_params = {}
+    template_params["tabs"] = uiutils.generate_tabs("reports")
     zone_runs = list(model.ZoneRun.gql(
       "ORDER BY created_at DESC LIMIT %s" % MAX_ZONE_RUNS_TO_SHOW))
     if webutils.is_format_json(self):
