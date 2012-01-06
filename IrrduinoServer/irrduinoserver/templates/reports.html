@@ -4,27 +4,54 @@
   <script type=text/javascript src=https://www.google.com/jsapi></script>
   <script type=text/javascript>
     google.load("visualization", "1", {packages: ["corechart"]});
-    google.setOnLoadCallback(drawChart);
+    google.setOnLoadCallback(drawCharts);
 
-    function drawChart() {
+    function drawWaterUsageChart() {
       var data = new google.visualization.DataTable();
       data.addColumn('datetime', 'Date');
       {% for zone in zones %}
         data.addColumn('number',
           '{{ zone.1.location|escape }}: {{ zone.1.name|escape }}');
       {% endfor %}
-      data.addRows({{ data_rows_str }});
+      data.addRows({{ water_usage_rows }});
       var options = {
         width: 800, height: 480,
-        title: 'Water Usage',
         backgroundColor: '#d3f7a4',
+        title: 'Water Usage',
         strictFirstColumnType: true,
         vAxis: {
           title: "Gallons"
         }
       };
-      var chart = new google.visualization.LineChart(document.getElementById('chart-div'));
+      var chart = new google.visualization.LineChart(
+        document.getElementById('water-usage-chart'));
       chart.draw(data, options);
+    }
+
+    function drawWaterCostChart() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('datetime', 'Date');
+      data.addColumn('number', 'Cost');
+      data.addRows({{ water_cost_rows }});
+      var options = {
+        width: 800, height: 480,
+        backgroundColor: '#d3f7a4',
+        title: 'Water Cost',
+        strictFirstColumnType: true,
+        vAxis: {
+          title: "Dollars"
+        }
+      };
+      var chart = new google.visualization.LineChart(
+        document.getElementById('water-cost-chart'));
+      var formatter = new google.visualization.NumberFormat({prefix: '$'});
+      formatter.format(data, 1);  // Apply formatter to second column.
+      chart.draw(data, options);
+    }
+
+    function drawCharts() {
+      drawWaterUsageChart();
+      drawWaterCostChart();
     }
   </script>
 {% endblock %}
@@ -32,7 +59,8 @@
 {% block content %}
   <h3>Reports</h3>
 
-  <div id="chart-div"></div>
+  <div id="water-usage-chart"></div>
+  <div id="water-cost-chart"></div>
 </html>
 
 {% endblock %}
