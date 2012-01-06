@@ -37,6 +37,8 @@ ZONES = {
   7: {"nth": 5, "location": "Front Yard", "name": "Left Side Lawn", "gallons_per_minute": 6.13},
   8: {"nth": 6, "location": "Front Yard", "name": "Right Side Lawn", "gallons_per_minute": 6.13}
 }
+COST_PER_CUBIC_FOOT = 0.0252
+CUBIC_FEET_PER_GALLON = 0.134
 
 
 def execute(path):
