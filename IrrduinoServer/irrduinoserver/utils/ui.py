@@ -21,6 +21,7 @@ def generate_tabs(tab_name="welcome"):
   for (name, url) in (
     ("Controls", "/"),
     ("Reports", "/reports"),
+    ("LawnVille", "javascript:window.open('/lawnville', 'lawnville', 'width=800, height=600, status=no, toolbar=no, menubar=no, location=no, resizable=no, scrollbars=no')"),
     ("About", "/about")
   ):
     selected = ""
