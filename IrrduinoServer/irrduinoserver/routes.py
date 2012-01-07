@@ -14,12 +14,14 @@
 
 """This module contains the routing for the application."""
 
+from irrduinoserver.handlers.abouthandler import AboutHandler
+from irrduinoserver.handlers.lawnvillehandler import LawnVilleHandler
 from irrduinoserver.handlers.reportshandler import ReportsHandler
 from irrduinoserver.handlers.welcomehandler import WelcomeHandler
-from irrduinoserver.handlers.abouthandler import AboutHandler
 
 ROUTES = [
   ('/', WelcomeHandler),
   ('/reports', ReportsHandler),
+  ('/lawnville', LawnVilleHandler),
   ('/about', AboutHandler)
 ]
