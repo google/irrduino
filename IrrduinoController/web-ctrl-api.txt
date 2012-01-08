@@ -1,14 +1,14 @@
 Here's a quick run-down on the Irrduino controller web API:
 
-Get Control main page:
-http://irrduinoctrl.org/
+= Get Control main page:
+  http://irrduinoctrl.org/
 
-Turn off everything (all zones):
-http://irrduinoctrl.org/off
+= Turn off everything (all zones):
+  http://irrduinoctrl.org/off
     returns: {"zones":"ALL OFF"}
 
-Get Global system status (whole system)
-http://irrduinoctrl.org/status
+= Get Global system status (whole system)
+  http://irrduinoctrl.org/status
     returns: {"system status":"ready"}
     - or: if a zone is running:
     returns: 
@@ -16,34 +16,39 @@ http://irrduinoctrl.org/status
      "elapsed":"4",	// seconds elapsed in run
      "remaining":"235"} // seconds remaining for run
 
-Get per-zone status
-http://irrduinoctrl.org/zone1
-http://irrduinoctrl.org/zone1/status
-    returns: {"zone1":"OFF"}
-    - or - 
+= Get per-zone status
+  http://irrduinoctrl.org/zone1
+  http://irrduinoctrl.org/zone1/status
     returns: 
+    {"zone1":"OFF"}
+    - or - 
     {"zone1":"ON", 	// zone is on
      "elapsed":"4",	// seconds elapsed in run
      "remaining":"235"} // seconds remaining for run
 
-Activate Zones: (syntax: zone[1-9]/on/[1-10]) zone X, ON for N minutes
-http://irrduinoctrl.org/zone1/on/1
-    returns: {"zone1":"ON","time":"1"}
+= Activate Zones: (syntax: zone[1-9]/on/[1-10][s]) zone X, ON for N minutes, 
+                 or N seconds (with "s" suffix)
+  http://irrduinoctrl.org/zone1/on/1
+  http://irrduinoctrl.org/zone1/on/60s
+    returns: 
+    {"zone1":"ON",   // value status
+     "time":"60"}    // run time in seconds
 
-Controller Settings (syntax: /settings?label1=value1&label2=value2&label3=value3 )
-http://irrduinoctrl.org/settings?re=true&rhn=my.server.com
+= Set Controller Settings (syntax: /settings?label1=value1&label2=value2&label3=value3 )
+  http://irrduinoctrl.org/settings?re=true&rhn=my.server.com
     parameters
         reportingHostName=my.server.com (short form: rhn=my.server.com ) default value = NULL
         reportingHostPort=80            (short form: rhp=80 )            default value = 80
         reportingEnabled=true|false     (short form: re=true|false )     default value = false
 
-Controller Settings listing (syntax: /settings (no parameters))
+= Get Controller Settings (syntax: /settings (no parameters))
+  http://irrduinoctrl.org/settings
     returns:
     {"reportingEnabled":"true",
      "reportingHostName":"my.server.com",
      "reportingHostPort":"80"}
 
-Provoke a report call (for testing only)
-http://irrduinoctrl.org/testreport/irrduinoserver.org:8080/datadrop?what=1&ever=2&you=3&want=4
+= Provoke a report call (for testing only)
+  http://irrduinoctrl.org/testreport/irrduinoserver.org:8080/datadrop?what=1&ever=2&you=3&want=4
     makes the following http request:
     http://irrduinoserver.org:8080/datadrop?what=1&ever=2&you=3&want=4
