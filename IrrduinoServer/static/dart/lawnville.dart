@@ -12,6 +12,11 @@
  */
 class Lawnville {
   int TIMER_INTERVAL = 10 * 1000;  // 10 seconds
+  int DROID_WIDTH = 53;
+  int DROID_HEIGHT = 93;
+  int DROID_IDLE_X = 381;
+  int DROID_IDLE_Y = 395;
+  double HALF = 0.5;
   
   Queue _actionQueue;
   bool _waitingForTimer = false;
@@ -22,6 +27,7 @@ class Lawnville {
 
   void _run() {
     document.title = "LawnVille in Dart!";
+    _idle();
     _handleZoneClicks();
   }
   
@@ -66,12 +72,20 @@ class Lawnville {
   void _doAction(action) {
     window.console.log("Doing action: " + action["action"] + " zone: " + action["zone"]);
     AreaElement zone = document.query("#" + action["zone"]);
-    window.console.log("Center: " + 
-      zone.dataAttributes["center-x"] + ", " +
-      zone.dataAttributes["center-y"]);
+    _repositionDroid(Math.parseInt(zone.dataAttributes["center-x"]),
+                     Math.parseInt(zone.dataAttributes["center-y"]));
+  }
+  
+  void _repositionDroid(int x, int y) {
+    ImageElement droid = document.query("#droid");
+    x -= (HALF * DROID_WIDTH).toInt();
+    y -= DROID_HEIGHT;
+    droid.style.left = "${x}px";
+    droid.style.top = "${y}px";
   }
   
   void _idle() {
+    _repositionDroid(DROID_IDLE_X, DROID_IDLE_Y);
     window.console.log("I'm bored");
   }
 }
