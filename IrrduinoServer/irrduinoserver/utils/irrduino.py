@@ -48,7 +48,7 @@ ZONES = {
   5: {"nth": 4, "location": "Back Yard", "name": "Patio Plants",
       "gallons_per_minute": 0.52,
       "coordinates": "535,429,528,447,487,468,449,446,447,394,477,390,528,411",
-      "center": (493, 418)},
+      "center": (515, 451)},
   7: {"nth": 5, "location": "Front Yard", "name": "Left Side Lawn",
       "gallons_per_minute": 6.13,
       "coordinates": "148,354,294,410,148,475,2,413",
