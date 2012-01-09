@@ -16,8 +16,11 @@ void cmdZoneTimedRun(){
     }
 
     // check value is reasonable
-    if (commandDispatch[CD_VALUE_1] > MAX_RUN_TIME_MINUTES){
-        commandDispatch[CD_VALUE_1] = MAX_RUN_TIME_MINUTES;
+    if (commandDispatch[CD_VALUE_1] > MAX_RUN_TIME_MINUTES * 60){
+        Serial.print("Requested time exceeds max runtime, reseting runtime to: ");
+        Serial.print(MAX_RUN_TIME_MINUTES);
+        Serial.println(" minutes");
+        commandDispatch[CD_VALUE_1] = MAX_RUN_TIME_MINUTES * 60;
     }
 
     jsonReply += ",\"time\":\"";
@@ -69,7 +72,7 @@ void cmdZoneStatus(){
     clearCommandDispatch();
 }
 
-void startTimedRun(int zone, unsigned long minutes){
+void startTimedRun(int zone, unsigned long seconds){
     // deactivate last zone before starting another
     endTimedRun();
 
@@ -92,7 +95,7 @@ void startTimedRun(int zone, unsigned long minutes){
     commandRunning[CR_ZONE_ID]    = zone;
     commandRunning[CR_PIN_ID]     = pin; //BUG?: int to unsigned long?
     commandRunning[CR_START_TIME] = millis();
-    commandRunning[CR_END_TIME]   = commandRunning[CR_START_TIME] + (minutes * 60000);
+    commandRunning[CR_END_TIME]   = commandRunning[CR_START_TIME] + (seconds * 1000);
 }
 /*
   Check on timedRuns, stop runs on expiration time

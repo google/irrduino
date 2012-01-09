@@ -1,12 +1,12 @@
  /**
-  Irrduino v0.8 by Joe Fernandez
+  Irrduino v0.8.1 by Joe Fernandez
 
   Issues:
-  - need a nanny process to set a max run time for valves (regardless of commands or program)
-  - add a "status" option for each zone individually
-  - add sending event reports to web server for reporting
+  - need a nanny process to check a max run time for valves (regardless of commands or program)
 
   Change Log:
+  - 2012-01-07 - added run time in seconds (web command syntax option and 
+                 update to CommandDispatch handling)
   - 2011-12-14 - added function to retrieve current settings
   - 2011-12-13 - added REST command for system settings /settings?rr
   - 2011-12-02 - added function to report zone runs checkAndPostReport()
@@ -122,7 +122,7 @@ const int CD_VALUE_2   = 4;
 // Command Running structure - for managing running commands
 int commandRunningLength = 4;
 unsigned long commandRunning[] = {0, // pin ID, 0 for none
-                                  0, // run end time in miliseconds, 0 for none
+                                  0, // run end time in milliseconds, 0 for none
                                   0, // zone ID, 0 for none
                                   0  // run start time in milliseconds, 0 for none
                                   };
@@ -435,9 +435,21 @@ void findZoneCommand(char *zoneCmd){
     
 }
 
-void findZoneTimeValue(char *zoneTime){
-    int time = atoi(zoneTime);
-    commandDispatch[CD_VALUE_1] = time;
+// Finds and sets the zone run time in seconds
+void findZoneTimeValue(char *zoneTimeValue){
+
+    String zoneTime = String(zoneTimeValue);
+
+    if (zoneTime.lastIndexOf("s") >= 0 ){
+        // zone run request is in seconds (e.g., 30s)
+        zoneTime = zoneTime.substring(0, zoneTime.lastIndexOf("s"));
+        commandDispatch[CD_VALUE_1] = stringToInt(zoneTime);
+        
+    } else {
+        int time = atoi(zoneTimeValue);
+        commandDispatch[CD_VALUE_1] = time * 60;
+    }
+
 }
 
 // interpret and execute settings commands 
