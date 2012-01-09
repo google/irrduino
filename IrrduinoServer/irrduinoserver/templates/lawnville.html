@@ -20,6 +20,11 @@
 
       #droid {
         position: absolute;
+        left: 355px;
+        top: 302px;
+        -webkit-transition-property: left, top;
+        -webkit-transition-duration: 1s;
+        -webkit-transition-timing-function: ease-in-out;
       }
     </style>
   </head>
@@ -37,7 +42,7 @@
       {% endfor %}
     </map>
 
-    <img src=/static/images/droid-waiting-front.png width=53 height=93
+    <img src=/static/images/droid-waiting-front.png width=65 height=96
          id=droid>
 
     <script type=text/javascript src=/static/dart/lawnville.dart.app.js></script>
