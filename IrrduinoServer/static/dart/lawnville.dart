@@ -11,12 +11,13 @@
  * to talk to IrrduinoController.
  */
 class Lawnville {
-  int TIMER_INTERVAL = 10 * 1000;  // 10 seconds
-  int DROID_WIDTH = 53;
-  int DROID_HEIGHT = 93;
-  int DROID_IDLE_X = 381;
-  int DROID_IDLE_Y = 395;
-  double HALF = 0.5;
+  final int TIMER_INTERVAL = 10000;      // 10 seconds
+  final int REPOSITION_DURATION = 1000;  // 1 second
+  final int DROID_WIDTH = 53;
+  final int DROID_HEIGHT = 93;
+  final int DROID_IDLE_X = 381;
+  final int DROID_IDLE_Y = 395;
+  final double HALF = 0.5;
   
   Queue _actionQueue;
   bool _waitingForTimer = false;
@@ -27,7 +28,6 @@ class Lawnville {
 
   void _run() {
     document.title = "LawnVille in Dart!";
-    _idle();
     _handleZoneClicks();
   }
   
@@ -80,8 +80,12 @@ class Lawnville {
     ImageElement droid = document.query("#droid");
     x -= (HALF * DROID_WIDTH).toInt();
     y -= DROID_HEIGHT;
+    droid.src = "/static/images/droid-jetpack-on-front.png";
     droid.style.left = "${x}px";
     droid.style.top = "${y}px";
+    window.setTimeout(() {
+      droid.src = "/static/images/droid-waiting-front.png";
+    }, REPOSITION_DURATION);
   }
   
   void _idle() {
