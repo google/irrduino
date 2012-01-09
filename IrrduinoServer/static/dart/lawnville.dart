@@ -65,6 +65,10 @@ class Lawnville {
     
   void _doAction(action) {
     window.console.log("Doing action: " + action["action"] + " zone: " + action["zone"]);
+    AreaElement zone = document.query("#" + action["zone"]);
+    window.console.log("Center: " + 
+      zone.dataAttributes["center-x"] + ", " +
+      zone.dataAttributes["center-y"]);
   }
   
   void _idle() {
