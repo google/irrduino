@@ -20,12 +20,14 @@ def generate_tabs(tab_name="welcome"):
   tabs = []
   for (name, url) in (
     ("Controls", "/"),
+    ("Log", "/log"),
     ("Reports", "/reports"),
-    ("LawnVille", "javascript:window.open('/lawnville', 'lawnville', 'width=800, height=600, status=no, toolbar=no, menubar=no, location=no, resizable=no, scrollbars=no')"),
-    ("About", "/about")
+    ("About", "/about"),
+    ("LawnVille", "javascript:window.open('/lawnville', 'lawnville', 'width=800, height=600, status=no, toolbar=no, menubar=no, location=no, resizable=no, scrollbars=no')")
   ):
     selected = ""
     if tab_name.lower() == name.lower():
       selected = " class=selected"
     tabs.append('<li%s><a href="%s">%s</a></li>' % (selected, url, name))
+
   return "".join(tabs)
