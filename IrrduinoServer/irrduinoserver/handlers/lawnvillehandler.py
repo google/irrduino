@@ -17,8 +17,11 @@
 from google.appengine.ext import webapp
 
 from irrduinoserver.utils import web as webutils
+from irrduinoserver.utils import irrduino as irrduinoutils
 
 
 class LawnVilleHandler(webapp.RequestHandler):
   def get(self):
-    webutils.render_to_response(self, "lawnville.html", {})
+    template_params = {}
+    template_params["zones"] = sorted(irrduinoutils.ZONES.items())
+    webutils.render_to_response(self, "lawnville.html", template_params)
