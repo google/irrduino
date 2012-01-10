@@ -1,16 +1,16 @@
-IrrduinoServer
-==============
+IrrduinoServerGo
+================
 
-This is the server component of Irrduino.  It's a Python Google App Engine
-application.
+This is the Go version of IrrduinoServer.  It's a Go application written for
+Google App Engine.
 
 Running
 -------
 
-Make sure you have the Google App Engine for Python installed and run the
-following from the current directory:
+Make sure you have Google App Engine for Go SDK installed and run the following
+from the current directory:
 
-  dev_appserver.py .
+  SDK_PATH/dev_appserver.py .
 
 If you want to setup an ssh tunnel from a public server back to your own
 development server so that Irrduino can talk to your development server,
@@ -18,10 +18,13 @@ do something like:
 
   ssh -R \*:8080:127.0.0.1:8080 $USER@your-public-server.com
 
-To deploy to the public server, just use GoogleAppEngineLauncher.  The
-app is currently deployed to:
+To deploy to the public server:
 
-  http://irrduinoserver.appspot.com/
+  SDK_PATH/appcfg.py update .
+
+The app will be temporarily deployed to the following:
+
+  http://2.latest.irrduinoserver.appspot.com
 
 Configuring IrrduinoController
 ------------------------------
@@ -43,11 +46,8 @@ a slightly tweaked version of the URL below:
 Global TODOs
 ------------
 
-Add some real navigation.
 Restrict access to the server.
 Remove the hostname for Joe's server from the code.
-Fix pdb_set_trace:
-  Don't force the user to reload the server.
 
 Limitations
 -----------
