@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <p>
+    This page lists the most recent sprinkler runs executed by the Irrduino
+    Controller.
+  </p>
+
+  <ul>
+    {% for i in zone_runs %}
+      <li>
+        Zone
+        {{ i.zone|escape }}
+        ran for
+        {{ i.runtime_seconds|escape }}
+        seconds on
+        {{ i.created_at|escape }}
+        UTC
+      </li>
+    {% endfor %}
+  </ul>   
+{% endblock %}
