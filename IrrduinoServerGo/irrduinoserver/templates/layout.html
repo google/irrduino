@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang=en>
+  <head>
+    <title>{% block title %}Irrduino{% endblock %}</title>
+    <link rel=stylesheet href=/static/css/layout.css type=text/css>
+    {% block javascript_head %}{% endblock %}
+  </head>
+
+  <body>
+    <h1 id="title">Irrduino Server</h1>
+
+    <div id="header">
+      <ul>
+        {{ tabs }}
+      </ul>
+    </div>
+    
+    <div id="main-container">
+      {% if action_results %}
+        <ul>
+        {% for msg in action_results %}
+          <li>{{ msg|escape }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>

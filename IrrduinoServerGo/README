@@ -1,0 +1,55 @@
+IrrduinoServer
+==============
+
+This is the server component of Irrduino.  It's a Python Google App Engine
+application.
+
+Running
+-------
+
+Make sure you have the Google App Engine for Python installed and run the
+following from the current directory:
+
+  dev_appserver.py .
+
+If you want to setup an ssh tunnel from a public server back to your own
+development server so that Irrduino can talk to your development server,
+do something like:
+
+  ssh -R \*:8080:127.0.0.1:8080 $USER@your-public-server.com
+
+To deploy to the public server, just use GoogleAppEngineLauncher.  The
+app is currently deployed to:
+
+  http://irrduinoserver.appspot.com/
+
+Configuring IrrduinoController
+------------------------------
+
+To get IrrduinoController to send us its logs, you must configure it.
+To get the existing settings, go to:
+
+  http://joefernandez.org/settings
+
+To change it to use the default, public server, go to:
+
+  http://joefernandez.org/settings?reportingEnabled=true&reportingHostName=irrduinoserver.appspot.com&reportingHostPort=80
+
+To change it to use the development server (running over an ssh tunnel), go to
+a slightly tweaked version of the URL below:
+
+  http://joefernandez.org/settings?reportingEnabled=true&reportingHostName=your-public-server.com&reportingHostPort=8080
+
+Global TODOs
+------------
+
+Add some real navigation.
+Restrict access to the server.
+Remove the hostname for Joe's server from the code.
+Fix pdb_set_trace:
+  Don't force the user to reload the server.
+
+Limitations
+-----------
+
+I specifically decided not to write any tests because this is a prototype.
