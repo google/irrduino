@@ -19,6 +19,7 @@ import (
 	"server/handler"
 )
 
+/* This contains the routing for the application. */
 func init() {
 	http.HandleFunc("/", handler.Irrigate)
 	http.HandleFunc("/report", handler.Report)
@@ -26,19 +27,3 @@ func init() {
 	http.HandleFunc("/about", handler.About)
 	http.HandleFunc("/lawnville", handler.LawnVille)
 }
-
-//"""This module contains the routing for the application."""
-//
-//from irrduinoserver.handlers.abouthandler import AboutHandler
-//from irrduinoserver.handlers.lawnvillehandler import LawnVilleHandler
-//from irrduinoserver.handlers.reportshandler import ReportsHandler
-//from irrduinoserver.handlers.controlshandler import ControlsHandler
-//from irrduinoserver.handlers.loghandler import LogHandler
-//
-//ROUTES = [
-//  ('/', ControlsHandler),
-//  ('/reports', ReportsHandler),
-//  ('/log', LogHandler),
-//  ('/about', AboutHandler),
-//  ('/lawnville', LawnVilleHandler),
-//]
