@@ -19,7 +19,7 @@ import (
 	"server/handler"
 )
 
-/* This contains the routing for the application. */
+// This contains the routing for the application.
 func init() {
 	http.HandleFunc("/", handler.Irrigate)
 	http.HandleFunc("/report", handler.Report)
