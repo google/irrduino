@@ -20,6 +20,8 @@ from irrduinoserver.utils import web as webutils
 from irrduinoserver.utils import irrduino as irrduinoutils
 from irrduinoserver.utils import ui as uiutils
 
+SECS_PER_MINUTE = 60
+
 
 class ControlsHandler(webapp.RequestHandler):
   def get(self, template_params=None):
@@ -47,9 +49,10 @@ class ControlsHandler(webapp.RequestHandler):
         raise ValueError("Invalid zone: %s" % zone)
       if not (irrduinoutils.MIN_TIME <= time <= irrduinoutils.MAX_TIME):
         raise ValueError("Invalid time: %s" % time)
-      response = irrduinoutils.execute("/zone%s/on/%s" % (zone, time))
+      secs = time * SECS_PER_MINUTE
+      response = irrduinoutils.execute("/zone%s/on/%ss" % (zone, secs))
       assert response["zone%s" % zone] == "on"
-      assert int(response["time"]) == time
+      assert int(response["time"]) == secs
     elif self.request.get("turn-off-everything"):
       response = irrduinoutils.execute("/off")
       assert response["zones"] == "ALL OFF"
