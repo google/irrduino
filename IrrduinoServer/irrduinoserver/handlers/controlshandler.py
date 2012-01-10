@@ -21,6 +21,9 @@ from irrduinoserver.utils import irrduino as irrduinoutils
 from irrduinoserver.utils import ui as uiutils
 
 SECS_PER_MINUTE = 60
+MAX_TIME_MINS = 10
+MIN_TIME_SECS = 1
+MAX_TIME_SECS = MAX_TIME_MINS * SECS_PER_MINUTE
 
 
 class ControlsHandler(webapp.RequestHandler):
@@ -29,8 +32,10 @@ class ControlsHandler(webapp.RequestHandler):
       template_params = {}
     template_params["tabs"] = uiutils.generate_tabs("controls")
     template_params["zones"] = sorted(irrduinoutils.ZONES.items())
-    template_params["times"] = xrange(irrduinoutils.MIN_TIME, irrduinoutils.MAX_TIME + 1)
-    webutils.render_to_response(self, "welcome.html", template_params)
+    template_params["secs_and_mins"] = \
+      [(mins * SECS_PER_MINUTE, mins)
+       for mins in xrange(1, MAX_TIME_MINS + 1)]
+    webutils.render_to_response(self, "controls.html", template_params)
 
   def post(self):
     """Control the sprinklers.
@@ -44,12 +49,11 @@ class ControlsHandler(webapp.RequestHandler):
       assert response
     elif self.request.get("water-zone"):
       zone = int(self.request.get("zone"))
-      time = int(self.request.get("time"))
+      secs = int(self.request.get("secs"))
       if not zone in irrduinoutils.ZONES:
         raise ValueError("Invalid zone: %s" % zone)
-      if not (irrduinoutils.MIN_TIME <= time <= irrduinoutils.MAX_TIME):
-        raise ValueError("Invalid time: %s" % time)
-      secs = time * SECS_PER_MINUTE
+      if not (MIN_TIME_SECS <= secs <= MAX_TIME_SECS):
+        raise ValueError("Invalid secs: %s" % secs)
       response = irrduinoutils.execute("/zone%s/on/%ss" % (zone, secs))
       assert response["zone%s" % zone] == "on"
       assert int(response["time"]) == secs
