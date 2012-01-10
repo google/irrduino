@@ -26,16 +26,16 @@ MIN_TIME_SECS = 1
 MAX_TIME_SECS = MAX_TIME_MINS * SECS_PER_MINUTE
 
 
-class ControlsHandler(webapp.RequestHandler):
+class IrrigateHandler(webapp.RequestHandler):
   def get(self, template_params=None):
     if template_params is None:
       template_params = {}
-    template_params["tabs"] = uiutils.generate_tabs("controls")
+    template_params["tabs"] = uiutils.generate_tabs("irrigate")
     template_params["zones"] = sorted(irrduinoutils.ZONES.items())
     template_params["secs_and_mins"] = \
       [(mins * SECS_PER_MINUTE, mins)
        for mins in xrange(1, MAX_TIME_MINS + 1)]
-    webutils.render_to_response(self, "controls.html", template_params)
+    webutils.render_to_response(self, "irrigate.html", template_params)
 
   def post(self):
     """Control the sprinklers.

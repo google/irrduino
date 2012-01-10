@@ -14,12 +14,13 @@
 
 """This module contains helpers related to user interface rendering."""
 
+from datetime import timedelta
 
-def generate_tabs(tab_name="welcome"):
+def generate_tabs(tab_name="watering"):
   """Take a parameter for a selected tab and generate a tab list."""
   tabs = []
   for (name, url) in (
-    ("Controls", "/"),
+    ("Irrigate", "/"),
     ("Log", "/log"),
     ("Reports", "/reports"),
     ("About", "/about"),
@@ -31,3 +32,10 @@ def generate_tabs(tab_name="welcome"):
     tabs.append('<li%s><a href="%s">%s</a></li>' % (selected, url, name))
 
   return "".join(tabs)
+
+
+def localize_date(date):
+  """ a quick and dirty hack for displaying time in PST
+  This solution breaks as soon as we hit daylight savings.
+   """
+  return date + timedelta(hours=-8);

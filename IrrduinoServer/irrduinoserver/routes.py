@@ -17,11 +17,11 @@
 from irrduinoserver.handlers.abouthandler import AboutHandler
 from irrduinoserver.handlers.lawnvillehandler import LawnVilleHandler
 from irrduinoserver.handlers.reportshandler import ReportsHandler
-from irrduinoserver.handlers.controlshandler import ControlsHandler
+from irrduinoserver.handlers.irrigatehandler import IrrigateHandler
 from irrduinoserver.handlers.loghandler import LogHandler
 
 ROUTES = [
-  ('/', ControlsHandler),
+  ('/', IrrigateHandler),
   ('/reports', ReportsHandler),
   ('/log', LogHandler),
   ('/about', AboutHandler),
