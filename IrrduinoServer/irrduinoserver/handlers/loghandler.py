@@ -22,7 +22,7 @@ from irrduinoserver.utils import irrduino as irrduinoutils
 from irrduinoserver.utils import ui as uiutils
 
 
-class LogsHandler(webapp.RequestHandler):
+class LogHandler(webapp.RequestHandler):
   def get(self):
     """Give the user information about the zone runs.
 
@@ -38,7 +38,7 @@ class LogsHandler(webapp.RequestHandler):
         webutils.entity_to_dict, template_params["zone_runs"])
       webutils.render_json_to_response(self, template_params)
     else:
-      webutils.render_to_response(self, "logs.html", template_params)
+      webutils.render_to_response(self, "log.html", template_params)
 
   def post(self):
     """Accept data from IrrduinoController.
