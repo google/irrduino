@@ -21,95 +21,64 @@ from irrduinoserver.utils import web as webutils
 from irrduinoserver.utils import irrduino as irrduinoutils
 from irrduinoserver.utils import ui as uiutils
 
-MAX_ZONE_RUNS_TO_SHOW = 100
 MINS_PER_SEC = 1 / 60.0
 
 
 class ReportsHandler(webapp.RequestHandler):
   def get(self):
-    """Give the user information about the zone runs.
-
-    This also supports ?format=JSON.
-
-    """
+    """Give the user information about the zone runs."""
     template_params = {}
     template_params["tabs"] = uiutils.generate_tabs("reports")
-    zone_runs = list(model.ZoneRun.gql(
-      "ORDER BY created_at DESC LIMIT %s" % MAX_ZONE_RUNS_TO_SHOW))
-    if webutils.is_format_json(self):
-      template_params["zone_runs"] = map(
-        webutils.entity_to_dict, zone_runs)
-      webutils.render_json_to_response(self, template_params)
-    else:
-      
-      # Shuffle the data into:
-      # organized_by_date[date][nth_zone] = gallons
-      organized_by_date = {}
-      for zone_run in zone_runs:
-        created_at = zone_run.created_at
+    zone_runs = model.get_recent_zone_runs()
 
-        # Python months are 1-based, whereas Google Chart Tools expects them to
-        # be 0-based.
-        date = (created_at.year, created_at.month - 1, created_at.day)
-        
-        if not date in organized_by_date:
-          organized_by_date[date] = [0] * len(irrduinoutils.ZONES)
-        zone_data = irrduinoutils.ZONES.get(zone_run.zone)
+    # Shuffle the data into:
+    # organized_by_date[date][nth_zone] = gallons
+    organized_by_date = {}
+    for zone_run in zone_runs:
+      created_at = zone_run.created_at
 
-        # You can tell IrrduinoController to water a zone even if that zone
-        # isn't hooked up.  Ignore such records.
-        if zone_data is None:
-          continue
+      # Python months are 1-based, whereas Google Chart Tools expects them to
+      # be 0-based.
+      date = (created_at.year, created_at.month - 1, created_at.day)
 
-        gallons = (zone_run.runtime_seconds * MINS_PER_SEC *
-                   zone_data["gallons_per_minute"])
-        organized_by_date[date][zone_data["nth"]] += gallons
+      if not date in organized_by_date:
+        organized_by_date[date] = [0] * len(irrduinoutils.ZONES)
+      zone_data = irrduinoutils.ZONES.get(zone_run.zone)
 
-      # Shuffle the data into:
-      # "[[new Date(year, month, day), zone0_gallons, ...],
-      #   ...]"
-      date_gallons_per_zone_list = []
-      sorted_organized_by_date_items = sorted(organized_by_date.items())
-      for ((year, month, day), gallons_per_zone) in \
-        sorted_organized_by_date_items:
-        gallons_per_zone_str = ", ".join(map(str, gallons_per_zone))
-        date_gallons_per_zone_list.append("[new Date(%s, %s, %s), %s]" %
-          (year, month, day, gallons_per_zone_str))
+      # You can tell IrrduinoController to water a zone even if that zone
+      # isn't hooked up.  Ignore such records.
+      if zone_data is None:
+        continue
 
-      # Shuffle the data into:
-      # "[[new Date(year, month, day), cost], ...]"
-      date_cost_list = []
-      for ((year, month, day), gallons_per_zone) in \
-        sorted_organized_by_date_items:
-        gallons = sum(gallons_per_zone)
-        cost = (gallons * irrduinoutils.CUBIC_FEET_PER_GALLON *
-                irrduinoutils.COST_PER_CUBIC_FOOT)
-        date_cost_list.append("[new Date(%s, %s, %s), %s]" %
-          (year, month, day, cost))
+      gallons = (zone_run.runtime_seconds * MINS_PER_SEC *
+                 zone_data["gallons_per_minute"])
+      organized_by_date[date][zone_data["nth"]] += gallons
 
-      template_params["zones"] = sorted(irrduinoutils.ZONES.items())
-      template_params["water_usage_rows"] = \
-        "[%s]" % ",\n".join(date_gallons_per_zone_list)
-      template_params["water_cost_rows"] = \
-        "[%s]" % ",\n".join(date_cost_list)
-      webutils.render_to_response(self, "reports.html", template_params)
+    # Shuffle the data into:
+    # "[[new Date(year, month, day), zone0_gallons, ...],
+    #   ...]"
+    date_gallons_per_zone_list = []
+    sorted_organized_by_date_items = sorted(organized_by_date.items())
+    for ((year, month, day), gallons_per_zone) in \
+      sorted_organized_by_date_items:
+      gallons_per_zone_str = ", ".join(map(str, gallons_per_zone))
+      date_gallons_per_zone_list.append("[new Date(%s, %s, %s), %s]" %
+        (year, month, day, gallons_per_zone_str))
 
-  def post(self):
-    """Accept data from IrrduinoController.
+    # Shuffle the data into:
+    # "[[new Date(year, month, day), cost], ...]"
+    date_cost_list = []
+    for ((year, month, day), gallons_per_zone) in \
+      sorted_organized_by_date_items:
+      gallons = sum(gallons_per_zone)
+      cost = (gallons * irrduinoutils.CUBIC_FEET_PER_GALLON *
+              irrduinoutils.COST_PER_CUBIC_FOOT)
+      date_cost_list.append("[new Date(%s, %s, %s), %s]" %
+        (year, month, day, cost))
 
-    Store it in the datastore and just respond "OK".
-
-    """
-    try:
-      zone = int(self.request.get("zone"))
-      if zone not in irrduinoutils.ZONES:
-        raise ValueError("Invalid zone: %s" % zone)
-      runtime = int(self.request.get("runtime"))
-      if runtime <= 0:
-        raise ValueError("runtime out of range: %s" % runtime)
-    except (ValueError, TypeError), e:
-      webutils.error_response(self, msg="Invalid request: %r" % e)
-    else:
-      zone_run = model.ZoneRun(zone=zone, runtime_seconds=runtime)
-      zone_run.put()
-      self.response.out.write("OK")
+    template_params["zones"] = sorted(irrduinoutils.ZONES.items())
+    template_params["water_usage_rows"] = \
+      "[%s]" % ",\n".join(date_gallons_per_zone_list)
+    template_params["water_cost_rows"] = \
+      "[%s]" % ",\n".join(date_cost_list)
+    webutils.render_to_response(self, "reports.html", template_params)
