@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+package server
+
 //"""This module contains the routing for the application."""
 //
 //from irrduinoserver.handlers.abouthandler import AboutHandler

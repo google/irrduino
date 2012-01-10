@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+package server
+
 //"""IrrduinoServer
 //
 //This is the server component of Irrduino.  It's a Python Google App Engine

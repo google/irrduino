@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+package handler
+
 //"""This handles the about page for the app."""
 //
 //from google.appengine.ext import webapp

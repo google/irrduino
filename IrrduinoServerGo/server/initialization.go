@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+package server
+
 //"""This module contains various initialization routines.
 //
 //Many of these are HACKs that must be called very early in the application.
