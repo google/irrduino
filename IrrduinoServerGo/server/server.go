@@ -14,19 +14,6 @@
 
 package server
 
-import (
-	"fmt"
-	"http"
-)
-
-func init() {
-	http.HandleFunc("/", hello)
-}
-
-func hello(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>Hello, world</h1>")
-}
-
 //"""IrrduinoServer
 //
 //This is the server component of Irrduino.  It's a Python Google App Engine

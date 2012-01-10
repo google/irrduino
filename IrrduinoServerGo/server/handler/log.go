@@ -14,6 +14,15 @@
 
 package handler
 
+import (
+	"fmt"
+	"http"
+)
+
+func Log(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<h1>Log</h1>")
+}
+
 //"""Output log information."""
 //
 //from google.appengine.ext import webapp

@@ -14,6 +14,15 @@
 
 package handler
 
+import (
+	"fmt"
+	"http"
+)
+
+func About(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<h1>About</h1>")
+}
+
 //"""This handles the about page for the app."""
 //
 //from google.appengine.ext import webapp

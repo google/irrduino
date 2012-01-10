@@ -14,6 +14,15 @@
 
 package handler
 
+import (
+	"fmt"
+	"http"
+)
+
+func Report(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<h1>Report</h1>")
+}
+
 //"""Handle reporting."""
 //
 //from google.appengine.ext import webapp

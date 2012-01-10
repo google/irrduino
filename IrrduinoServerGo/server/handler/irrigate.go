@@ -14,6 +14,15 @@
 
 package handler
 
+import (
+	"fmt"
+	"http"
+)
+
+func Irrigate(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<h1>Irrigate</h1>")
+}
+
 //"""This is the welcome page for the app."""
 //
 //from google.appengine.ext import webapp

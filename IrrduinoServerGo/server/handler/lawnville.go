@@ -14,6 +14,15 @@
 
 package handler
 
+import (
+	"fmt"
+	"http"
+)
+
+func LawnVille(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<h1>LawnVille</h1>")
+}
+
 //"""This is like FarmVille, but it actually works."""
 //
 //from google.appengine.ext import webapp
