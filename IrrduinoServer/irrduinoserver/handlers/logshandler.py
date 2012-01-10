@@ -10,12 +10,9 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limitations under the License.'''
-"""Created on Jan 9, 2012
+# limitations under the License.
 
-@author: joefernandez (adapted from original reports page by JJ Behrens)
-
-Handle reporting."""
+"""Output log information."""
 
 from google.appengine.ext import webapp
 
@@ -25,23 +22,23 @@ from irrduinoserver.utils import irrduino as irrduinoutils
 from irrduinoserver.utils import ui as uiutils
 
 
-class LogHandler(webapp.RequestHandler):
+class LogsHandler(webapp.RequestHandler):
   def get(self):
     """Give the user information about the zone runs.
 
     This also supports ?format=JSON.
+
     """
     template_params = {}
     template_params["tabs"] = uiutils.generate_tabs("log")    
-    num_zone_runs_to_show = 16
-    template_params["zone_runs"] = list(model.ZoneRun.gql(
-      "ORDER BY created_at DESC LIMIT %s" % num_zone_runs_to_show))
+    template_params["zone_runs"] = model.get_recent_zone_runs(
+      num_zone_runs_to_show=16)
     if webutils.is_format_json(self):
       template_params["zone_runs"] = map(
         webutils.entity_to_dict, template_params["zone_runs"])
       webutils.render_json_to_response(self, template_params)
     else:
-      webutils.render_to_response(self, "log.html", template_params)
+      webutils.render_to_response(self, "logs.html", template_params)
 
   def post(self):
     """Accept data from IrrduinoController.
