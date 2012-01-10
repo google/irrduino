@@ -21,7 +21,7 @@ from irrduinoserver.utils import irrduino as irrduinoutils
 from irrduinoserver.utils import ui as uiutils
 
 
-class WelcomeHandler(webapp.RequestHandler):
+class ControlsHandler(webapp.RequestHandler):
   def get(self, template_params=None):
     if template_params is None:
       template_params = {}
