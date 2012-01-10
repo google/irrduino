@@ -27,20 +27,28 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "<h1>Hello, world</h1>")
 }
 
+//"""IrrduinoServer
+//
+//This is the server component of Irrduino.  It's a Python Google App Engine
+//application.
+//
+//"""
+//
+//from irrduinoserver import initialization
+//
+//initialization.fix_sys_path()
+//
 //from google.appengine.ext import webapp
-//from google.appengine.ext.webapp import util
+//from google.appengine.ext.webapp.util import run_wsgi_app
 //
-//
-//class MainHandler(webapp.RequestHandler):
-//    def get(self):
-//        self.response.out.write('Hello world!')
+//from irrduinoserver.routes import ROUTES
 //
 //
 //def main():
-//    application = webapp.WSGIApplication([('/', MainHandler)],
-//                                         debug=True)
-//    util.run_wsgi_app(application)
+//  """Run the WSGI application."""
+//  application = webapp.WSGIApplication(ROUTES, debug=True)
+//  run_wsgi_app(application)
 //
 //
 //if __name__ == '__main__':
-//    main()
+//  main()
