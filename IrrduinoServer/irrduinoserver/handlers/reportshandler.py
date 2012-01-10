@@ -95,7 +95,7 @@ class ReportsHandler(webapp.RequestHandler):
       webutils.render_to_response(self, "reports.html", template_params)
 
   def post(self):
-    """Accept data from Irrduino.
+    """Accept data from IrrduinoController.
 
     Store it in the datastore and just respond "OK".
 
