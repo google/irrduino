@@ -1,10 +1,11 @@
  /**
-  Irrduino v0.8.1 by Joe Fernandez
+  Irrduino v0.8.2 by Joe Fernandez
 
   Issues:
   - need a nanny process to check a max run time for valves (regardless of commands or program)
 
   Change Log:
+  - 2012-01-09 - changed reporting to point to /log (instead of /reports)
   - 2012-01-07 - added run time in seconds (web command syntax option and 
                  update to CommandDispatch handling)
   - 2011-12-14 - added function to retrieve current settings

@@ -27,7 +27,7 @@ const char* ip_to_str(const uint8_t*);
 void checkAndPostReport(){
 
     if (commandReport[CR_ZONE_ID] > 0){
-        reportData  = "/reports?zone=";
+        reportData  = "/log?zone=";
         reportData += commandReport[CR_ZONE_ID];
         reportData += "&runtime=";
 

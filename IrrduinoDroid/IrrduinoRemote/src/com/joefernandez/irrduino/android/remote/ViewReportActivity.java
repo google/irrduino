@@ -35,7 +35,7 @@ public class ViewReportActivity extends Activity {
 	private SharedPreferences settings;
 	private boolean settingsChanged = true;
 
-	private final static String REPORT_JSON_FORMAT = "/reports?format=json";
+	private final static String REPORT_JSON_FORMAT = "/log?format=json";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
