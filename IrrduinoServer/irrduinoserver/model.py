@@ -22,3 +22,8 @@ class ZoneRun(db.Model):
   zone = db.IntegerProperty()
   runtime_seconds = db.IntegerProperty()
   created_at = db.DateTimeProperty(auto_now_add=True)
+
+
+def get_recent_zone_runs(num_zone_runs_to_show=100):
+  return list(ZoneRun.gql(
+    "ORDER BY created_at DESC LIMIT %s" % num_zone_runs_to_show))
