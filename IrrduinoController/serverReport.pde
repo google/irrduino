@@ -1,4 +1,4 @@
-// This code is adapted from by Joe Fernandez from PollingDNS.pde which is:
+// This code is adapted by Joe Fernandez from PollingDNS.pde which is:
 
 //  Copyright (C) 2010 Georg Kaindl
 //  http://gkaindl.com
