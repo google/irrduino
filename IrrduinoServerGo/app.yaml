@@ -1,7 +1,7 @@
 application: irrduinoserver
-version: 1
-runtime: python
-api_version: 1
+version: 2
+runtime: go
+api_version: 3
 
 handlers:
 - url: /favicon.ico
@@ -15,5 +15,5 @@ handlers:
   script: $PYTHON_LIB/google/appengine/ext/admin
   login: admin
 
-- url: .*
-  script: irrduinoserver/main.py
+- url: /.*
+  script: _go_app
