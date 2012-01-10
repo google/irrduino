@@ -15,9 +15,9 @@
         {% endfor %}
       </select>
       for
-      <select name=time>
-        {% for time in times %}
-          <option value="{{ time|escape }}">{{ time|escape }}</option>
+      <select name=secs>
+        {% for i in secs_and_mins %}
+          <option value="{{ i.0|escape }}">{{ i.1|escape }}</option>
         {% endfor %}
       </select>
       minute(s)
