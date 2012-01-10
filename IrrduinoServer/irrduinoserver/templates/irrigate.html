@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <p>Use the the controls below to run sprinklers for a specific zone.</p>
+  <p>Use the the controls below to turn on the water for a specific irrigation zone.</p>
 
   <form action="" method=post>
     <fieldset>
-      <legend>Activate Sprinklers</legend>
-      Water zone
+      <legend>Activate Irrigation</legend>
+      Zone
       <select name=zone>
         {% for zone in zones %}
           <option value="{{ zone.0|escape }}">

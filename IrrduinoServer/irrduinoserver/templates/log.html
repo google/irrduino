@@ -14,8 +14,8 @@
         ran for
         {{ i.runtime_seconds|escape }}
         seconds on
-        {{ i.created_at|escape }}
-        UTC
+        {{ i.localized_date|date:"F j, Y h:i A"|escape }}
+        (PST)
       </li>
     {% endfor %}
   </ul>   

@@ -33,6 +33,8 @@ class LogHandler(webapp.RequestHandler):
     template_params["tabs"] = uiutils.generate_tabs("log")    
     template_params["zone_runs"] = model.get_recent_zone_runs(
       num_zone_runs_to_show=16)
+    for zone_run in template_params["zone_runs"]:
+      zone_run.localized_date = uiutils.localize_date(zone_run.created_at)
     if webutils.is_format_json(self):
       template_params["zone_runs"] = map(
         webutils.entity_to_dict, template_params["zone_runs"])

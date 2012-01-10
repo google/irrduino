@@ -1,5 +1,9 @@
 package com.joefernandez.irrduino.android.remote;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.joefernandez.irrduino.android.remote.ViewReportActivity.IrrduinoServerRequestTask;
 
 import android.app.Activity;
@@ -218,6 +222,25 @@ public class IrrduinoRemoteActivity extends Activity {
         }
     }   
 
+    protected String parseJsonStatus(String statusJson){
+    	try {
+    		JSONObject response = new JSONObject(statusJson);
+
+    		if (response.has("zones")) {
+    			return "Zones: " + response.getString("zones");
+    		}
+    		if (response.has("system status")){ 
+    			return "System: "+response.getString("system status");
+    		}
+		} 
+    	catch (JSONException e) {
+			Log.d(TAG, "Unable to parse JSON response: "+ statusJson);
+			return "System: Not available";
+		}
+    	return "System: No information";
+    }
+    		
+
     /** Async Task code (for Irrduino Controller requests) */
     public class IrrduinoCommandTask extends HttpCommandTask {
     	
@@ -231,7 +254,7 @@ public class IrrduinoRemoteActivity extends Activity {
         			timer.cancel();
         		}
         		if (result.length() < 256) {
-	            	statusText.setText(result);
+	            	statusText.setText(parseJsonStatus(result));
         		} else {
         			// something went wrong with the request. Log it.
         			Log.d(TAG, "Error processing command. Unexpected return result:\n" + result);
