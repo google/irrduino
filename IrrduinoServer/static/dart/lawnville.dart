@@ -21,6 +21,7 @@ class Lawnville {
   final int DROID_IDLE_X = 381;
   final int DROID_IDLE_Y = 395;
   final double HALF = 0.5;
+  final double SECS_PER_MS = 1 / 1000.0;
   
   Queue _actionQueue;
   bool _waitingForTimer = false;
@@ -85,14 +86,16 @@ class Lawnville {
     _water(action["zone"]);
   }
  
-  void _water(zoneId) {
+  void _water(String zoneId) {
     window.console.log("Watering zone: ${zoneId}");
     AreaElement zone = document.query("#${zoneId}");
     int x = Math.parseInt(zone.dataAttributes["center-x"]);
     int y = Math.parseInt(zone.dataAttributes["center-y"]);
+    int zoneNum = Math.parseInt(zoneId.split("-")[1]);
     _repositionDroid(x, y, () {
       _droid.src = "/static/images/droid-watering-1.png";
       _animationCallbacks["_wateringAnimation"] = _wateringAnimation;
+      _waterRpc(zoneNum);
     });
   }
   
@@ -103,6 +106,22 @@ class Lawnville {
       int oneOrTwo = (_animationProgress / HALF_SECOND).toInt() % 2 + 1;
       _droid.src = "/static/images/droid-watering-${oneOrTwo}.png";
     }
+  }
+  
+  void _waterRpc(int zone) {
+    XMLHttpRequest req = new XMLHttpRequest();
+    int secs = (TIMER_INTERVAL * SECS_PER_MS).toInt();
+    req.open("POST", "/?water-zone=true&zone=${zone}&secs=${secs}", true);
+    req.on.readyStateChange.add((Event e) {
+      if (req.readyState == 4) {
+        if (req.status == 200) {
+          window.console.log("Watering was successful");
+        } else {
+          window.console.log("Watering was unsuccessful");
+        }
+      }
+    });
+    req.send();
   }
   
   /**

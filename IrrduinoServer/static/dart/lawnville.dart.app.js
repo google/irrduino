@@ -777,6 +777,12 @@ function native__Logger__printString(str) {
     this.write('\n');
   }
 }
+function $DartRegExpToJSRegExp(exp) {
+  var flags = "g";
+  if (native_JSSyntaxRegExp__multiLine(exp)) flags += "m";
+  if (native_JSSyntaxRegExp__ignoreCase(exp)) flags += "i";
+  return new RegExp(native_JSSyntaxRegExp__pattern(exp), flags);
+}
 function RTT(classkey, typekey, typeargs, returnType, functionType, named) {
   this.classKey = classkey;
   this.typeKey = typekey ? typekey : classkey;
@@ -964,6 +970,14 @@ function native_StringImplementation_concat(other) {
 function native_StringImplementation__substringUnchecked(startIndex, endIndex) {
   "use strict";
   return this.substring(startIndex, endIndex);
+}
+function native_StringImplementation__split(pattern) {
+  "use strict";
+  if ($isString(pattern)) {
+    return this.split(pattern);
+  } else {
+    return this.split($DartRegExpToJSRegExp(pattern));
+  }
 }
 function native_StringImplementation_toLowerCase() {
   "use strict";
@@ -2564,6 +2578,29 @@ Number.prototype.dynamic$getter = function(){
   return this.toDouble$member();
 }
 ;
+function JSSyntaxRegExp$Dart(){
+}
+JSSyntaxRegExp$Dart._pattern$$member_ = function(regexp){
+  return regexp.pattern$getter();
+}
+;
+function native_JSSyntaxRegExp__pattern(regexp){
+  return JSSyntaxRegExp$Dart._pattern$$member_(regexp);
+}
+JSSyntaxRegExp$Dart._multiLine$$member_ = function(regexp){
+  return regexp.multiLine$getter();
+}
+;
+function native_JSSyntaxRegExp__multiLine(regexp){
+  return JSSyntaxRegExp$Dart._multiLine$$member_(regexp);
+}
+JSSyntaxRegExp$Dart._ignoreCase$$member_ = function(regexp){
+  return regexp.ignoreCase$getter();
+}
+;
+function native_JSSyntaxRegExp__ignoreCase(regexp){
+  return JSSyntaxRegExp$Dart._ignoreCase$$member_(regexp);
+}
 String.$lookupRTT = function(typeArgs, named){
   return RTT.create($cls('String'), String.$RTTimplements, null, named);
 }
@@ -2732,6 +2769,22 @@ String.prototype.contains$named = function($n, $o, pattern, startIndex){
   return String.prototype.contains$member.call(this, pattern, startIndex);
 }
 ;
+String.prototype.split$member = function(pattern){
+  var tmp$0;
+  if ($isString(pattern) || !!(tmp$0 = pattern , tmp$0 != null && tmp$0.$implements$JSSyntaxRegExp$Dart)) {
+    return this._split$$member_(pattern);
+  }
+   else {
+    $Dart$ThrowException('StringImplementation.split(Pattern) UNIMPLEMENTED');
+  }
+}
+;
+String.prototype.split$named = function($n, $o, pattern){
+  if ($o.count || $n != 1)
+    $nsme();
+  return String.prototype.split$member.call(this, pattern);
+}
+;
 String.prototype.allMatches$member = function(str){
   var result = RTT.setTypeInfo([], Array.$lookupRTT());
   if (this.isEmpty$named(0, $noargs)) {
@@ -2802,6 +2855,10 @@ String.prototype._charCodeAt$$named_ = function($n, $o, index){
 ;
 String.prototype._substringUnchecked$$member_ = function(startIndex, endIndex){
   return native_StringImplementation__substringUnchecked.call(this, startIndex, endIndex);
+}
+;
+String.prototype._split$$member_ = function(pattern){
+  return native_StringImplementation__split.call(this, pattern);
 }
 ;
 String.prototype.dynamic$getter = function(){
@@ -5185,6 +5242,13 @@ function native__ConsoleWrappingImplementation__log(_this, arg) {
     throw __dom_wrap_exception(e);
   }
 }
+function native__DOMApplicationCacheWrappingImplementation__get_status(_this) {
+  try {
+    return __dom_wrap(_this.$dom.status);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
 function native__DOMApplicationCacheWrappingImplementation__addEventListener_DOMApplicationCache(_this, type, listener) {
   try {
     return __dom_wrap(_this.$dom.addEventListener(__dom_unwrap(type), __dom_unwrap(listener)));
@@ -5395,6 +5459,13 @@ function native__DOMWindowWrappingImplementation__get_parent(_this) {
     throw __dom_wrap_exception(e);
   }
 }
+function native__DOMWindowWrappingImplementation__get_status(_this) {
+  try {
+    return __dom_wrap(_this.$dom.status);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
 function native__DOMWindowWrappingImplementation__set_top(_this, value) {
   try {
     _this.$dom.top = __dom_unwrap(value);
@@ -5419,6 +5490,20 @@ function native__DOMWindowWrappingImplementation__addEventListener_DOMWindow(_th
 function native__DOMWindowWrappingImplementation__addEventListener_DOMWindow_2(_this, type, listener, useCapture) {
   try {
     return __dom_wrap(_this.$dom.addEventListener(__dom_unwrap(type), __dom_unwrap(listener), __dom_unwrap(useCapture)));
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__DOMWindowWrappingImplementation__open(_this, url, name) {
+  try {
+    return __dom_wrap(_this.$dom.open(__dom_unwrap(url), __dom_unwrap(name)));
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__DOMWindowWrappingImplementation__open_2(_this, url, name, options) {
+  try {
+    return __dom_wrap(_this.$dom.open(__dom_unwrap(url), __dom_unwrap(name), __dom_unwrap(options)));
   } catch (e) {
     throw __dom_wrap_exception(e);
   }
@@ -5489,6 +5574,13 @@ function native__DocumentWrappingImplementation__get_defaultView(_this) {
 function native__DocumentWrappingImplementation__get_documentElement(_this) {
   try {
     return __dom_wrap(_this.$dom.documentElement);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__DocumentWrappingImplementation__get_readyState(_this) {
+  try {
+    return __dom_wrap(_this.$dom.readyState);
   } catch (e) {
     throw __dom_wrap_exception(e);
   }
@@ -5668,6 +5760,13 @@ function native__EventExceptionWrappingImplementation__toString(_this) {
     throw __dom_wrap_exception(e);
   }
 }
+function native__EventSourceWrappingImplementation__get_readyState(_this) {
+  try {
+    return __dom_wrap(_this.$dom.readyState);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
 function native__EventSourceWrappingImplementation__addEventListener_EventSource(_this, type, listener) {
   try {
     return __dom_wrap(_this.$dom.addEventListener(__dom_unwrap(type), __dom_unwrap(listener)));
@@ -5759,9 +5858,23 @@ function native__FileListWrappingImplementation__item(_this, index) {
     throw __dom_wrap_exception(e);
   }
 }
+function native__FileReaderWrappingImplementation__get_readyState(_this) {
+  try {
+    return __dom_wrap(_this.$dom.readyState);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
 function native__FileWriterWrappingImplementation__get_length(_this) {
   try {
     return __dom_wrap(_this.$dom.length);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__FileWriterWrappingImplementation__get_readyState(_this) {
+  try {
+    return __dom_wrap(_this.$dom.readyState);
   } catch (e) {
     throw __dom_wrap_exception(e);
   }
@@ -5920,9 +6033,23 @@ function native__HTMLCollectionWrappingImplementation__item(_this, index) {
     throw __dom_wrap_exception(e);
   }
 }
+function native__HTMLDetailsElementWrappingImplementation__get_open(_this) {
+  try {
+    return __dom_wrap(_this.$dom.open);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
 function native__HTMLDocumentWrappingImplementation__clear(_this) {
   try {
     return __dom_wrap(_this.$dom.clear());
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__HTMLDocumentWrappingImplementation__open(_this) {
+  try {
+    return __dom_wrap(_this.$dom.open());
   } catch (e) {
     throw __dom_wrap_exception(e);
   }
@@ -6112,6 +6239,13 @@ function native__HTMLLIElementWrappingImplementation__set_value(_this, value) {
 function native__HTMLMapElementWrappingImplementation__get_name(_this) {
   try {
     return __dom_wrap(_this.$dom.name);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__HTMLMediaElementWrappingImplementation__get_readyState(_this) {
+  try {
+    return __dom_wrap(_this.$dom.readyState);
   } catch (e) {
     throw __dom_wrap_exception(e);
   }
@@ -6375,6 +6509,13 @@ function native__HTMLTextAreaElementWrappingImplementation__set_value(_this, val
     throw __dom_wrap_exception(e);
   }
 }
+function native__HTMLTrackElementWrappingImplementation__get_readyState(_this) {
+  try {
+    return __dom_wrap(_this.$dom.readyState);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
 function native__HTMLTrackElementWrappingImplementation__get_src(_this) {
   try {
     return __dom_wrap(_this.$dom.src);
@@ -6459,6 +6600,13 @@ function native__IDBDatabaseExceptionWrappingImplementation__toString(_this) {
     throw __dom_wrap_exception(e);
   }
 }
+function native__IDBFactoryWrappingImplementation__open(_this, name) {
+  try {
+    return __dom_wrap(_this.$dom.open(__dom_unwrap(name)));
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
 function native__IDBIndexWrappingImplementation__get_name(_this) {
   try {
     return __dom_wrap(_this.$dom.name);
@@ -6490,6 +6638,13 @@ function native__IDBObjectStoreWrappingImplementation__add_2(_this, value, key) 
 function native__IDBObjectStoreWrappingImplementation__clear(_this) {
   try {
     return __dom_wrap(_this.$dom.clear());
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__IDBRequestWrappingImplementation__get_readyState(_this) {
+  try {
+    return __dom_wrap(_this.$dom.readyState);
   } catch (e) {
     throw __dom_wrap_exception(e);
   }
@@ -7726,6 +7881,13 @@ function native__WebKitCSSMatrixWrappingImplementation__toString(_this) {
     throw __dom_wrap_exception(e);
   }
 }
+function native__WebSocketWrappingImplementation__get_readyState(_this) {
+  try {
+    return __dom_wrap(_this.$dom.readyState);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
 function native__WebSocketWrappingImplementation__addEventListener_WebSocket(_this, type, listener) {
   try {
     return __dom_wrap(_this.$dom.addEventListener(__dom_unwrap(type), __dom_unwrap(listener)));
@@ -7796,6 +7958,20 @@ function native__WorkerLocationWrappingImplementation__toString(_this) {
     throw __dom_wrap_exception(e);
   }
 }
+function native__XMLHttpRequestWrappingImplementation__get_readyState(_this) {
+  try {
+    return __dom_wrap(_this.$dom.readyState);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__XMLHttpRequestWrappingImplementation__get_status(_this) {
+  try {
+    return __dom_wrap(_this.$dom.status);
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
 function native__XMLHttpRequestWrappingImplementation__addEventListener_XMLHttpRequest(_this, type, listener) {
   try {
     return __dom_wrap(_this.$dom.addEventListener(__dom_unwrap(type), __dom_unwrap(listener)));
@@ -7806,6 +7982,34 @@ function native__XMLHttpRequestWrappingImplementation__addEventListener_XMLHttpR
 function native__XMLHttpRequestWrappingImplementation__addEventListener_XMLHttpRequest_2(_this, type, listener, useCapture) {
   try {
     return __dom_wrap(_this.$dom.addEventListener(__dom_unwrap(type), __dom_unwrap(listener), __dom_unwrap(useCapture)));
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__XMLHttpRequestWrappingImplementation__open(_this, method, url) {
+  try {
+    return __dom_wrap(_this.$dom.open(__dom_unwrap(method), __dom_unwrap(url)));
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__XMLHttpRequestWrappingImplementation__open_2(_this, method, url, async) {
+  try {
+    return __dom_wrap(_this.$dom.open(__dom_unwrap(method), __dom_unwrap(url), __dom_unwrap(async)));
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__XMLHttpRequestWrappingImplementation__open_3(_this, method, url, async, user) {
+  try {
+    return __dom_wrap(_this.$dom.open(__dom_unwrap(method), __dom_unwrap(url), __dom_unwrap(async), __dom_unwrap(user)));
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
+}
+function native__XMLHttpRequestWrappingImplementation__open_4(_this, method, url, async, user, password) {
+  try {
+    return __dom_wrap(_this.$dom.open(__dom_unwrap(method), __dom_unwrap(url), __dom_unwrap(async), __dom_unwrap(user), __dom_unwrap(password)));
   } catch (e) {
     throw __dom_wrap_exception(e);
   }
@@ -7935,6 +8139,13 @@ function native__DOMWindowWrappingImplementation__setTimeout(_this, callback, ti
 }
 function native__WorkerContextWrappingImplementation__setTimeout(_this, callback, timeout) {
   return __dom_native_TimeoutHander_method(_this, callback, timeout, 'setTimeout');
+}
+function native__XMLHttpRequestFactoryProvider_create() {
+  try {
+    return __dom_wrap(new XMLHttpRequest());
+  } catch (e) {
+    throw __dom_wrap_exception(e);
+  }
 }
 var __dom_type_map = {
   "AbstractWorker": native__AbstractWorkerWrappingImplementation_create__AbstractWorkerWrappingImplementation,
@@ -20143,6 +20354,14 @@ _DOMApplicationCacheWrappingImplementation$Dart.create__DOMApplicationCacheWrapp
 function native__DOMApplicationCacheWrappingImplementation_create__DOMApplicationCacheWrappingImplementation(){
   return _DOMApplicationCacheWrappingImplementation$Dart.create__DOMApplicationCacheWrappingImplementation$member();
 }
+_DOMApplicationCacheWrappingImplementation$Dart.prototype.status$getter = function(){
+  return _DOMApplicationCacheWrappingImplementation$Dart._get_status$$member_(this);
+}
+;
+_DOMApplicationCacheWrappingImplementation$Dart._get_status$$member_ = function(_this){
+  return native__DOMApplicationCacheWrappingImplementation__get_status(_this);
+}
+;
 _DOMApplicationCacheWrappingImplementation$Dart.prototype.addEventListener$member = function(type, listener, useCapture){
   if (useCapture == null) {
     _DOMApplicationCacheWrappingImplementation$Dart._addEventListener_DOMApplicationCache$$member_(this, type, listener);
@@ -21151,6 +21370,14 @@ _DOMWindowWrappingImplementation$Dart._get_parent$$member_ = function(_this){
   return native__DOMWindowWrappingImplementation__get_parent(_this);
 }
 ;
+_DOMWindowWrappingImplementation$Dart.prototype.status$getter = function(){
+  return _DOMWindowWrappingImplementation$Dart._get_status$$member_(this);
+}
+;
+_DOMWindowWrappingImplementation$Dart._get_status$$member_ = function(_this){
+  return native__DOMWindowWrappingImplementation__get_status(_this);
+}
+;
 _DOMWindowWrappingImplementation$Dart.prototype.top$setter = function(value){
   _DOMWindowWrappingImplementation$Dart._set_top$$member_(this, value);
 }
@@ -21196,6 +21423,43 @@ _DOMWindowWrappingImplementation$Dart._addEventListener_DOMWindow$$member_ = fun
 ;
 _DOMWindowWrappingImplementation$Dart._addEventListener_DOMWindow_2$$member_ = function(receiver, type, listener, useCapture){
   return native__DOMWindowWrappingImplementation__addEventListener_DOMWindow_2(receiver, type, listener, useCapture);
+}
+;
+_DOMWindowWrappingImplementation$Dart.prototype.open$member = function(url, name_0, options){
+  if (options == null) {
+    return _DOMWindowWrappingImplementation$Dart._open$$member_(this, url, name_0);
+  }
+   else {
+    return _DOMWindowWrappingImplementation$Dart._open_2$$member_(this, url, name_0, options);
+  }
+}
+;
+_DOMWindowWrappingImplementation$Dart.prototype.open$named = function($n, $o, url, name_0, options){
+  var seen = 0;
+  var def = 0;
+  switch ($n) {
+    case 2:
+      options = '$p_options' in $o?(++seen , $o.$p_options):(++def , $Dart$Null);
+  }
+  if (seen != $o.count || seen + def + $n != 3)
+    $nsme();
+  return _DOMWindowWrappingImplementation$Dart.prototype.open$member.call(this, url, name_0, options);
+}
+;
+_DOMWindowWrappingImplementation$Dart.prototype.open$named_$lookupRTT = function(){
+  return RTT.createFunction([String$Dart.$lookupRTT(), String$Dart.$lookupRTT(), String$Dart.$lookupRTT(null, 'options')], DOMWindow$Dart.$lookupRTT());
+}
+;
+_DOMWindowWrappingImplementation$Dart.prototype.open$getter = function(){
+  return $bind(_DOMWindowWrappingImplementation$Dart.prototype.open$named, _DOMWindowWrappingImplementation$Dart.prototype.open$named_$lookupRTT, this);
+}
+;
+_DOMWindowWrappingImplementation$Dart._open$$member_ = function(receiver, url, name_0){
+  return native__DOMWindowWrappingImplementation__open(receiver, url, name_0);
+}
+;
+_DOMWindowWrappingImplementation$Dart._open_2$$member_ = function(receiver, url, name_0, options){
+  return native__DOMWindowWrappingImplementation__open_2(receiver, url, name_0, options);
 }
 ;
 _DOMWindowWrappingImplementation$Dart.prototype.print$member = function(){
@@ -22323,6 +22587,14 @@ _EventSourceWrappingImplementation$Dart.create__EventSourceWrappingImplementatio
 function native__EventSourceWrappingImplementation_create__EventSourceWrappingImplementation(){
   return _EventSourceWrappingImplementation$Dart.create__EventSourceWrappingImplementation$member();
 }
+_EventSourceWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return _EventSourceWrappingImplementation$Dart._get_readyState$$member_(this);
+}
+;
+_EventSourceWrappingImplementation$Dart._get_readyState$$member_ = function(_this){
+  return native__EventSourceWrappingImplementation__get_readyState(_this);
+}
+;
 _EventSourceWrappingImplementation$Dart.prototype.addEventListener$member = function(type, listener, useCapture){
   if (useCapture == null) {
     _EventSourceWrappingImplementation$Dart._addEventListener_EventSource$$member_(this, type, listener);
@@ -23211,6 +23483,14 @@ _FileReaderWrappingImplementation$Dart.create__FileReaderWrappingImplementation$
 function native__FileReaderWrappingImplementation_create__FileReaderWrappingImplementation(){
   return _FileReaderWrappingImplementation$Dart.create__FileReaderWrappingImplementation$member();
 }
+_FileReaderWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return _FileReaderWrappingImplementation$Dart._get_readyState$$member_(this);
+}
+;
+_FileReaderWrappingImplementation$Dart._get_readyState$$member_ = function(_this){
+  return native__FileReaderWrappingImplementation__get_readyState(_this);
+}
+;
 _FileReaderWrappingImplementation$Dart.prototype.typeName$getter = function(){
   return 'FileReader';
 }
@@ -23378,6 +23658,14 @@ _FileWriterWrappingImplementation$Dart.prototype.length$getter = function(){
 ;
 _FileWriterWrappingImplementation$Dart._get_length$$member_ = function(_this){
   return native__FileWriterWrappingImplementation__get_length(_this);
+}
+;
+_FileWriterWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return _FileWriterWrappingImplementation$Dart._get_readyState$$member_(this);
+}
+;
+_FileWriterWrappingImplementation$Dart._get_readyState$$member_ = function(_this){
+  return native__FileWriterWrappingImplementation__get_readyState(_this);
 }
 ;
 _FileWriterWrappingImplementation$Dart.prototype.truncate$member = function(size){
@@ -24771,6 +25059,28 @@ _IDBFactoryWrappingImplementation$Dart.create__IDBFactoryWrappingImplementation$
 function native__IDBFactoryWrappingImplementation_create__IDBFactoryWrappingImplementation(){
   return _IDBFactoryWrappingImplementation$Dart.create__IDBFactoryWrappingImplementation$member();
 }
+_IDBFactoryWrappingImplementation$Dart.prototype.open$member = function(name_0){
+  return _IDBFactoryWrappingImplementation$Dart._open$$member_(this, name_0);
+}
+;
+_IDBFactoryWrappingImplementation$Dart.prototype.open$named = function($n, $o, name_0){
+  if ($o.count || $n != 1)
+    $nsme();
+  return _IDBFactoryWrappingImplementation$Dart.prototype.open$member.call(this, name_0);
+}
+;
+_IDBFactoryWrappingImplementation$Dart.prototype.open$named_$lookupRTT = function(){
+  return RTT.createFunction([String$Dart.$lookupRTT()], IDBRequest$Dart.$lookupRTT());
+}
+;
+_IDBFactoryWrappingImplementation$Dart.prototype.open$getter = function(){
+  return $bind(_IDBFactoryWrappingImplementation$Dart.prototype.open$named, _IDBFactoryWrappingImplementation$Dart.prototype.open$named_$lookupRTT, this);
+}
+;
+_IDBFactoryWrappingImplementation$Dart._open$$member_ = function(receiver, name_0){
+  return native__IDBFactoryWrappingImplementation__open(receiver, name_0);
+}
+;
 _IDBFactoryWrappingImplementation$Dart.prototype.typeName$getter = function(){
   return 'IDBFactory';
 }
@@ -25063,6 +25373,14 @@ _IDBRequestWrappingImplementation$Dart.create__IDBRequestWrappingImplementation$
 function native__IDBRequestWrappingImplementation_create__IDBRequestWrappingImplementation(){
   return _IDBRequestWrappingImplementation$Dart.create__IDBRequestWrappingImplementation$member();
 }
+_IDBRequestWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return _IDBRequestWrappingImplementation$Dart._get_readyState$$member_(this);
+}
+;
+_IDBRequestWrappingImplementation$Dart._get_readyState$$member_ = function(_this){
+  return native__IDBRequestWrappingImplementation__get_readyState(_this);
+}
+;
 _IDBRequestWrappingImplementation$Dart.prototype.addEventListener$member = function(type, listener, useCapture){
   if (useCapture == null) {
     _IDBRequestWrappingImplementation$Dart._addEventListener$$member_(this, type, listener);
@@ -28134,6 +28452,14 @@ _DocumentWrappingImplementation$Dart._get_documentElement$$member_ = function(_t
   return native__DocumentWrappingImplementation__get_documentElement(_this);
 }
 ;
+_DocumentWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return _DocumentWrappingImplementation$Dart._get_readyState$$member_(this);
+}
+;
+_DocumentWrappingImplementation$Dart._get_readyState$$member_ = function(_this){
+  return native__DocumentWrappingImplementation__get_readyState(_this);
+}
+;
 _DocumentWrappingImplementation$Dart.prototype.title$setter = function(value){
   _DocumentWrappingImplementation$Dart._set_title$$member_(this, value);
 }
@@ -28480,6 +28806,29 @@ _HTMLDocumentWrappingImplementation$Dart.prototype.clear$getter = function(){
 ;
 _HTMLDocumentWrappingImplementation$Dart._clear$$member_ = function(receiver){
   return native__HTMLDocumentWrappingImplementation__clear(receiver);
+}
+;
+_HTMLDocumentWrappingImplementation$Dart.prototype.open$member = function(){
+  _HTMLDocumentWrappingImplementation$Dart._open$$member_(this);
+  return;
+}
+;
+_HTMLDocumentWrappingImplementation$Dart.prototype.open$named = function($n, $o){
+  if ($o.count || $n != 0)
+    $nsme();
+  return _HTMLDocumentWrappingImplementation$Dart.prototype.open$member.call(this);
+}
+;
+_HTMLDocumentWrappingImplementation$Dart.prototype.open$named_$lookupRTT = function(){
+  return RTT.createFunction(null, RTT.dynamicType.$lookupRTT());
+}
+;
+_HTMLDocumentWrappingImplementation$Dart.prototype.open$getter = function(){
+  return $bind(_HTMLDocumentWrappingImplementation$Dart.prototype.open$named, _HTMLDocumentWrappingImplementation$Dart.prototype.open$named_$lookupRTT, this);
+}
+;
+_HTMLDocumentWrappingImplementation$Dart._open$$member_ = function(receiver){
+  return native__HTMLDocumentWrappingImplementation__open(receiver);
 }
 ;
 _HTMLDocumentWrappingImplementation$Dart.prototype.typeName$getter = function(){
@@ -29172,6 +29521,18 @@ _HTMLDetailsElementWrappingImplementation$Dart.create__HTMLDetailsElementWrappin
 function native__HTMLDetailsElementWrappingImplementation_create__HTMLDetailsElementWrappingImplementation(){
   return _HTMLDetailsElementWrappingImplementation$Dart.create__HTMLDetailsElementWrappingImplementation$member();
 }
+_HTMLDetailsElementWrappingImplementation$Dart.prototype.open$named = function(){
+  return this.open$getter().apply(this, arguments);
+}
+;
+_HTMLDetailsElementWrappingImplementation$Dart.prototype.open$getter = function(){
+  return _HTMLDetailsElementWrappingImplementation$Dart._get_open$$member_(this);
+}
+;
+_HTMLDetailsElementWrappingImplementation$Dart._get_open$$member_ = function(_this){
+  return native__HTMLDetailsElementWrappingImplementation__get_open(_this);
+}
+;
 _HTMLDetailsElementWrappingImplementation$Dart.prototype.typeName$getter = function(){
   return 'HTMLDetailsElement';
 }
@@ -30467,6 +30828,14 @@ _HTMLMediaElementWrappingImplementation$Dart.create__HTMLMediaElementWrappingImp
 function native__HTMLMediaElementWrappingImplementation_create__HTMLMediaElementWrappingImplementation(){
   return _HTMLMediaElementWrappingImplementation$Dart.create__HTMLMediaElementWrappingImplementation$member();
 }
+_HTMLMediaElementWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return _HTMLMediaElementWrappingImplementation$Dart._get_readyState$$member_(this);
+}
+;
+_HTMLMediaElementWrappingImplementation$Dart._get_readyState$$member_ = function(_this){
+  return native__HTMLMediaElementWrappingImplementation__get_readyState(_this);
+}
+;
 _HTMLMediaElementWrappingImplementation$Dart.prototype.src$getter = function(){
   return _HTMLMediaElementWrappingImplementation$Dart._get_src$$member_(this);
 }
@@ -32055,6 +32424,14 @@ _HTMLTrackElementWrappingImplementation$Dart.create__HTMLTrackElementWrappingImp
 function native__HTMLTrackElementWrappingImplementation_create__HTMLTrackElementWrappingImplementation(){
   return _HTMLTrackElementWrappingImplementation$Dart.create__HTMLTrackElementWrappingImplementation$member();
 }
+_HTMLTrackElementWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return _HTMLTrackElementWrappingImplementation$Dart._get_readyState$$member_(this);
+}
+;
+_HTMLTrackElementWrappingImplementation$Dart._get_readyState$$member_ = function(_this){
+  return native__HTMLTrackElementWrappingImplementation__get_readyState(_this);
+}
+;
 _HTMLTrackElementWrappingImplementation$Dart.prototype.src$getter = function(){
   return _HTMLTrackElementWrappingImplementation$Dart._get_src$$member_(this);
 }
@@ -45315,6 +45692,14 @@ _WebSocketWrappingImplementation$Dart.create__WebSocketWrappingImplementation$me
 function native__WebSocketWrappingImplementation_create__WebSocketWrappingImplementation(){
   return _WebSocketWrappingImplementation$Dart.create__WebSocketWrappingImplementation$member();
 }
+_WebSocketWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return _WebSocketWrappingImplementation$Dart._get_readyState$$member_(this);
+}
+;
+_WebSocketWrappingImplementation$Dart._get_readyState$$member_ = function(_this){
+  return native__WebSocketWrappingImplementation__get_readyState(_this);
+}
+;
 _WebSocketWrappingImplementation$Dart.prototype.addEventListener$member = function(type, listener, useCapture){
   if (useCapture == null) {
     _WebSocketWrappingImplementation$Dart._addEventListener_WebSocket$$member_(this, type, listener);
@@ -46068,6 +46453,22 @@ _XMLHttpRequestWrappingImplementation$Dart.create__XMLHttpRequestWrappingImpleme
 function native__XMLHttpRequestWrappingImplementation_create__XMLHttpRequestWrappingImplementation(){
   return _XMLHttpRequestWrappingImplementation$Dart.create__XMLHttpRequestWrappingImplementation$member();
 }
+_XMLHttpRequestWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return _XMLHttpRequestWrappingImplementation$Dart._get_readyState$$member_(this);
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart._get_readyState$$member_ = function(_this){
+  return native__XMLHttpRequestWrappingImplementation__get_readyState(_this);
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart.prototype.status$getter = function(){
+  return _XMLHttpRequestWrappingImplementation$Dart._get_status$$member_(this);
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart._get_status$$member_ = function(_this){
+  return native__XMLHttpRequestWrappingImplementation__get_status(_this);
+}
+;
 _XMLHttpRequestWrappingImplementation$Dart.prototype.addEventListener$member = function(type, listener, useCapture){
   if (useCapture == null) {
     _XMLHttpRequestWrappingImplementation$Dart._addEventListener_XMLHttpRequest$$member_(this, type, listener);
@@ -46097,6 +46498,76 @@ _XMLHttpRequestWrappingImplementation$Dart._addEventListener_XMLHttpRequest$$mem
 ;
 _XMLHttpRequestWrappingImplementation$Dart._addEventListener_XMLHttpRequest_2$$member_ = function(receiver, type, listener, useCapture){
   return native__XMLHttpRequestWrappingImplementation__addEventListener_XMLHttpRequest_2(receiver, type, listener, useCapture);
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart.prototype.open$member = function(method, url, async, user, password){
+  if (async == null) {
+    if (user == null) {
+      if (password == null) {
+        _XMLHttpRequestWrappingImplementation$Dart._open$$member_(this, method, url);
+        return;
+      }
+    }
+  }
+   else {
+    if (user == null) {
+      if (password == null) {
+        _XMLHttpRequestWrappingImplementation$Dart._open_2$$member_(this, method, url, async);
+        return;
+      }
+    }
+     else {
+      if (password == null) {
+        _XMLHttpRequestWrappingImplementation$Dart._open_3$$member_(this, method, url, async, user);
+        return;
+      }
+       else {
+        _XMLHttpRequestWrappingImplementation$Dart._open_4$$member_(this, method, url, async, user, password);
+        return;
+      }
+    }
+  }
+  $Dart$ThrowException('Incorrect number or type of arguments');
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart.prototype.open$named = function($n, $o, method, url, async, user, password){
+  var seen = 0;
+  var def = 0;
+  switch ($n) {
+    case 2:
+      async = '$p_async' in $o?(++seen , $o.$p_async):(++def , $Dart$Null);
+    case 3:
+      user = '$p_user' in $o?(++seen , $o.$p_user):(++def , $Dart$Null);
+    case 4:
+      password = '$p_password' in $o?(++seen , $o.$p_password):(++def , $Dart$Null);
+  }
+  if (seen != $o.count || seen + def + $n != 5)
+    $nsme();
+  return _XMLHttpRequestWrappingImplementation$Dart.prototype.open$member.call(this, method, url, async, user, password);
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart.prototype.open$named_$lookupRTT = function(){
+  return RTT.createFunction([String$Dart.$lookupRTT(), String$Dart.$lookupRTT(), bool$Dart.$lookupRTT(null, 'async'), String$Dart.$lookupRTT(null, 'user'), String$Dart.$lookupRTT(null, 'password')], RTT.dynamicType.$lookupRTT());
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart.prototype.open$getter = function(){
+  return $bind(_XMLHttpRequestWrappingImplementation$Dart.prototype.open$named, _XMLHttpRequestWrappingImplementation$Dart.prototype.open$named_$lookupRTT, this);
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart._open$$member_ = function(receiver, method, url){
+  return native__XMLHttpRequestWrappingImplementation__open(receiver, method, url);
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart._open_2$$member_ = function(receiver, method, url, async){
+  return native__XMLHttpRequestWrappingImplementation__open_2(receiver, method, url, async);
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart._open_3$$member_ = function(receiver, method, url, async, user){
+  return native__XMLHttpRequestWrappingImplementation__open_3(receiver, method, url, async, user);
+}
+;
+_XMLHttpRequestWrappingImplementation$Dart._open_4$$member_ = function(receiver, method, url, async, user, password){
+  return native__XMLHttpRequestWrappingImplementation__open_4(receiver, method, url, async, user, password);
 }
 ;
 _XMLHttpRequestWrappingImplementation$Dart.prototype.removeEventListener$member = function(type, listener, useCapture){
@@ -46574,6 +47045,16 @@ _Collections$Dart.forEach$member = function(iterable, f){
       }
     }
   }
+}
+;
+function _XMLHttpRequestFactoryProvider$Dart(){
+}
+_XMLHttpRequestFactoryProvider$Dart.XMLHttpRequest$$Factory = function(){
+  return _XMLHttpRequestFactoryProvider$Dart.create$member();
+}
+;
+_XMLHttpRequestFactoryProvider$Dart.create$member = function(){
+  return native__XMLHttpRequestFactoryProvider_create();
 }
 ;
 function _VariableSizeListIterator$Dart(){
@@ -48496,6 +48977,10 @@ htmlimpl0a8e4b$DocumentEventsImplementation$Dart.DocumentEventsImplementation$_w
   return tmp$0;
 }
 ;
+htmlimpl0a8e4b$DocumentEventsImplementation$Dart.prototype.readyStateChange$getter = function(){
+  return this._get$htmlimpl0a8e4b$$member_('readystatechange');
+}
+;
 function htmlimpl0a8e4b$_EventListenerWrapper$Dart(){
 }
 htmlimpl0a8e4b$_EventListenerWrapper$Dart.$lookupRTT = function(typeArgs, named){
@@ -50110,6 +50595,14 @@ htmlimpl0a8e4b$DetailsElementWrappingImplementation$Dart.DetailsElementWrappingI
   return tmp$0;
 }
 ;
+htmlimpl0a8e4b$DetailsElementWrappingImplementation$Dart.prototype.open$named = function(){
+  return this.open$getter().apply(this, arguments);
+}
+;
+htmlimpl0a8e4b$DetailsElementWrappingImplementation$Dart.prototype.open$getter = function(){
+  return this._ptr$htmlimpl0a8e4b$$getter_().open$getter();
+}
+;
 function htmlimpl0a8e4b$DivElementWrappingImplementation$Dart(){
 }
 $inherits(htmlimpl0a8e4b$DivElementWrappingImplementation$Dart, htmlimpl0a8e4b$ElementWrappingImplementation$Dart);
@@ -50863,6 +51356,10 @@ htmlimpl0a8e4b$MediaElementWrappingImplementation$Dart.MediaElementWrappingImple
   htmlimpl0a8e4b$MediaElementWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Initializer_.call(tmp$0, ptr);
   htmlimpl0a8e4b$MediaElementWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_.call(tmp$0, ptr);
   return tmp$0;
+}
+;
+htmlimpl0a8e4b$MediaElementWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return this._ptr$htmlimpl0a8e4b$$getter_().readyState$getter();
 }
 ;
 htmlimpl0a8e4b$MediaElementWrappingImplementation$Dart.prototype.src$getter = function(){
@@ -52128,6 +52625,7 @@ htmlimpl0a8e4b$DocumentWrappingImplementation$Dart.$addTo = function(target){
   htmld071c1$Document$Dart.$addTo(target);
 }
 ;
+htmlimpl0a8e4b$DocumentWrappingImplementation$Dart.prototype.$implements$htmld071c1$Document$Dart = 1;
 htmlimpl0a8e4b$DocumentWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_ = function(_documentPtr, ptr){
   htmlimpl0a8e4b$ElementWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_.call(this, ptr);
   var tmp$0;
@@ -52157,6 +52655,10 @@ htmlimpl0a8e4b$DocumentWrappingImplementation$Dart.prototype.parent$getter = fun
 ;
 htmlimpl0a8e4b$DocumentWrappingImplementation$Dart.prototype.window$getter = function(){
   return htmlimpl0a8e4b$LevelDom$Dart.wrapWindow$member(this._documentPtr$htmlimpl0a8e4b$$getter_().defaultView$getter());
+}
+;
+htmlimpl0a8e4b$DocumentWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return this._documentPtr$htmlimpl0a8e4b$$getter_().readyState$getter();
 }
 ;
 htmlimpl0a8e4b$DocumentWrappingImplementation$Dart.prototype.title$setter = function(value){
@@ -52364,6 +52866,7 @@ htmlimpl0a8e4b$SVGDocumentWrappingImplementation$Dart.$addTo = function(target){
   htmld071c1$SVGDocument$Dart.$addTo(target);
 }
 ;
+htmlimpl0a8e4b$SVGDocumentWrappingImplementation$Dart.prototype.$implements$htmld071c1$Document$Dart = 1;
 htmlimpl0a8e4b$SVGDocumentWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_ = function(ptr){
   htmlimpl0a8e4b$DocumentWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_.call(this, ptr, ptr.rootElement$getter());
 }
@@ -55926,9 +56429,42 @@ htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.parent$getter = funct
   return htmlimpl0a8e4b$LevelDom$Dart.wrapWindow$member(this._ptr$htmlimpl0a8e4b$$getter_().parent$getter());
 }
 ;
+htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.status$getter = function(){
+  return this._ptr$htmlimpl0a8e4b$$getter_().status$getter();
+}
+;
 htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.top$setter = function(value){
   var tmp$0;
   this._ptr$htmlimpl0a8e4b$$getter_().top$setter(tmp$0 = htmlimpl0a8e4b$LevelDom$Dart.unwrap$member(value)) , tmp$0;
+}
+;
+htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.open$member = function(url, target, features){
+  if (features == null) {
+    return htmlimpl0a8e4b$LevelDom$Dart.wrapWindow$member(this._ptr$htmlimpl0a8e4b$$getter_().open$named(2, $noargs, url, target));
+  }
+   else {
+    return htmlimpl0a8e4b$LevelDom$Dart.wrapWindow$member(this._ptr$htmlimpl0a8e4b$$getter_().open$named(3, $noargs, url, target, features));
+  }
+}
+;
+htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.open$named = function($n, $o, url, target, features){
+  var seen = 0;
+  var def = 0;
+  switch ($n) {
+    case 2:
+      features = '$p_features' in $o?(++seen , $o.$p_features):(++def , $Dart$Null);
+  }
+  if (seen != $o.count || seen + def + $n != 3)
+    $nsme();
+  return htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.open$member.call(this, url, target, features);
+}
+;
+htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.open$named_$lookupRTT = function(){
+  return RTT.createFunction([String$Dart.$lookupRTT(), String$Dart.$lookupRTT(), String$Dart.$lookupRTT(null, 'features')], htmld071c1$Window$Dart.$lookupRTT());
+}
+;
+htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.open$getter = function(){
+  return $bind(htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.open$named, htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.open$named_$lookupRTT, this);
 }
 ;
 htmlimpl0a8e4b$WindowWrappingImplementation$Dart.prototype.print$member = function(){
@@ -56015,6 +56551,173 @@ htmlimpl0a8e4b$XMLHttpRequestProgressEventWrappingImplementation$Dart.XMLHttpReq
   htmlimpl0a8e4b$XMLHttpRequestProgressEventWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Initializer_.call(tmp$0, ptr);
   htmlimpl0a8e4b$XMLHttpRequestProgressEventWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_.call(tmp$0, ptr);
   return tmp$0;
+}
+;
+function htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart(){
+}
+$inherits(htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart, htmlimpl0a8e4b$EventsImplementation$Dart);
+htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart.$lookupRTT = function(typeArgs, named){
+  return RTT.create($cls('htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart'), htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart.$RTTimplements, null, named);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart.$RTTimplements = function(rtt){
+  htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart.$addTo(rtt);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart.$addTo = function(target){
+  var rtt = htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart.$lookupRTT();
+  target.implementedTypes[rtt.classKey] = rtt;
+  htmlimpl0a8e4b$EventsImplementation$Dart.$addTo(target);
+  htmld071c1$XMLHttpRequestEvents$Dart.$addTo(target);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_ = function(_ptr){
+  htmlimpl0a8e4b$EventsImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_.call(this, _ptr);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart._wrap$htmlimpl0a8e4b$$Initializer_ = function(_ptr){
+  htmlimpl0a8e4b$EventsImplementation$Dart._wrap$htmlimpl0a8e4b$$Initializer_.call(this, _ptr);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart.XMLHttpRequestEventsImplementation$_wrap$34$htmlimpl0a8e4b$$Factory_ = function(_ptr){
+  var tmp$0 = new htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart;
+  tmp$0.$typeInfo = htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart.$lookupRTT();
+  htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart._wrap$htmlimpl0a8e4b$$Initializer_.call(tmp$0, _ptr);
+  htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_.call(tmp$0, _ptr);
+  return tmp$0;
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart.prototype.readyStateChange$getter = function(){
+  return this._get$htmlimpl0a8e4b$$member_('readystatechange');
+}
+;
+function htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart(){
+}
+$inherits(htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart, htmlimpl0a8e4b$EventTargetWrappingImplementation$Dart);
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.$lookupRTT = function(typeArgs, named){
+  return RTT.create($cls('htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart'), htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.$RTTimplements, null, named);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.$RTTimplements = function(rtt){
+  htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.$addTo(rtt);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.$addTo = function(target){
+  var rtt = htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.$lookupRTT();
+  target.implementedTypes[rtt.classKey] = rtt;
+  htmlimpl0a8e4b$EventTargetWrappingImplementation$Dart.$addTo(target);
+  htmld071c1$XMLHttpRequest$Dart.$addTo(target);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_ = function(ptr){
+  htmlimpl0a8e4b$EventTargetWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_.call(this, ptr);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Initializer_ = function(ptr){
+  htmlimpl0a8e4b$EventTargetWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Initializer_.call(this, ptr);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.XMLHttpRequestWrappingImplementation$_wrap$36$htmlimpl0a8e4b$$Factory_ = function(ptr){
+  var tmp$0 = new htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart;
+  tmp$0.$typeInfo = htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.$lookupRTT();
+  htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Initializer_.call(tmp$0, ptr);
+  htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart._wrap$htmlimpl0a8e4b$$Constructor_.call(tmp$0, ptr);
+  return tmp$0;
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.XMLHttpRequestWrappingImplementation$$Factory = function(){
+  return htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.XMLHttpRequestWrappingImplementation$_wrap$36$htmlimpl0a8e4b$$Factory_(_XMLHttpRequestFactoryProvider$Dart.XMLHttpRequest$$Factory());
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.readyState$getter = function(){
+  return this._ptr$htmlimpl0a8e4b$$getter_().readyState$getter();
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.status$getter = function(){
+  return this._ptr$htmlimpl0a8e4b$$getter_().status$getter();
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.open$member = function(method, url, async, user, password){
+  if (user == null) {
+    if (password == null) {
+      this._ptr$htmlimpl0a8e4b$$getter_().open$named(3, $noargs, method, url, async);
+      return;
+    }
+  }
+   else {
+    if (password == null) {
+      this._ptr$htmlimpl0a8e4b$$getter_().open$named(4, $noargs, method, url, async, user);
+      return;
+    }
+     else {
+      this._ptr$htmlimpl0a8e4b$$getter_().open$named(5, $noargs, method, url, async, user, password);
+      return;
+    }
+  }
+  $Dart$ThrowException('Incorrect number or type of arguments');
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.open$named = function($n, $o, method, url, async, user, password){
+  var seen = 0;
+  var def = 0;
+  switch ($n) {
+    case 3:
+      user = '$p_user' in $o?(++seen , $o.$p_user):(++def , $Dart$Null);
+    case 4:
+      password = '$p_password' in $o?(++seen , $o.$p_password):(++def , $Dart$Null);
+  }
+  if (seen != $o.count || seen + def + $n != 5)
+    $nsme();
+  return htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.open$member.call(this, method, url, async, user, password);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.open$named_$lookupRTT = function(){
+  return RTT.createFunction([String$Dart.$lookupRTT(), String$Dart.$lookupRTT(), bool$Dart.$lookupRTT(), String$Dart.$lookupRTT(null, 'user'), String$Dart.$lookupRTT(null, 'password')], RTT.dynamicType.$lookupRTT());
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.open$getter = function(){
+  return $bind(htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.open$named, htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.open$named_$lookupRTT, this);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.send$member = function(data){
+  var tmp$0;
+  if (data == null) {
+    this._ptr$htmlimpl0a8e4b$$getter_().send$named(0, $noargs);
+    return;
+  }
+   else {
+    if (!!(tmp$0 = data , tmp$0 != null && tmp$0.$implements$htmld071c1$Document$Dart)) {
+      this._ptr$htmlimpl0a8e4b$$getter_().send$named(1, $noargs, htmlimpl0a8e4b$LevelDom$Dart.unwrapMaybePrimitive$member(data));
+      return;
+    }
+     else {
+      if ($isString(data)) {
+        this._ptr$htmlimpl0a8e4b$$getter_().send$named(1, $noargs, htmlimpl0a8e4b$LevelDom$Dart.unwrapMaybePrimitive$member(data));
+        return;
+      }
+    }
+  }
+  $Dart$ThrowException('Incorrect number or type of arguments');
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.send$named = function($n, $o, data){
+  var seen = 0;
+  var def = 0;
+  switch ($n) {
+    case 0:
+      data = '$p_data' in $o?(++seen , $o.$p_data):(++def , $Dart$Null);
+  }
+  if (seen != $o.count || seen + def + $n != 1)
+    $nsme();
+  return htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.send$member.call(this, data);
+}
+;
+htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.prototype.on$getter = function(){
+  var tmp$0;
+  if (this._on$htmlimpl0a8e4b$$getter_() == null) {
+    this._on$htmlimpl0a8e4b$$setter_(tmp$0 = htmlimpl0a8e4b$XMLHttpRequestEventsImplementation$Dart.XMLHttpRequestEventsImplementation$_wrap$34$htmlimpl0a8e4b$$Factory_(this._ptr$htmlimpl0a8e4b$$getter_())) , tmp$0;
+  }
+  return this._on$htmlimpl0a8e4b$$getter_();
 }
 ;
 function htmld071c1$AnchorElement$Dart(){
@@ -59483,6 +60186,38 @@ htmld071c1$Window$Dart.$addTo = function(target){
   htmld071c1$EventTarget$Dart.$addTo(target);
 }
 ;
+function htmld071c1$XMLHttpRequestEvents$Dart(){
+}
+htmld071c1$XMLHttpRequestEvents$Dart.$lookupRTT = function(typeArgs, named){
+  return RTT.create($cls('htmld071c1$XMLHttpRequestEvents$Dart'), htmld071c1$XMLHttpRequestEvents$Dart.$RTTimplements, null, named);
+}
+;
+htmld071c1$XMLHttpRequestEvents$Dart.$RTTimplements = function(rtt){
+  htmld071c1$XMLHttpRequestEvents$Dart.$addTo(rtt);
+}
+;
+htmld071c1$XMLHttpRequestEvents$Dart.$addTo = function(target){
+  var rtt = htmld071c1$XMLHttpRequestEvents$Dart.$lookupRTT();
+  target.implementedTypes[rtt.classKey] = rtt;
+  htmld071c1$Events$Dart.$addTo(target);
+}
+;
+function htmld071c1$XMLHttpRequest$Dart(){
+}
+htmld071c1$XMLHttpRequest$Dart.$lookupRTT = function(typeArgs, named){
+  return RTT.create($cls('htmld071c1$XMLHttpRequest$Dart'), htmld071c1$XMLHttpRequest$Dart.$RTTimplements, null, named);
+}
+;
+htmld071c1$XMLHttpRequest$Dart.$RTTimplements = function(rtt){
+  htmld071c1$XMLHttpRequest$Dart.$addTo(rtt);
+}
+;
+htmld071c1$XMLHttpRequest$Dart.$addTo = function(target){
+  var rtt = htmld071c1$XMLHttpRequest$Dart.$lookupRTT();
+  target.implementedTypes[rtt.classKey] = rtt;
+  htmld071c1$EventTarget$Dart.$addTo(target);
+}
+;
 function htmld071c1$XMLHttpRequestProgressEvent$Dart(){
 }
 htmld071c1$XMLHttpRequestProgressEvent$Dart.$lookupRTT = function(typeArgs, named){
@@ -59521,6 +60256,7 @@ unnamede02874$Lawnville$Dart.$Initializer = function(){
   this.DROID_IDLE_X$field = 381;
   this.DROID_IDLE_Y$field = 395;
   this.HALF$field = 0.5;
+  this.SECS_PER_MS$field = DIV$operator(1, 1000);
   this._waitingForTimer$unnamede02874$$field_ = false;
 }
 ;
@@ -59562,6 +60298,19 @@ unnamede02874$Lawnville$Dart.prototype.DROID_IDLE_Y$getter = function(){
 ;
 unnamede02874$Lawnville$Dart.prototype.HALF$getter = function(){
   return 0.5;
+}
+;
+unnamede02874$Lawnville$Dart.prototype.SECS_PER_MS$getter = function(){
+  var tmp$0 = this.SECS_PER_MS$field;
+  var tmp$1 = static$initializing;
+  if (tmp$0 === tmp$1)
+    throw 'circular initialization';
+  if (tmp$0 !== static$uninitialized)
+    return tmp$0;
+  this.SECS_PER_MS$field = tmp$1;
+  var tmp$2 = DIV$operator(1, 1000);
+  this.SECS_PER_MS$field = tmp$2;
+  return tmp$2;
 }
 ;
 unnamede02874$Lawnville$Dart.prototype._actionQueue$unnamede02874$$getter_ = function(){
@@ -59701,25 +60450,30 @@ unnamede02874$Lawnville$Dart.prototype._doAction$unnamede02874$$member_ = functi
   this._water$unnamede02874$$member_(action.INDEX$operator('zone'));
 }
 ;
-function unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted(){
+function unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted(dartc_scp$1){
   var tmp$1, tmp$0;
   this._droid$unnamede02874$$getter_().src$setter(tmp$0 = '/static/images/droid-watering-1.png') , tmp$0;
   this._animationCallbacks$unnamede02874$$getter_().ASSIGN_INDEX$operator('_wateringAnimation', tmp$1 = $bind(unnamede02874$Lawnville$Dart.prototype._wateringAnimation$unnamede02874$$named_, unnamede02874$Lawnville$Dart.prototype._wateringAnimation$unnamede02874$$named__$lookupRTT, this)) , tmp$1;
+  this._waterRpc$unnamede02874$$member_(dartc_scp$1.zoneNum);
 }
-function unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted$named($n, $o){
+function unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted$named($s0, $n, $o){
   if ($o.count || $n != 0)
     $nsme();
-  return unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted.call(this);
+  return unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted.call(this, $s0);
 }
 function unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted$named$named_$lookupRTT(){
   return RTT.createFunction(null, RTT.dynamicType.$lookupRTT());
 }
 unnamede02874$Lawnville$Dart.prototype._water$unnamede02874$$member_ = function(zoneId){
+  var dartc_scp$1;
+  dartc_scp$1 = {};
   htmld071c1$window$getter().console$getter().log$named(1, $noargs, 'Watering zone: ' + $toString(zoneId) + '');
   var zone = htmld071c1$document$getter().query$named(1, $noargs, '#' + $toString(zoneId) + '');
   var x = Math$Dart.parseInt$member(zone.dataAttributes$getter().INDEX$operator('center-x'));
   var y = Math$Dart.parseInt$member(zone.dataAttributes$getter().INDEX$operator('center-y'));
-  this._repositionDroid$unnamede02874$$member_(x, y, $bind(unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted$named, unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted$named$named_$lookupRTT, this));
+  dartc_scp$1.zoneNum = Math$Dart.parseInt$member(zoneId.split$named(1, $noargs, '-').INDEX$operator(1));
+  this._repositionDroid$unnamede02874$$member_(x, y, $bind(unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted$named, unnamede02874$Lawnville$Dart$_water$c0$28_28$Hoisted$named$named_$lookupRTT, this, dartc_scp$1));
+  dartc_scp$1 = $Dart$Null;
 }
 ;
 unnamede02874$Lawnville$Dart.prototype._wateringAnimation$unnamede02874$$member_ = function(){
@@ -59741,6 +60495,35 @@ unnamede02874$Lawnville$Dart.prototype._wateringAnimation$unnamede02874$$named_ 
 ;
 unnamede02874$Lawnville$Dart.prototype._wateringAnimation$unnamede02874$$named__$lookupRTT = function(){
   return RTT.createFunction(null, RTT.dynamicType.$lookupRTT());
+}
+;
+function unnamede02874$Lawnville$Dart$_waterRpc$c0$28_28$Hoisted(dartc_scp$1, e){
+  if (EQ$operator(dartc_scp$1.req.readyState$getter(), 4)) {
+    if (EQ$operator(dartc_scp$1.req.status$getter(), 200)) {
+      htmld071c1$window$getter().console$getter().log$named(1, $noargs, 'Watering was successful');
+    }
+     else {
+      htmld071c1$window$getter().console$getter().log$named(1, $noargs, 'Watering was unsuccessful');
+    }
+  }
+}
+function unnamede02874$Lawnville$Dart$_waterRpc$c0$28_28$Hoisted$named($s0, $n, $o, e){
+  if ($o.count || $n != 1)
+    $nsme();
+  return unnamede02874$Lawnville$Dart$_waterRpc$c0$28_28$Hoisted.call(this, $s0, e);
+}
+function unnamede02874$Lawnville$Dart$_waterRpc$c0$28_28$Hoisted$named$named_$lookupRTT(){
+  return RTT.createFunction([htmld071c1$Event$Dart.$lookupRTT()], RTT.dynamicType.$lookupRTT());
+}
+unnamede02874$Lawnville$Dart.prototype._waterRpc$unnamede02874$$member_ = function(zone){
+  var dartc_scp$1;
+  dartc_scp$1 = {};
+  dartc_scp$1.req = htmlimpl0a8e4b$XMLHttpRequestWrappingImplementation$Dart.XMLHttpRequestWrappingImplementation$$Factory();
+  var secs = MUL$operator(this.TIMER_INTERVAL$getter(), this.SECS_PER_MS$getter()).toInt$named(0, $noargs);
+  dartc_scp$1.req.open$named(3, $noargs, 'POST', '/?water-zone=true&zone=' + $toString(zone) + '&secs=' + $toString(secs) + '', true);
+  dartc_scp$1.req.on$getter().readyStateChange$getter().add$named(1, $noargs, $bind(unnamede02874$Lawnville$Dart$_waterRpc$c0$28_28$Hoisted$named, unnamede02874$Lawnville$Dart$_waterRpc$c0$28_28$Hoisted$named$named_$lookupRTT, this, dartc_scp$1));
+  dartc_scp$1.req.send$named(0, $noargs);
+  dartc_scp$1 = $Dart$Null;
 }
 ;
 function unnamede02874$Lawnville$Dart$_repositionDroid$c0$28_28$Hoisted(dartc_scp$0){
@@ -59893,6 +60676,7 @@ isolate$inits.push(function(){
 }
 );
 isolate$inits.push(function(){
+  this.SECS_PER_MS$field = static$uninitialized;
   this._waitingForTimer$unnamede02874$$field_ = false;
 }
 );
