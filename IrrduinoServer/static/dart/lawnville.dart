@@ -15,8 +15,8 @@ typedef void Continuation();
 class Lawnville {
   final int TIMER_INTERVAL = 10000;      // 10 seconds
   final int REPOSITION_DURATION = 1000;  // 1 second
-  final int DROID_WIDTH = 65;
-  final int DROID_HEIGHT = 96;
+  final int DROID_WIDTH = 100;
+  final int DROID_HEIGHT = 100;
   final int DROID_IDLE_X = 381;
   final int DROID_IDLE_Y = 395;
   final double HALF = 0.5;
@@ -85,7 +85,7 @@ class Lawnville {
     int x = Math.parseInt(zone.dataAttributes["center-x"]);
     int y = Math.parseInt(zone.dataAttributes["center-y"]);
     _repositionDroid(x, y, () {
-      _droid.src = "/static/images/droid-watering-lawn.png";
+      _droid.src = "/static/images/droid-watering-1.png";
     });
   }
   
