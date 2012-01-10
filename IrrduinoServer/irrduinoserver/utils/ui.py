@@ -20,7 +20,7 @@ def generate_tabs(tab_name="welcome"):
   tabs = []
   for (name, url) in (
     ("Controls", "/"),
-    ("Log", "/log"),
+    ("Logs", "/logs"),
     ("Reports", "/reports"),
     ("About", "/about"),
     ("LawnVille", "javascript:window.open('/lawnville', 'lawnville', 'width=800, height=600, status=no, toolbar=no, menubar=no, location=no, resizable=no, scrollbars=no')")
