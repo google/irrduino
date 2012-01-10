@@ -1,5 +1,7 @@
 #import('dart:html');
 
+typedef void Continuation();
+
 /**
  * This is like FarmVille, but it actually works.
  *
@@ -21,6 +23,7 @@ class Lawnville {
   
   Queue _actionQueue;
   bool _waitingForTimer = false;
+  ImageElement _droid;
   
   Lawnville() {
     _actionQueue = new Queue();
@@ -28,6 +31,7 @@ class Lawnville {
 
   void _run() {
     document.title = "LawnVille in Dart!";
+    _droid = document.query("#droid");
     _handleZoneClicks();
   }
   
@@ -53,7 +57,7 @@ class Lawnville {
   
   void _executeActionQueue() {
     window.console.log("_executeActionQueue");
-    window.console.log("_actionQueue.length: " + _actionQueue.length);
+    window.console.log("_actionQueue.length: ${_actionQueue.length}");
     if (_actionQueue.isEmpty()) {
       window.console.log("Nothing to do");
       window.console.log("_waitingForTimer = false");
@@ -70,21 +74,38 @@ class Lawnville {
   }
     
   void _doAction(action) {
-    window.console.log("Doing action: " + action["action"] + " zone: " + action["zone"]);
-    AreaElement zone = document.query("#" + action["zone"]);
-    _repositionDroid(Math.parseInt(zone.dataAttributes["center-x"]),
-                     Math.parseInt(zone.dataAttributes["center-y"]));
+    // We only have one action at this point.
+    assert (action["action"] == "water");
+    _water(action["zone"]);
+  }
+ 
+  void _water(zone) {
+    window.console.log("Watering zone: ${zone}");
+    AreaElement zone = document.query("#${zone}");
+    int x = Math.parseInt(zone.dataAttributes["center-x"]);
+    int y = Math.parseInt(zone.dataAttributes["center-y"]);
+    _repositionDroid(x, y, () {
+      _droid.src = "/static/images/droid-watering-lawn.png";
+    });
   }
   
-  void _repositionDroid(int x, int y) {
-    ImageElement droid = document.query("#droid");
+  /**
+   * Move the droid in an animated way.
+   *
+   * If continuation is not null, then call it once the movement is done.
+   */
+  void _repositionDroid(int x, int y, [Continuation continuation = null]) {
     x -= (HALF * DROID_WIDTH).toInt();
     y -= DROID_HEIGHT;
-    droid.src = "/static/images/droid-jetpack-on-front.png";
-    droid.style.left = "${x}px";
-    droid.style.top = "${y}px";
+    _droid.src = "/static/images/droid-jetpack-on-front.png";
+    _droid.style.left = "${x}px";
+    _droid.style.top = "${y}px";
     window.setTimeout(() {
-      droid.src = "/static/images/droid-waiting-front.png";
+      if (continuation != null) {
+        continuation();
+      } else {
+        _droid.src = "/static/images/droid-waiting-front.png";
+      }
     }, REPOSITION_DURATION);
   }
   
