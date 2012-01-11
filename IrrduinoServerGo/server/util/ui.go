@@ -12,24 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// This module contains helpers related to user interface rendering.
 package util
 
-//"""This module contains helpers related to user interface rendering."""
-//
-//
-//def generate_tabs(tab_name="welcome"):
-//  """Take a parameter for a selected tab and generate a tab list."""
-//  tabs = []
-//  for (name, url) in (
-//    ("Controls", "/"),
-//    ("Log", "/log"),
-//    ("Reports", "/reports"),
-//    ("About", "/about"),
-//    ("LawnVille", "javascript:window.open('/lawnville', 'lawnville', 'width=800, height=600, status=no, toolbar=no, menubar=no, location=no, resizable=no, scrollbars=no')")
-//  ):
-//    selected = ""
-//    if tab_name.lower() == name.lower():
-//      selected = " class=selected"
-//    tabs.append('<li%s><a href="%s">%s</a></li>' % (selected, url, name))
-//
-//  return "".join(tabs)
+import (
+	"fmt"
+	"strings"
+)
+
+// Generate a tab list, given the currently selected tab.
+func GenerateTabs(current string) string {
+	lawnville := "javascript:window.open('/lawnville', 'lawnville', 'width=800, height=600, status=no, toolbar=no, menubar=no, location=no, resizable=no, scrollbars=no')"
+	tabs := []string{
+		generateTab("Irrigate", "/", current),
+		generateTab("Log", "/log", current),
+		generateTab("Reports", "/reports", current),
+		generateTab("About", "/about", current),
+		generateTab("LawnVille", lawnville, current)}
+	return strings.Join(tabs, "")
+}
+
+func generateTab(name string, url string, current string) string {
+	selected := ""
+	if strings.ToLower(name) == strings.ToLower(current) {
+		selected = " class=selected"
+	}
+	return fmt.Sprintf("<li%v><a href=\"%v\">%v</a></li>", selected, url, name)
+}
