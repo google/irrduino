@@ -23,9 +23,11 @@ def generate_tabs(tab_name="watering"):
     ("Irrigate", "/"),
     ("Log", "/log"),
     ("Reports", "/reports"),
-    ("About", "/about"),
-    ("LawnVille", "javascript:window.open('/lawnville', 'lawnville', 'width=800, height=600, status=no, toolbar=no, menubar=no, location=no, resizable=no, scrollbars=no')")
+    ("About", "/about")
   ):
+    """
+    ,("LawnVille", "javascript:window.open('/lawnville', 'lawnville', 'width=800, height=600, status=no, toolbar=no, menubar=no, location=no, resizable=no, scrollbars=no')")
+    """
     selected = ""
     if tab_name.lower() == name.lower():
       selected = " class=selected"
