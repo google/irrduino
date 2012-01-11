@@ -19,20 +19,11 @@ import (
 	"http"
 )
 
+// This handles the about page for the app.
 func About(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "<h1>About</h1>")
 }
 
-//"""This handles the about page for the app."""
-//
-//from google.appengine.ext import webapp
-//
-//from irrduinoserver.utils import web as webutils
-//from irrduinoserver.utils import ui as uiutils
-//
-//
-//class AboutHandler(webapp.RequestHandler):
-//  def get(self):
 //    template_params = {}
 //    template_params["tabs"] = uiutils.generate_tabs("about")
 //    webutils.render_to_response(self, "about.html", template_params)
