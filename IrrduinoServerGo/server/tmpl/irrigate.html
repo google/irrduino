@@ -1,5 +1,5 @@
 {{define "Irrigate"}}
-  {{template "LayoutHeader"}}
+  {{template "LayoutHeader" .}}
     <p>Use the the controls below to run sprinklers for a specific zone.</p>
 
     <form action="" method=post>
@@ -8,15 +8,15 @@
         Water zone
         <select name=zone>
           {% for zone in zones %}
-            <option value="{{ .zone.0|html }}">
-              {{ .zone.1.location|html }}: {{ .zone.1.name|html }}
+            <option value="{{.zone.0|html}}">
+              {{.zone.1.location|html}}: {{.zone.1.name|html}}
             </option>
           {% endfor %}
         </select>
         for
         <select name=secs>
           {% for i in secs_and_mins %}
-            <option value="{{ .i.0|html }}">{{ .i.1|html }}</option>
+            <option value="{{.i.0|html}}">{{.i.1|html}}</option>
           {% endfor %}
         </select>
         minute(s)
@@ -31,10 +31,10 @@
         <fieldset>
           <legend>Status</legend>
           {% for item in status.items %}
-            {{ .item.0|html }}: {{ .item.1|html }}<br>
+            {{.item.0|html}}: {{.item.1|html}}<br>
           {% endfor %}
         </fieldset>
       </form>
     {% endif %}
-  {{template "LayoutFooter"}}
+  {{template "LayoutFooter" .}}
 {{end}}

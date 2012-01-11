@@ -1,5 +1,5 @@
 {{define "Log"}}
-  {{template "LayoutHeader"}}
+  {{template "LayoutHeader" .}}
     <p>
       This page lists the most recent sprinkler runs executed by the Irrduino
       Controller.
@@ -9,14 +9,14 @@
       {% for i in zone_runs %}
         <li>
           Zone
-          {{ .i.zone|html }}
+          {{.i.zone|html}}
           ran for
-          {{ .i.runtime_seconds|html }}
+          {{.i.runtime_seconds|html}}
           seconds on
-          {{ .i.created_at|html }}
+          {{.i.created_at|html}}
           UTC
         </li>
       {% endfor %}
     </ul>
-  {{template "LayoutFooter"}}
+  {{template "LayoutFooter" .}}
 {{end}}
