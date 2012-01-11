@@ -15,16 +15,15 @@
 package handler
 
 import (
-	"fmt"
 	"http"
+	"server/tmpl"
 )
 
+// Output log information.
 func Log(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>Log</h1>")
+	tmpl.TemplateSet.Execute(w, "log", nil)
 }
 
-//"""Output log information."""
-//
 //from google.appengine.ext import webapp
 //
 //from irrduinoserver import model

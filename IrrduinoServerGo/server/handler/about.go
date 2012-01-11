@@ -15,13 +15,13 @@
 package handler
 
 import (
-	"fmt"
 	"http"
+	"server/tmpl"
 )
 
 // This handles the about page for the app.
 func About(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>About</h1>")
+	tmpl.TemplateSet.Execute(w, "about", nil)
 }
 
 //    template_params = {}

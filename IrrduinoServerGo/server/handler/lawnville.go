@@ -15,16 +15,15 @@
 package handler
 
 import (
-	"fmt"
 	"http"
+	"server/tmpl"
 )
 
+// This is like FarmVille, but it actually works.
 func LawnVille(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>LawnVille</h1>")
+	tmpl.TemplateSet.Execute(w, "lawnville", nil)
 }
 
-//"""This is like FarmVille, but it actually works."""
-//
 //from google.appengine.ext import webapp
 //
 //from irrduinoserver.utils import web as webutils

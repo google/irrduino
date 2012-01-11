@@ -15,16 +15,15 @@
 package handler
 
 import (
-	"fmt"
 	"http"
+	"server/tmpl"
 )
 
+// Handle reporting.
 func Report(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>Report</h1>")
+	tmpl.TemplateSet.Execute(w, "report", nil)
 }
 
-//"""Handle reporting."""
-//
 //from google.appengine.ext import webapp
 //
 //from irrduinoserver import model

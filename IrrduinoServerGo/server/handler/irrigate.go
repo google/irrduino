@@ -15,16 +15,15 @@
 package handler
 
 import (
-	"fmt"
 	"http"
+	"server/tmpl"
 )
 
+// This is the welcome page for the app.
 func Irrigate(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>Irrigate</h1>")
+	tmpl.TemplateSet.Execute(w, "irrigate", nil)
 }
 
-//"""This is the welcome page for the app."""
-//
 //from google.appengine.ext import webapp
 //
 //from irrduinoserver.utils import web as webutils
