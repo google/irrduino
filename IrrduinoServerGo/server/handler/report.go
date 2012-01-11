@@ -17,11 +17,14 @@ package handler
 import (
 	"http"
 	"server/tmpl"
+	"server/util"
 )
 
 // Handle reporting.
 func Report(w http.ResponseWriter, r *http.Request) {
-	tmpl.TemplateSet.Execute(w, "Report", nil)
+	tabs := util.GenerateTabs("Reports")
+	params := map[string]string{"tabs":tabs}
+	tmpl.TemplateSet.Execute(w, "Report", params)
 }
 
 //from google.appengine.ext import webapp

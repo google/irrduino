@@ -17,11 +17,14 @@ package handler
 import (
 	"http"
 	"server/tmpl"
+	"server/util"
 )
 
 // This is the welcome page for the app.
 func Irrigate(w http.ResponseWriter, r *http.Request) {
-	tmpl.TemplateSet.Execute(w, "Irrigate", nil)
+	tabs := util.GenerateTabs("Irrigate")
+	params := map[string]string{"tabs":tabs}
+	tmpl.TemplateSet.Execute(w, "Irrigate", params)
 }
 
 //from google.appengine.ext import webapp

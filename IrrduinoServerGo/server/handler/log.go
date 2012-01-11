@@ -17,11 +17,14 @@ package handler
 import (
 	"http"
 	"server/tmpl"
+	"server/util"
 )
 
 // Output log information.
 func Log(w http.ResponseWriter, r *http.Request) {
-	tmpl.TemplateSet.Execute(w, "Log", nil)
+	tabs := util.GenerateTabs("Log")
+	params := map[string]string{"tabs":tabs}
+	tmpl.TemplateSet.Execute(w, "Log", params)
 }
 
 //from google.appengine.ext import webapp

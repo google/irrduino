@@ -17,13 +17,12 @@ package handler
 import (
 	"http"
 	"server/tmpl"
+	"server/util"
 )
 
 // This handles the about page for the app.
 func About(w http.ResponseWriter, r *http.Request) {
-	tmpl.TemplateSet.Execute(w, "About", nil)
+	tabs := util.GenerateTabs("About")
+	params := map[string]string{"tabs":tabs}
+	tmpl.TemplateSet.Execute(w, "About", params)
 }
-
-//    template_params = {}
-//    template_params["tabs"] = uiutils.generate_tabs("about")
-//    webutils.render_to_response(self, "about.html", template_params)

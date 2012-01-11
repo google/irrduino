@@ -17,11 +17,14 @@ package handler
 import (
 	"http"
 	"server/tmpl"
+	"server/util"
 )
 
 // This is like FarmVille, but it actually works.
 func LawnVille(w http.ResponseWriter, r *http.Request) {
-	tmpl.TemplateSet.Execute(w, "LawnVille", nil)
+	tabs := util.GenerateTabs("LawnVille")
+	params := map[string]string{"tabs":tabs}
+	tmpl.TemplateSet.Execute(w, "LawnVille", params)
 }
 
 //from google.appengine.ext import webapp
