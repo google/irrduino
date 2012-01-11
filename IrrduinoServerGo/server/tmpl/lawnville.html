@@ -1,52 +1,52 @@
-{{define "lawnville"}}
-<!DOCTYPE html>
-<html lang=en>
-  <head>
-    <title>LawnVille</title>
-    <style type=text/css>
-      body {
-        font-family: Helvetica, Arial, sans-serif;
-        background: #ffffff;
+{{define "LawnVille"}}
+  <!DOCTYPE html>
+  <html lang=en>
+    <head>
+      <title>LawnVille</title>
+      <style type=text/css>
+        body {
+          font-family: Helvetica, Arial, sans-serif;
+          background: #ffffff;
 
-        /* See: http://stackoverflow.com/questions/1994945/how-to-do-window-open-with-no-scrollbars-in-google-chrome */
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-        overflow-y: hidden;
-      }
+          /* See: http://stackoverflow.com/questions/1994945/how-to-do-window-open-with-no-scrollbars-in-google-chrome */
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+          overflow-y: hidden;
+        }
 
-      img {
-        border: 0;
-      }
+        img {
+          border: 0;
+        }
 
-      #droid {
-        position: absolute;
-        left: 355px;
-        top: 302px;
-        -webkit-transition-property: left, top;
-        -webkit-transition-duration: 1s;
-        -webkit-transition-timing-function: ease-in-out;
-      }
-    </style>
-  </head>
+        #droid {
+          position: absolute;
+          left: 355px;
+          top: 302px;
+          -webkit-transition-property: left, top;
+          -webkit-transition-duration: 1s;
+          -webkit-transition-timing-function: ease-in-out;
+        }
+      </style>
+    </head>
 
-  <body>
-    <img src=/static/images/map.png width=800 height=600 usemap=#map-map>
+    <body>
+      <img src=/static/images/map.png width=800 height=600 usemap=#map-map>
 
-    <!-- Created by Online Image Map Editor (http://www.maschek.hu/imagemap/index). -->
-    <map name=map-map>
-      {% for zone in zones %}
-        <area shape=poly id="zone-{{ .zone.0|html }}" href=javascript:void(0)
-              class=zone coords="{{ .zone.1.coordinates|html }}"
-              data-center-x="{{ .zone.1.center.0 }}"
-              data-center-y="{{ .zone.1.center.1 }}">
-      {% endfor %}
-    </map>
+      <!-- Created by Online Image Map Editor (http://www.maschek.hu/imagemap/index). -->
+      <map name=map-map>
+        {% for zone in zones %}
+          <area shape=poly id="zone-{{ .zone.0|html }}" href=javascript:void(0)
+                class=zone coords="{{ .zone.1.coordinates|html }}"
+                data-center-x="{{ .zone.1.center.0 }}"
+                data-center-y="{{ .zone.1.center.1 }}">
+        {% endfor %}
+      </map>
 
-    <img src=/static/images/droid-waiting-front.png width=100 height=100
-         id=droid>
+      <img src=/static/images/droid-waiting-front.png width=100 height=100
+           id=droid>
 
-    <script type=text/javascript src=/static/dart/lawnville.dart.app.js></script>
-  </body>
-</html>
+      <script type=text/javascript src=/static/dart/lawnville.dart.app.js></script>
+    </body>
+  </html>
 {{end}}

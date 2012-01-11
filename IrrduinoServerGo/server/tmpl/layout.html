@@ -1,31 +1,33 @@
-{{define "layout"}}
-<!DOCTYPE html>
-<html lang=en>
-  <head>
-    <title>{% block title %}Irrduino{% endblock %}</title>
-    <link rel=stylesheet href=/static/css/layout.css type=text/css>
-    {% block javascript_head %}{% endblock %}
-  </head>
+{{define "LayoutHeader"}}
+  <!DOCTYPE html>
+  <html lang=en>
+    <head>
+      <title>{% block title %}Irrduino{% endblock %}</title>
+      <link rel=stylesheet href=/static/css/layout.css type=text/css>
+      {% block javascript_head %}{% endblock %}
+    </head>
 
-  <body>
-    <h1 id="title">Irrduino Server</h1>
+    <body>
+      <h1 id="title">Irrduino Server</h1>
 
-    <div id="header">
-      <ul>
-        {{ .tabs }}
-      </ul>
-    </div>
-
-    <div id="main-container">
-      {% if action_results %}
+      <div id="header">
         <ul>
-        {% for msg in action_results %}
-          <li>{{ .msg|html }}</li>
-        {% endfor %}
+          {{ .tabs }}
         </ul>
-      {% endif %}
-      {% block content %}{% endblock %}
-    </div>
-  </body>
-</html>
+      </div>
+
+      <div id="main-container">
+        {% if action_results %}
+          <ul>
+          {% for msg in action_results %}
+            <li>{{ .msg|html }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+{{end}}
+
+{{define "LayoutFooter"}}
+      </div>
+    </body>
+  </html>
 {{end}}

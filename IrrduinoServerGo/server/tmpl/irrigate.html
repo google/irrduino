@@ -1,42 +1,40 @@
-{{define "irrigate"}}
-{% extends "layout.html" %}
+{{define "Irrigate"}}
+  {{template "LayoutHeader"}}
+    <p>Use the the controls below to run sprinklers for a specific zone.</p>
 
-{% block content %}
-  <p>Use the the controls below to run sprinklers for a specific zone.</p>
-
-  <form action="" method=post>
-    <fieldset>
-      <legend>Activate Sprinklers</legend>
-      Water zone
-      <select name=zone>
-        {% for zone in zones %}
-          <option value="{{ .zone.0|html }}">
-            {{ .zone.1.location|html }}: {{ .zone.1.name|html }}
-          </option>
-        {% endfor %}
-      </select>
-      for
-      <select name=secs>
-        {% for i in secs_and_mins %}
-          <option value="{{ .i.0|html }}">{{ .i.1|html }}</option>
-        {% endfor %}
-      </select>
-      minute(s)
-      <input type=submit name=water-zone value=Water> |
-      <input type=submit name=get-system-status value="Get System Status"> |
-      <input type=submit name=turn-off-everything value="Turn Off Everything">
-    </fieldset>
-  </form>
-
-  {% if status %}
-    <form>
+    <form action="" method=post>
       <fieldset>
-        <legend>Status</legend>
-        {% for item in status.items %}
-          {{ .item.0|html }}: {{ .item.1|html }}<br>
-        {% endfor %}
+        <legend>Activate Sprinklers</legend>
+        Water zone
+        <select name=zone>
+          {% for zone in zones %}
+            <option value="{{ .zone.0|html }}">
+              {{ .zone.1.location|html }}: {{ .zone.1.name|html }}
+            </option>
+          {% endfor %}
+        </select>
+        for
+        <select name=secs>
+          {% for i in secs_and_mins %}
+            <option value="{{ .i.0|html }}">{{ .i.1|html }}</option>
+          {% endfor %}
+        </select>
+        minute(s)
+        <input type=submit name=water-zone value=Water> |
+        <input type=submit name=get-system-status value="Get System Status"> |
+        <input type=submit name=turn-off-everything value="Turn Off Everything">
       </fieldset>
     </form>
-  {% endif %}
-{% endblock %}
+
+    {% if status %}
+      <form>
+        <fieldset>
+          <legend>Status</legend>
+          {% for item in status.items %}
+            {{ .item.0|html }}: {{ .item.1|html }}<br>
+          {% endfor %}
+        </fieldset>
+      </form>
+    {% endif %}
+  {{template "LayoutFooter"}}
 {{end}}
