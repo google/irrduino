@@ -17,13 +17,6 @@
       </div>
 
       <div id="main-container">
-        {% if action_results %}
-          <ul>
-          {% for msg in action_results %}
-            <li>{{ .msg|html }}</li>
-          {% endfor %}
-          </ul>
-        {% endif %}
 {{end}}
 
 {{define "LayoutFooter"}}
