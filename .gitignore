@@ -9,3 +9,6 @@
 
 # IntelliJ and PyCharm
 .idea
+
+# Python
+.*.swp

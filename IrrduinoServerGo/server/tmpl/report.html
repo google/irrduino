@@ -1,0 +1,70 @@
+{{define "Report"}}
+  {{template "LayoutHeader"}}
+    <script type=text/javascript src=https://www.google.com/jsapi></script>
+    <script type=text/javascript>
+      google.load("visualization", "1", {packages: ["corechart"]});
+      google.setOnLoadCallback(drawCharts);
+
+      function drawWaterUsageChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('datetime', 'Date');
+        {% for zone in zones %}
+          data.addColumn('number',
+            '{{ .zone.1.location|html }}: {{ .zone.1.name|html }}');
+        {% endfor %}
+        data.addRows({{ .water_usage_rows }});
+        var options = {
+          width: 800, height: 480,
+          backgroundColor: '#d3f7a4',
+          title: 'Water Usage',
+          strictFirstColumnType: true,
+          vAxis: {
+            title: "Gallons"
+          }
+        };
+        var chart = new google.visualization.LineChart(
+          document.getElementById('water-usage-chart'));
+        chart.draw(data, options);
+      }
+
+      function drawWaterCostChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('datetime', 'Date');
+        data.addColumn('number', 'Cost');
+        data.addRows({{ .water_cost_rows }});
+        var options = {
+          width: 800, height: 480,
+          backgroundColor: '#d3f7a4',
+          title: 'Water Cost',
+          strictFirstColumnType: true,
+          vAxis: {
+            title: "Dollars"
+          }
+        };
+        var chart = new google.visualization.LineChart(
+          document.getElementById('water-cost-chart'));
+        var formatter = new google.visualization.NumberFormat({prefix: '$'});
+        formatter.format(data, 1);  // Apply formatter to second column.
+        chart.draw(data, options);
+      }
+
+      function drawCharts() {
+        drawWaterUsageChart();
+        drawWaterCostChart();
+      }
+    </script>
+
+    <p>
+      The following report shows number of gallons used in each watering zone
+      per day.
+    </p>
+
+    <div id="water-usage-chart"></div>
+
+    <p>
+      The following report shows daily watering cost across all zones.
+    </p>
+
+    <div id="water-cost-chart"></div>
+  {{template "LayoutFooter"}}
+{{end}}

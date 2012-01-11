@@ -1,0 +1,68 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  background: #5976a3 url("/static/images/grass.png") repeat-x center bottom;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+}
+
+#main-container {
+  background-color: #d3f7a4;
+  margin: 0 97px 151px 97px;
+  padding: 10px;
+}
+
+#title {
+  color: white;
+  margin: 20px;
+  padding: 0;
+}
+
+#title a {
+  color: white;
+  text-decoration: none;
+}
+
+fieldset {
+  margin-bottom: 1em;
+}
+
+#header {
+  margin: 0 97px 0 97px;
+}
+
+#header ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#header li {
+  display: inline;
+  margin: 0 3px 0 0;
+  background: white;
+}
+
+#header a {
+  padding: 3px 1em;
+  padding-bottom: 0;
+  text-decoration: none;
+  background: white;
+  color: darkgrey;
+}
+
+#header a:hover {
+  background: #d3f7a4;
+  color: black;
+}
+
+#header .selected {
+  padding-bottom: 1px; 
+}
+
+#header .selected a {
+  padding-bottom: 2px;
+  font-weight: bold;
+  color: black;
+  background: #d3f7a4;
+}
