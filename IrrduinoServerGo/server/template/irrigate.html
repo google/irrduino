@@ -1,3 +1,4 @@
+{{define "irrigate"}}
 {% extends "layout.html" %}
 
 {% block content %}
@@ -9,15 +10,15 @@
       Water zone
       <select name=zone>
         {% for zone in zones %}
-          <option value="{{ zone.0|escape }}">
-            {{ zone.1.location|escape }}: {{ zone.1.name|escape }}
+          <option value="{{ .zone.0|html }}">
+            {{ .zone.1.location|html }}: {{ .zone.1.name|html }}
           </option>
         {% endfor %}
       </select>
       for
       <select name=secs>
         {% for i in secs_and_mins %}
-          <option value="{{ i.0|escape }}">{{ i.1|escape }}</option>
+          <option value="{{ .i.0|html }}">{{ .i.1|html }}</option>
         {% endfor %}
       </select>
       minute(s)
@@ -26,15 +27,16 @@
       <input type=submit name=turn-off-everything value="Turn Off Everything">
     </fieldset>
   </form>
-        
+
   {% if status %}
     <form>
       <fieldset>
         <legend>Status</legend>
         {% for item in status.items %}
-          {{ item.0|escape }}: {{ item.1|escape }}<br>
+          {{ .item.0|html }}: {{ .item.1|html }}<br>
         {% endfor %}
       </fieldset>
     </form>
   {% endif %}
 {% endblock %}
+{{end}}

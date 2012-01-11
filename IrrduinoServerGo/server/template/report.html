@@ -1,3 +1,4 @@
+{{define "report"}}
 {% extends "layout.html" %}
 
 {% block javascript_head %}
@@ -11,9 +12,9 @@
       data.addColumn('datetime', 'Date');
       {% for zone in zones %}
         data.addColumn('number',
-          '{{ zone.1.location|escape }}: {{ zone.1.name|escape }}');
+          '{{ .zone.1.location|html }}: {{ .zone.1.name|html }}');
       {% endfor %}
-      data.addRows({{ water_usage_rows }});
+      data.addRows({{ .water_usage_rows }});
       var options = {
         width: 800, height: 480,
         backgroundColor: '#d3f7a4',
@@ -32,7 +33,7 @@
       var data = new google.visualization.DataTable();
       data.addColumn('datetime', 'Date');
       data.addColumn('number', 'Cost');
-      data.addRows({{ water_cost_rows }});
+      data.addRows({{ .water_cost_rows }});
       var options = {
         width: 800, height: 480,
         backgroundColor: '#d3f7a4',
@@ -70,3 +71,4 @@
 
   <div id="water-cost-chart"></div>
 {% endblock %}
+{{end}}

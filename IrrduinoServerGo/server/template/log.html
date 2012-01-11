@@ -1,3 +1,4 @@
+{{define "log"}}
 {% extends "layout.html" %}
 
 {% block content %}
@@ -10,13 +11,14 @@
     {% for i in zone_runs %}
       <li>
         Zone
-        {{ i.zone|escape }}
+        {{ .i.zone|html }}
         ran for
-        {{ i.runtime_seconds|escape }}
+        {{ .i.runtime_seconds|html }}
         seconds on
-        {{ i.created_at|escape }}
+        {{ .i.created_at|html }}
         UTC
       </li>
     {% endfor %}
-  </ul>   
+  </ul>
 {% endblock %}
+{{end}}
