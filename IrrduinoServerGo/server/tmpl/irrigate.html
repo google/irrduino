@@ -7,11 +7,7 @@
         <legend>Activate Sprinklers</legend>
         Water zone
         <select name=zone>
-          {% for zone in zones %}
-            <option value="{{.zone.0|html}}">
-              {{.zone.1.location|html}}: {{.zone.1.name|html}}
-            </option>
-          {% endfor %}
+          {{.zoneOptions}}
         </select>
         for
         <select name=secs>

@@ -15,35 +15,54 @@
 package handler
 
 import (
+//	"appengine"
+	"container/vector"
+	"fmt"
 	"http"
+//	"os"
 	"server/tmpl"
 	"server/util"
+	"sort"
+	"template"
 )
+
+const SECS_PER_MINUTE = 60
+const MAX_TIME_MINS = 10
+const MIN_TIME_SECS = 1
+const MAX_TIME_SECS = MAX_TIME_MINS * SECS_PER_MINUTE
 
 // This is the welcome page for the app.
 func Irrigate(w http.ResponseWriter, r *http.Request) {
-	tabs := util.GenerateTabs("Irrigate")
-	params := map[string]string{"tabs":tabs}
+	params := map[string]interface{}{}
+// 	if r.Method == "POST" {
+// 	}
+	params["tabs"] = util.GenerateTabs("Irrigate")
+	params["zoneOptions"] = zoneOptions()
 	tmpl.TemplateSet.Execute(w, "Irrigate", params)
 }
 
-//from google.appengine.ext import webapp
-//
-//from irrduinoserver.utils import web as webutils
-//from irrduinoserver.utils import irrduino as irrduinoutils
-//from irrduinoserver.utils import ui as uiutils
-//
-//SECS_PER_MINUTE = 60
-//MAX_TIME_MINS = 10
-//MIN_TIME_SECS = 1
-//MAX_TIME_SECS = MAX_TIME_MINS * SECS_PER_MINUTE
-//
-//
-//class ControlsHandler(webapp.RequestHandler):
-//  def get(self, template_params=None):
-//    if template_params is None:
-//      template_params = {}
-//    template_params["tabs"] = uiutils.generate_tabs("controls")
+// Create a string containing zone options.
+// It's too painful to do this in the template.
+func zoneOptions() string {
+	options := ""
+	var keys vector.IntVector
+	for k, _ := range util.Zones {
+		keys.Push(k)
+	}
+	sort.Sort(&keys)
+	for _, k := range keys {
+		zone := util.Zones[k]
+		location := template.HTMLEscapeString(zone.Location)
+		name := template.HTMLEscapeString(zone.Name)
+		options += fmt.Sprintf(`
+			<option value="%v">
+				%v: %v
+			</option>
+		`, k, location, name)
+	}
+	return options
+}
+
 //    template_params["zones"] = sorted(irrduinoutils.ZONES.items())
 //    template_params["secs_and_mins"] = \
 //      [(mins * SECS_PER_MINUTE, mins)
@@ -77,3 +96,15 @@ func Irrigate(w http.ResponseWriter, r *http.Request) {
 //    else:
 //      raise ValueError("Invalid submit button")
 //    self.get({"status": response})
+
+
+// 	// XXX: Try it out
+// 	c := appengine.NewContext(r)
+// 	var status string
+// 	var err os.Error
+// 	if status, err = util.ExecCmd(c, "/status"); err != nil {
+// 	    http.Error(w, err.String(), http.StatusInternalServerError)
+// 	    return
+// 	}
+// 	params["status"] = status
+
