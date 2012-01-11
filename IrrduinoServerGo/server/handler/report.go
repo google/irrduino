@@ -21,7 +21,7 @@ import (
 
 // Handle reporting.
 func Report(w http.ResponseWriter, r *http.Request) {
-	tmpl.TemplateSet.Execute(w, "report", nil)
+	tmpl.TemplateSet.Execute(w, "Report", nil)
 }
 
 //from google.appengine.ext import webapp

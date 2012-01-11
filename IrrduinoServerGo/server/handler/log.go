@@ -21,7 +21,7 @@ import (
 
 // Output log information.
 func Log(w http.ResponseWriter, r *http.Request) {
-	tmpl.TemplateSet.Execute(w, "log", nil)
+	tmpl.TemplateSet.Execute(w, "Log", nil)
 }
 
 //from google.appengine.ext import webapp

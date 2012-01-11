@@ -21,7 +21,7 @@ import (
 
 // This is the welcome page for the app.
 func Irrigate(w http.ResponseWriter, r *http.Request) {
-	tmpl.TemplateSet.Execute(w, "irrigate", nil)
+	tmpl.TemplateSet.Execute(w, "Irrigate", nil)
 }
 
 //from google.appengine.ext import webapp

@@ -21,7 +21,7 @@ import (
 
 // This handles the about page for the app.
 func About(w http.ResponseWriter, r *http.Request) {
-	tmpl.TemplateSet.Execute(w, "about", nil)
+	tmpl.TemplateSet.Execute(w, "About", nil)
 }
 
 //    template_params = {}
