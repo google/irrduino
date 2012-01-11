@@ -21,7 +21,7 @@ import (
 
 // This is like FarmVille, but it actually works.
 func LawnVille(w http.ResponseWriter, r *http.Request) {
-	tmpl.TemplateSet.Execute(w, "Lawnville", nil)
+	tmpl.TemplateSet.Execute(w, "LawnVille", nil)
 }
 
 //from google.appengine.ext import webapp
