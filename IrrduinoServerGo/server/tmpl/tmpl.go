@@ -24,7 +24,7 @@ var TemplateSet *template.Set
 
 func init() {
 	var err os.Error
-	if TemplateSet, err = template.ParseSetGlob("server/template/*.html"); err != nil {
+	if TemplateSet, err = template.ParseSetGlob("server/tmpl/*.html"); err != nil {
 		panic(fmt.Sprintf("Could not parse templates: %v", err))
 	}
 }
