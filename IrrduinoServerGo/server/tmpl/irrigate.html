@@ -26,15 +26,13 @@
       </fieldset>
     </form>
 
-    {% if status %}
+    {{with .status}}
       <form>
         <fieldset>
           <legend>Status</legend>
-          {% for item in status.items %}
-            {{.item.0|html}}: {{.item.1|html}}<br>
-          {% endfor %}
+          {{.|html}}
         </fieldset>
       </form>
-    {% endif %}
+    {{end}}
   {{template "LayoutFooter" .}}
 {{end}}
