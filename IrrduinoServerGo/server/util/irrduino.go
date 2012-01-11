@@ -14,60 +14,81 @@
 
 package util
 
-//"""This module contains helpers related to controlling Irrduino.
-//
-//See irrduino/IrrduinoController/web-ctrl-api.txt for documentation about
-//talking to the server.
-//
-//"""
-//
-//import simplejson
-//
-//from irrduinoserver.utils import web as webutils
-//
-//SERVER_ROOT = "http://joefernandez.org"
-//
-//# See: https://docs.google.com/a/google.com/spreadsheet/ccc?key=0AuX1PmdkirJmdGNWRlpOTDY3WjVNUkczR2pMVGtnS1E&hl=en_US#gid=0
-//ZONES = {
-//  1: {"nth": 0, "location": "Back Yard", "name": "Garden",
-//      "gallons_per_minute": 1.50,
-//      "coordinates": "602,198,782,267,781,282,735,301,556,226,557,212",
-//      "center": (670, 244)},
-//  2: {"nth": 1, "location": "Back Yard", "name": "Lawn 1",
-//      "gallons_per_minute": 2.99,
-//      "coordinates": "497,210,793,329,726,363,428,238,472,222",
-//      "center": (615, 279)},
-//  3: {"nth": 2, "location": "Back Yard", "name": "Lawn 2",
-//      "gallons_per_minute": 5.46,
-//      "coordinates": "421,242,721,364,647,398,349,271",
-//      "center": (531, 311)},
-//  4: {"nth": 3, "location": "Back Yard", "name": "Lawn 3",
-//      "gallons_per_minute": 5.46, "coordinates":
-//      "574,426,536,409,535,383,474,382,313,318,313,284,345,269,641,397",
-//      "center": (463, 343)},
-//  5: {"nth": 4, "location": "Back Yard", "name": "Patio Plants",
-//      "gallons_per_minute": 0.52,
-//      "coordinates": "535,429,528,447,487,468,449,446,447,394,477,390,528,411",
-//      "center": (515, 451)},
-//  7: {"nth": 5, "location": "Front Yard", "name": "Left Side Lawn",
-//      "gallons_per_minute": 6.13,
-//      "coordinates": "148,354,294,410,148,475,2,413",
-//      "center": (151, 404)},
-//  8: {"nth": 6, "location": "Front Yard", "name": "Right Side Lawn",
-//      "gallons_per_minute": 6.13,
-//      "coordinates": "300,413,446,471,292,532,150,476",
-//      "center": (304, 465)}
-//}
-//COST_PER_CUBIC_FOOT = 0.0252
-//CUBIC_FEET_PER_GALLON = 0.134
-//
-//
-//def execute(path):
-//  """Do an HTTP GET to control the Arduino board."""
-//  assert path.startswith("/")
-//  http = webutils.create_http_with_timeout()
-//  (headers, body) = http.request(SERVER_ROOT + path)
-//  if headers["status"] != 200:
-//    raise RuntimeError("Irrduino error", headers, body)
-//  json = simplejson.loads(body)
-//  return json
+import (
+	"appengine"
+	"appengine/urlfetch"
+	"fmt"
+	"http"
+	"io/ioutil"
+	"os"
+	"strings"
+)
+
+const SERVER_ROOT = "http://joefernandez.org"
+const COST_PER_CUBIC_FOOT = 0.0252
+const CUBIC_FEET_PER_GALLON = 0.134
+
+type Zone struct {
+	Nth uint;
+	Location string;
+	Name string;
+	GPM float32;	// Gallons per minute
+	Coords string;	// Coordinates for use with an image map
+	CenterX uint;	// The center of the zone
+	CenterY uint;
+}
+
+// See: https://docs.google.com/a/google.com/spreadsheet/ccc?key=0AuX1PmdkirJmdGNWRlpOTDY3WjVNUkczR2pMVGtnS1E&hl=en_US#gid=0
+var Zones = map[int]Zone{
+	1:Zone{
+		Nth:0, Location:"Back Yard", Name:"Garden", GPM:1.50,
+		Coords:"602,198,782,267,781,282,735,301,556,226,557,212",
+		CenterX:670, CenterY:244},
+	2:Zone{
+		Nth:1, Location:"Back Yard", Name:"Lawn 1", GPM:2.99,
+		Coords:"497,210,793,329,726,363,428,238,472,222",
+		CenterX:615, CenterY:279},
+	3:Zone{
+		Nth:2, Location:"Back Yard", Name:"Lawn 2", GPM:5.46,
+		Coords:"421,242,721,364,647,398,349,271",
+		CenterX:531, CenterY:311},
+	4:Zone{
+		Nth:3, Location:"Back Yard", Name:"Lawn 3", GPM:5.46,
+		Coords:"574,426,536,409,535,383,474,382,313,318,313,284,345,269,641,397",
+		CenterX:463, CenterY:343},
+	5:Zone{
+		Nth:4, Location:"Back Yard", Name:"Patio Plants", GPM:0.52,
+		Coords:"535,429,528,447,487,468,449,446,447,394,477,390,528,411",
+		CenterX:515, CenterY:451},
+	7:Zone{
+		Nth:5, Location:"Front Yard", Name:"Left Side Lawn", GPM:6.13,
+		Coords:"148,354,294,410,148,475,2,413",
+		CenterX:151, CenterY:404},
+	8:Zone{
+		Nth:6, Location:"Front Yard", Name:"Right Side Lawn", GPM:6.13,
+		Coords:"300,413,446,471,292,532,150,476",
+		CenterX:304, CenterY:465}}
+
+// Do an HTTP GET to control IrrduinoController.
+// See (irrduino/IrrduinoController/web-ctrl-api.txt) for the API.
+func ExecCmd(c appengine.Context, path string) (body string, err os.Error) {
+	if !strings.HasPrefix(path, "/") {
+		err = os.NewError(fmt.Sprintf("Invalid path: %v", path))
+		return "", err
+	}
+	client := urlfetch.Client(c)
+	var resp *http.Response
+	if resp, err = client.Get(SERVER_ROOT + path); err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	if resp.Status != "200 OK" {
+		err = os.NewError(fmt.Sprintf("Unexpected response status: %v", resp.Status))
+		return "", err
+	}
+	var bytes []uint8
+	if bytes, err = ioutil.ReadAll(resp.Body); err != nil {
+		return "", err
+	}
+	return string(bytes), nil
+}
