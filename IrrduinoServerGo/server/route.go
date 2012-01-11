@@ -22,7 +22,7 @@ import (
 // This contains the routing for the application.
 func init() {
 	http.HandleFunc("/", handler.Irrigate)
-	http.HandleFunc("/report", handler.Report)
+	http.HandleFunc("/reports", handler.Report)
 	http.HandleFunc("/log", handler.Log)
 	http.HandleFunc("/about", handler.About)
 	http.HandleFunc("/lawnville", handler.LawnVille)
