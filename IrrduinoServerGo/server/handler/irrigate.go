@@ -63,7 +63,6 @@ func zoneOptions() string {
 	return options
 }
 
-//    template_params["zones"] = sorted(irrduinoutils.ZONES.items())
 //    template_params["secs_and_mins"] = \
 //      [(mins * SECS_PER_MINUTE, mins)
 //       for mins in xrange(1, MAX_TIME_MINS + 1)]
