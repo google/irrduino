@@ -4,7 +4,10 @@ IrrduinoServerGo
 This is the Go version of IrrduinoServer.  It's a Go application written for
 Google App Engine.
 
-Status: The port from Python is about half done.  It runs, but there's a lot
+Status
+------
+
+The port from Python is about half done.  It runs, but there's a lot
 of stuff that isn't implemented yet.
 
 Running
