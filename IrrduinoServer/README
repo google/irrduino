@@ -43,11 +43,8 @@ a slightly tweaked version of the URL below:
 Global TODOs
 ------------
 
-Add some real navigation.
 Restrict access to the server.
 Remove the hostname for Joe's server from the code.
-Fix pdb_set_trace:
-  Don't force the user to reload the server.
 
 Limitations
 -----------
