@@ -49,6 +49,10 @@ a slightly tweaked version of the URL below:
 Global TODOs
 ------------
 
+Grab the newest version of the CSS from IrrduinoServer.
+Get rid of the LawnVille tab like IrrduinoServer.
+Format the status output on the controls tab like IrrduinoServer does.
+Make sure to use "irrigate" instead of "controls".
 Restrict access to the server.
 Remove the hostname for Joe's server from the code.
 
