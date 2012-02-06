@@ -3,6 +3,7 @@
 
   Issues:
   - need a nanny process to check a max run time for valves (regardless of commands or program)
+  - not working on an Arduino Ethernet board 
 
   Change Log:
   - 2012-01-09 - changed reporting to point to /log (instead of /reports)
@@ -40,8 +41,8 @@
 #include <EthernetDNS.h>
 
 
-byte mac[] = { 0x90, 0xA2, 0xDA, 0x00, 0x50, 0xA0 };    //physical mac address
-byte ip[] = { 192, 168, 1, 14 };			// ip in lan
+byte mac[] = { 0x90, 0xA2, 0xDA, 0x00, 0xE2, 0xEB };    //physical mac address
+byte ip[] = { 192, 168, 1, 177 };			// ip in lan
 byte gateway[] = { 192, 168, 1, 1 };			// internet access via router
 byte dnsServerIp[] = { 192, 168, 1, 1};                 // DNS server IP (typically your gateway)
 byte subnet[] = { 255, 255, 255, 0 };                   //subnet mask
@@ -91,7 +92,6 @@ const int OBJ_CMD_ZONES    = 10;
 const int OBJ_CMD_ZONE     = 100;
 const int OBJ_CMD_PROGRAMS = 20;
 const int OBJ_CMD_PROGRAM  = 200;
-const int OBJ_CMD_REPORTTEST = 900;
 
 // Reporting constants and variables
 int maxReportAttempts    = 3;
@@ -147,6 +147,8 @@ void setup(){
   // Turn on serial output for debugging
   Serial.begin(9600);
 
+  Serial.println("Irrduino starting up...");
+
   // Start Ethernet connection and server
   Ethernet.begin(mac, ip, gateway, subnet);
   server.begin();
@@ -159,8 +161,8 @@ void setup(){
     pinMode(zones[i], OUTPUT);
   }
 
-  // set the LED indicator pin for output
-  pinMode(ledIndicator, OUTPUT);
+  // set the LED indicator pin for output 
+  // pinMode(ledIndicator, OUTPUT); // (causes failure on Arduino Ethernet board)
 }
 
 //  url buffer size
@@ -290,11 +292,6 @@ void loop(){
             case OBJ_CMD_PROGRAMS:  // all programs
               break;
 
-            case OBJ_CMD_REPORTTEST:
-              urlString.toCharArray(clientLine, BUFSIZE);
-              testReport(clientLine);
-              break;
-
             default:
               httpJsonReply("\"ERROR\":\"Command not recognized.\"");
           }
@@ -343,12 +340,6 @@ void findCmdObject(char *cmdObj){
     // check for settings request "/settings"
     if (commandObject.startsWith(REST_CMD_SETTINGS)) {
         commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_SETTINGS;
-        return;
-    }
-
-    // check for report test request "/testreport"
-    if (commandObject.compareTo(REST_CMD_TESTREPORT) == 0) {
-        commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_REPORTTEST;
         return;
     }
 

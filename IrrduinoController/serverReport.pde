@@ -106,36 +106,4 @@ const char* ip_to_str(const uint8_t* ipAddr) {
   return buf;
 }
 
-// process a test report of the format:
-// /testreport/testserver.org:8080/datadrop?what=1&ever=2&you=3&want=4
-void testReport(char* urlLocation){
-    
-    String location = String(urlLocation);
-    Serial.print("location: ");
-    Serial.println(location);
-
-    int testReportLength = REST_CMD_TESTREPORT.length() + 2;
-    
-    //  find the testreport host name
-    int endOfHost = location.indexOf(':', testReportLength); // start of port number
-    if (endOfHost < 0){
-      endOfHost = location.indexOf('/', testReportLength); // start of page
-    }
-    if (endOfHost < 0){
-      endOfHost = location.indexOf('?', testReportLength); // start of parameters
-    }
-    Serial.print("endOfHost: ");
-    Serial.println(endOfHost);
-    if (endOfHost < 0) return;
-    
-    String reportHost = location.substring( testReportLength, endOfHost );
-    Serial.print("reportHost: ");
-    Serial.println(reportHost);
-
-    reportHost.toCharArray(reportingHostName, BUFSIZE);
-    
-    reportData = location.substring( endOfHost, location.length());
-    Serial.print("reportData: ");
-    Serial.println(reportData);
-}
 
