@@ -1,0 +1,25 @@
+Irrduino
+========
+
+This is an Arduino-based sprinkler control system.
+
+IrrduinoController
+	This is the code used to actuate the sprinklers.
+
+IrrduinoDroid
+	This is an Android application that can control
+	IrrduinoController.
+
+IrrduinoServer
+	This is a Python, Google App Engine application that can control
+	IrrduinoController and talk to IrrduinoDroid.
+
+IrrduinoServer/static/dart
+	This is a game written in Dart called Lawnville that is a bit
+	like Farmville, but it results in a real lawn being watered.
+
+Setup
+-----
+
+To use these applications, you'll need to configure some server names. Search
+for YOUR-SERVER-NAME in the code. See also IrrduinoServer/README.
