@@ -17,6 +17,7 @@
 
   Issues:
   - need a nanny process to check a max run time for valves (regardless of commands or program)
+  - not working on an Arduino Ethernet board 
 
   Change Log:
   - 2012-01-09 - changed reporting to point to /log (instead of /reports)
@@ -54,8 +55,8 @@
 #include <EthernetDNS.h>
 
 
-byte mac[] = { 0x90, 0xA2, 0xDA, 0x00, 0x50, 0xA0 };    //physical mac address
-byte ip[] = { 192, 168, 1, 14 };			// ip in lan
+byte mac[] = { 0x90, 0xA2, 0xDA, 0x00, 0xE2, 0xEB };    //physical mac address
+byte ip[] = { 192, 168, 1, 15 };			// ip in lan
 byte gateway[] = { 192, 168, 1, 1 };			// internet access via router
 byte dnsServerIp[] = { 192, 168, 1, 1};                 // DNS server IP (typically your gateway)
 byte subnet[] = { 255, 255, 255, 0 };                   //subnet mask
@@ -72,8 +73,11 @@ int zone5 = 6; //pin 6
 int zone6 = 7; //pin 7
 int zone7 = 8; //pin 8
 int zone8 = 9; //pin 9
-int zone9 = 11; //pin 11
-int zone10 = 12; //pin 12
+
+int zone9  = A0; //pin A0
+int zone10 = A1; //pin A1
+int zone11 = A2; //pin A2
+int zone12 = A3; //pin A3
 
 // LED indicator pin variables
 int ledIndicator = 13;
@@ -85,9 +89,11 @@ unsigned long ledFlashInterval = 1000; // flash interval in milliseconds
 unsigned long MAX_RUN_TIME_MINUTES = 30;  // Default 30 minutes
 unsigned long MAX_RUN_TIME = MAX_RUN_TIME_MINUTES * 60000;
 
-int zones[] = {zone1, zone2, zone3, zone4, zone5,
-                   zone6, zone7, zone8, zone9, zone10};
-int zoneCount = 10;
+int zones[] = {zone1, zone2, zone3, zone4,
+               zone5, zone6, zone7, zone8,
+               zone9, zone10, zone11, zone12};
+
+int zoneCount = 12;
 
 // REST commands
 const String REST_CMD_OFF        = "off";
@@ -105,7 +111,6 @@ const int OBJ_CMD_ZONES    = 10;
 const int OBJ_CMD_ZONE     = 100;
 const int OBJ_CMD_PROGRAMS = 20;
 const int OBJ_CMD_PROGRAM  = 200;
-const int OBJ_CMD_REPORTTEST = 900;
 
 // Reporting constants and variables
 int maxReportAttempts    = 3;
@@ -161,6 +166,8 @@ void setup(){
   // Turn on serial output for debugging
   Serial.begin(9600);
 
+  Serial.println("Irrduino starting up...");
+
   // Start Ethernet connection and server
   Ethernet.begin(mac, ip, gateway, subnet);
   server.begin();
@@ -173,8 +180,8 @@ void setup(){
     pinMode(zones[i], OUTPUT);
   }
 
-  // set the LED indicator pin for output
-  pinMode(ledIndicator, OUTPUT);
+  // set the LED indicator pin for output 
+  // pinMode(ledIndicator, OUTPUT); // (causes failure on Arduino Ethernet board)
 }
 
 //  url buffer size
@@ -304,11 +311,6 @@ void loop(){
             case OBJ_CMD_PROGRAMS:  // all programs
               break;
 
-            case OBJ_CMD_REPORTTEST:
-              urlString.toCharArray(clientLine, BUFSIZE);
-              testReport(clientLine);
-              break;
-
             default:
               httpJsonReply("\"ERROR\":\"Command not recognized.\"");
           }
@@ -357,12 +359,6 @@ void findCmdObject(char *cmdObj){
     // check for settings request "/settings"
     if (commandObject.startsWith(REST_CMD_SETTINGS)) {
         commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_SETTINGS;
-        return;
-    }
-
-    // check for report test request "/testreport"
-    if (commandObject.compareTo(REST_CMD_TESTREPORT) == 0) {
-        commandDispatch[CD_OBJ_TYPE] = OBJ_CMD_REPORTTEST;
         return;
     }
 
