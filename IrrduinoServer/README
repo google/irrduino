@@ -40,11 +40,6 @@ a slightly tweaked version of the URL below:
 
   http://YOUR-SERVER-NAME/settings?reportingEnabled=true&reportingHostName=your-public-server.com&reportingHostPort=8080
 
-Global TODOs
-------------
-
-Restrict access to the server.
-
 Limitations
 -----------
 

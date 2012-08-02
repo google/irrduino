@@ -17,6 +17,7 @@ handlers:
 
 - url: .*
   script: irrduinoserver/main.py
+  login: admin
 
 builtins:
 - remote_api: on
