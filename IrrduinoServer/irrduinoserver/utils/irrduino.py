@@ -23,7 +23,7 @@ import simplejson
 
 from irrduinoserver.utils import web as webutils
 
-SERVER_ROOT = "http://joefernandez.org"
+SERVER_ROOT = "http://YOUR-SERVER-NAME"
 
 # See: https://docs.google.com/a/google.com/spreadsheet/ccc?key=0AuX1PmdkirJmdGNWRlpOTDY3WjVNUkczR2pMVGtnS1E&hl=en_US#gid=0
 ZONES = {

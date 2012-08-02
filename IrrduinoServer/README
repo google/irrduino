@@ -29,16 +29,16 @@ Configuring IrrduinoController
 To get IrrduinoController to send us its logs, you must configure it.
 To get the existing settings, go to:
 
-  http://joefernandez.org/settings
+  http://YOUR-SERVER-NAME/settings
 
 To change it to use the default, public server, go to:
 
-  http://joefernandez.org/settings?reportingEnabled=true&reportingHostName=irrduinoserver.appspot.com&reportingHostPort=80
+  http://YOUR-SERVER-NAME/settings?reportingEnabled=true&reportingHostName=irrduinoserver.appspot.com&reportingHostPort=80
 
 To change it to use the development server (running over an ssh tunnel), go to
 a slightly tweaked version of the URL below:
 
-  http://joefernandez.org/settings?reportingEnabled=true&reportingHostName=your-public-server.com&reportingHostPort=8080
+  http://YOUR-SERVER-NAME/settings?reportingEnabled=true&reportingHostName=your-public-server.com&reportingHostPort=8080
 
 Global TODOs
 ------------
