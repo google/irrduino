@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import 'dart:async';
+import 'dart:collection';
 import 'dart:html';
 
 typedef void Callback();
@@ -60,7 +62,7 @@ class Lawnville {
 
   void _handleZoneClicks() {
     document.queryAll("area.zone").forEach((AreaElement el) {
-      el.on.click.add((MouseEvent e) {
+      el.onClick.listen((MouseEvent e) {
         window.console.log("_actionQueue.add({'action': 'water', 'zone': ${el.id}});");
         _actionQueue.add({'action': 'water', 'zone': el.id});
         _notifyActionQueue();
@@ -92,7 +94,8 @@ class Lawnville {
       _doAction(action);
       window.console.log("_waitingForTimer = true");
       _waitingForTimer = true;
-      window.setTimeout(_executeActionQueue, TIMER_INTERVAL);
+      new Timer(new Duration(milliseconds: TIMER_INTERVAL),
+                _executeActionQueue);
     }
   }
 
@@ -105,8 +108,8 @@ class Lawnville {
   void _water(String zoneId) {
     window.console.log("Watering zone: ${zoneId}");
     AreaElement zone = document.query("#${zoneId}");
-    int x = int.parse(zone.dataAttributes["center-x"]);
-    int y = int.parse(zone.dataAttributes["center-y"]);
+    int x = int.parse(zone.dataset["center-x"]);
+    int y = int.parse(zone.dataset["center-y"]);
     int zoneNum = int.parse(zoneId.split("-")[1]);
     _repositionDroid(x, y, () {
       _droid.src = "/static/images/droid-watering-1.png";
@@ -128,7 +131,7 @@ class Lawnville {
     var req = new HttpRequest();
     int secs = (TIMER_INTERVAL * SECS_PER_MS).toInt();
     req.open("POST", "/?water-zone=true&zone=${zone}&secs=${secs}", true);
-    req.on.readyStateChange.add((Event e) {
+    req.onReadyStateChange.listen((Event e) {
       if (req.readyState == 4) {
         if (req.status == 200) {
           window.console.log("Watering was successful");
@@ -151,13 +154,13 @@ class Lawnville {
     _droid.src = "/static/images/droid-jetpack-on-front.png";
     _droid.style.left = "${x}px";
     _droid.style.top = "${y}px";
-    window.setTimeout(() {
+    new Timer(new Duration(milliseconds: REPOSITION_DURATION), () {
       if (callback != null) {
         callback();
       } else {
         _droid.src = "/static/images/droid-waiting-front.png";
       }
-    }, REPOSITION_DURATION);
+    });
   }
 
   void _idle() {
@@ -166,7 +169,7 @@ class Lawnville {
   }
 
   void _startAnimationLoop() {
-    _animationStartTime = new Date.now().millisecondsSinceEpoch;
+    _animationStartTime = new DateTime.now().millisecondsSinceEpoch;
     window.requestAnimationFrame(_animationLoop);
   }
 
