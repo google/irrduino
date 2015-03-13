@@ -1,9 +1,7 @@
 Irrduino
-========
+=========
 
-Irrduino is an Arduino-based irrigation control system.
-
-It includes:
+Irrduino is an Arduino-based irrigation control system. It includes:
 
 	IrrduinoController
 
@@ -35,4 +33,5 @@ for YOUR-SERVER-NAME in the code. See also IrrduinoServer/README.
 Project Disclaimer
 ------------------
 
-This is not an official Google product (experimental or otherwise), it is just code that happens to be owned by Google.
+This project is not an official Google product (experimental or otherwise), 
+it is just code that happens to be owned by Google.
